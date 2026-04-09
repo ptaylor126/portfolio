@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — Liquid Logic</title>
+<meta name="description" content="Product Designer in Brooklyn. I design apps. Then I build them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0A0A0A;--accent:#D4582A;--text:#EDEDED;--muted:#666;--muted2:#444;
+  --surface:#141414;--wire:rgba(237,237,237,.06);
+  --serif:'DM Serif Display',Georgia,serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --heavy:cubic-bezier(.22,1,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:auto}
+body{font-family:var(--mono);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.6;cursor:none}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--accent);color:#fff}
+
+/* ── CURSOR ── */
+.cur{position:fixed;width:16px;height:16px;border:1.5px solid rgba(237,237,237,.35);border-radius:50%;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);transition:width .3s var(--spring),height .3s var(--spring),background .2s,border-color .2s,border-radius .3s var(--spring);will-change:transform}
+.cur-d{position:fixed;width:4px;height:4px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:10001;transform:translate(-50%,-50%);will-change:transform;transition:opacity .15s}
+.cur.is-v{width:76px;height:36px;border-radius:18px;background:var(--accent);border-color:var(--accent)}
+.cur.is-v::after{content:'VIEW';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:600 8px/1 var(--mono);color:#fff;letter-spacing:.16em}
+.cur.is-l{width:36px;height:36px;border-color:var(--accent);background:rgba(212,88,42,.08)}
+@media(max-width:900px){.cur,.cur-d{display:none}body{cursor:auto}a,button{cursor:pointer}}
+
+/* ================================================================
+   CORNER BRACKETS → ELASTIC PILL NAV
+   ================================================================ */
+.bracket{position:fixed;z-index:600;width:28px;height:28px;pointer-events:none;transition:opacity .4s,transform .4s var(--heavy)}
+.bracket svg line{stroke:rgba(237,237,237,.2);stroke-width:1.5}
+.b-tl{top:20px;left:20px}.b-tr{top:20px;right:20px}
+.b-bl{bottom:20px;left:20px}.b-br{bottom:20px;right:20px}
+.bracket.hide{opacity:0;transform:scale(.4)}
+
+.pill-nav{
+  position:fixed;top:16px;left:50%;z-index:601;
+  transform:translateX(-50%) translateY(-60px);opacity:0;
+  background:rgba(20,20,20,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(237,237,237,.06);border-radius:100px;
+  padding:8px 10px 8px 20px;display:flex;align-items:center;gap:6px;
+  transition:transform .6s var(--heavy),opacity .4s;pointer-events:auto;
+  max-width:560px;
+}
+.pill-nav.on{transform:translateX(-50%) translateY(0);opacity:1}
+.pn-name{font:500 10px/1 var(--mono);color:rgba(237,237,237,.6);margin-right:6px;white-space:nowrap;letter-spacing:.04em}
+.pn-sep{width:1px;height:14px;background:rgba(237,237,237,.08);flex-shrink:0}
+.pn-nav a{font:400 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(237,237,237,.3);padding:6px 10px;border-radius:100px;transition:color .2s,background .2s;cursor:none}
+.pn-nav a:hover{color:var(--text);background:rgba(237,237,237,.06)}
+.pn-status{display:flex;align-items:center;gap:5px;font:400 8px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(237,237,237,.25);margin-left:6px;white-space:nowrap}
+.pn-dot{width:5px;height:5px;border-radius:50%;background:#34d399;box-shadow:0 0 6px #34d399;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+/* Metric log ticker */
+.pn-ticker{overflow:hidden;width:140px;margin-left:6px;flex-shrink:0}
+.pn-ticker-inner{white-space:nowrap;font:300 8px/1 var(--mono);color:rgba(237,237,237,.2);letter-spacing:.06em;animation:tickScroll 12s linear infinite}
+@keyframes tickScroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+/* ================================================================
+   PARTICLE HERO
+   ================================================================ */
+.hero{position:relative;height:350vh;background:var(--bg)}
+.hero-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.hero-canvas{position:absolute;inset:0;z-index:1}
+.hero-content{position:relative;z-index:2;text-align:center;pointer-events:none;padding:0 32px}
+.hero-hl{
+  font-family:var(--serif);font-size:clamp(20px,3vw,36px);
+  line-height:1.3;color:rgba(237,237,237,.6);margin-top:clamp(80px,14vw,180px);
+  /* Wave distortion via CSS animation */
+  animation:waveText 4s ease-in-out infinite;
+}
+@keyframes waveText{0%,100%{transform:skewX(0) scaleY(1)}25%{transform:skewX(.5deg) scaleY(1.01)}75%{transform:skewX(-.5deg) scaleY(.99)}}
+.hero-hl em{font-style:italic;color:var(--accent)}
+.hero-sub{font:400 11px/1.7 var(--mono);color:rgba(237,237,237,.3);margin-top:16px;max-width:400px;margin-left:auto;margin-right:auto}
+.hero-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:20px}
+.hc{font:400 9px/1 var(--mono);letter-spacing:.06em;padding:5px 12px;border:1px solid rgba(237,237,237,.08);border-radius:100px;color:rgba(237,237,237,.3);display:flex;align-items:center;gap:5px}
+.hc .hd{width:4px;height:4px;border-radius:50%}
+
+/* ================================================================
+   LIQUIFIED WORK SECTION
+   ================================================================ */
+.liquid-work{position:relative}
+.lw-runway{position:relative}
+.lw-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+
+/* SVG liquid filter */
+.lw-filter{position:absolute;width:0;height:0}
+
+/* Full-screen project panels */
+.lw-panel{
+  position:absolute;inset:0;
+  display:grid;grid-template-columns:1fr 1fr;align-items:center;
+  padding:0 60px;opacity:0;
+  transition:opacity .6s var(--heavy);
+  will-change:opacity;
+}
+.lw-panel.active{opacity:1}
+
+.lw-visual{display:flex;align-items:center;justify-content:center;position:relative;height:100%}
+.lw-visual-bg{position:absolute;inset:0;transition:filter .4s}
+.lw-mockup{
+  width:220px;height:310px;border-radius:26px;overflow:hidden;position:relative;z-index:2;
+  box-shadow:0 30px 70px rgba(0,0,0,.4);transition:transform .6s var(--heavy);
+}
+.lw-panel:hover .lw-mockup{transform:translateY(-6px) rotate(-1.5deg) scale(1.03)}
+.lm-in{position:absolute;inset:8px;border-radius:19px;display:flex;flex-direction:column;padding:14px 12px;overflow:hidden}
+.lm-top{display:flex;justify-content:space-between;font:400 8px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:12px}
+.lm-h{font-family:var(--serif);font-size:16px;color:#fff;margin-bottom:3px}
+.lm-s{font:400 8px/1 var(--mono);color:rgba(255,255,255,.2)}
+.lm-bl{display:flex;gap:4px;margin-top:12px}
+.lm-b{flex:1;height:32px;border-radius:6px;background:rgba(255,255,255,.05)}
+.lm-rl{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.lm-r{height:18px;border-radius:5px;background:rgba(255,255,255,.04)}
+.lm-ch{display:flex;align-items:flex-end;gap:2px;height:55px;margin-top:auto;padding-top:8px}
+.lm-cv{flex:1;border-radius:2px 2px 0 0;background:rgba(255,255,255,.07)}
+.lm-cv.hi{background:rgba(255,255,255,.25)}
+
+/* Floating metric labels */
+.lw-labels{position:absolute;z-index:3;display:flex;flex-direction:column;gap:6px}
+.lw-labels.left{top:30%;left:40px}
+.lw-labels.right{bottom:30%;right:40px}
+.lw-lbl{
+  font:500 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);background:rgba(10,10,10,.6);backdrop-filter:blur(8px);
+  padding:6px 12px;border-radius:4px;border:1px solid rgba(212,88,42,.15);
+  width:fit-content;
+}
+
+.lw-content{padding:0 40px;display:flex;flex-direction:column;justify-content:center}
+.lw-num{font:400 9px/1 var(--mono);letter-spacing:.15em;color:var(--muted);margin-bottom:20px}
+.lw-title{font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);line-height:1.1;margin-bottom:12px}
+.lw-desc{font:400 12px/1.8 var(--mono);color:var(--muted);max-width:380px;margin-bottom:18px}
+.lw-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px}
+.lw-tag{font:400 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--wire);border-radius:100px;color:var(--muted)}
+.lw-super{font:500 10px/1 var(--mono);color:var(--accent);display:flex;align-items:center;gap:6px}
+.lw-super::before{content:'';width:4px;height:4px;background:var(--accent);border-radius:50%}
+
+/* Panel BGs */
+.lw-panel[data-p="mealmatch"] .lw-visual-bg{background:radial-gradient(ellipse at center,rgba(45,90,61,.15),transparent 70%)}
+.lw-panel[data-p="mealmatch"] .lw-mockup{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.lw-panel[data-p="ballrs"] .lw-visual-bg{background:radial-gradient(ellipse at center,rgba(26,26,46,.2),transparent 70%)}
+.lw-panel[data-p="ballrs"] .lw-mockup{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.lw-panel[data-p="loupe"] .lw-visual-bg{background:radial-gradient(ellipse at center,rgba(91,79,160,.12),transparent 70%)}
+.lw-panel[data-p="loupe"] .lw-mockup{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.lw-panel[data-p="jetsweat"] .lw-visual-bg{background:radial-gradient(ellipse at center,rgba(212,88,42,.1),transparent 70%)}
+.lw-panel[data-p="jetsweat"] .lw-mockup{background:linear-gradient(150deg,#D4582A,#A84420)}
+
+/* Progress pips */
+.lw-pips{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:10px}
+.lw-pip{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--muted);transition:background .3s,border-color .3s}
+.lw-pip.active{background:var(--accent);border-color:var(--accent)}
+
+/* ================================================================
+   SUBTITLE TESTIMONIALS
+   ================================================================ */
+.subtitle-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  padding:16px 40px 24px;text-align:center;pointer-events:none;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .5s var(--heavy),transform .5s var(--heavy);
+}
+.subtitle-bar.on{opacity:1;transform:none}
+.sub-q{font:300 14px/1.6 var(--serif);font-style:italic;color:rgba(237,237,237,.5);max-width:560px;margin:0 auto 4px}
+.sub-a{font:500 8px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+
+/* ================================================================
+   STRING TIMELINE
+   ================================================================ */
+.timeline{padding:160px 48px;max-width:800px;margin:0 auto;position:relative}
+.tl-header{margin-bottom:60px}
+.sec-label{font:500 9px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.sec-label::before{content:'';width:20px;height:1px;background:var(--accent)}
+.sec-title{font-family:var(--serif);font-size:clamp(26px,3.5vw,44px);line-height:1.15}
+
+/* The glowing vertical string */
+.tl-string{
+  position:relative;padding-left:48px;
+}
+.tl-string::before{
+  content:'';position:absolute;top:0;bottom:0;left:16px;
+  width:2px;background:linear-gradient(to bottom,var(--accent),rgba(212,88,42,.1));
+  box-shadow:0 0 12px rgba(212,88,42,.2);
+}
+
+.tl-node{
+  position:relative;padding:24px 0 48px;
+}
+/* Dot on the string */
+.tl-node::before{
+  content:'';position:absolute;top:28px;left:-40px;
+  width:12px;height:12px;border-radius:50%;
+  border:2px solid var(--accent);background:var(--bg);
+  box-shadow:0 0 10px rgba(212,88,42,.3);
+  z-index:2;
+}
+.tl-node.active::before{background:var(--accent)}
+
+.tl-era{font:500 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.tl-title{font-family:var(--serif);font-size:22px;margin-bottom:6px}
+.tl-desc{font:400 11px/1.7 var(--mono);color:var(--muted);max-width:400px}
+
+/* Photo burst */
+.tl-burst{
+  position:absolute;top:16px;right:-60px;
+  width:200px;height:140px;border-radius:6px;overflow:hidden;
+  opacity:0;transform:scale(.8) translateX(-20px);
+  transition:opacity .5s var(--heavy),transform .6s var(--heavy);
+  box-shadow:0 8px 30px rgba(0,0,0,.3);z-index:3;
+}
+.tl-node.active .tl-burst{opacity:1;transform:scale(1) translateX(0)}
+.tl-burst img{width:100%;height:100%;object-fit:cover;filter:grayscale(70%) contrast(1.2)}
+.tl-burst-grain{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;opacity:.25;pointer-events:none;
+}
+
+/* ================================================================
+   CONTACT
+   ================================================================ */
+.contact{padding:120px 48px 80px;max-width:700px;margin:0 auto;text-align:center}
+.contact h2{font-family:var(--serif);font-size:clamp(28px,4vw,52px);line-height:1.1;margin-bottom:16px}
+.contact p{font:400 12px/1.8 var(--mono);color:var(--muted);max-width:400px;margin:0 auto 40px}
+.cta{display:inline-flex;align-items:center;gap:10px;font:500 12px/1 var(--mono);color:var(--accent);border:1.5px solid var(--accent);padding:14px 32px;border-radius:100px;transition:background .3s,color .3s,transform .3s var(--spring);cursor:none}
+.cta:hover{background:var(--accent);color:#fff;transform:scale(1.04)}
+.cta svg{transition:transform .3s var(--spring)}.cta:hover svg{transform:translateX(4px)}
+.footer{padding:28px 48px;display:flex;justify-content:space-between;align-items:center;max-width:800px;margin:0 auto;border-top:1px solid var(--wire)}
+.footer span{font:400 10px/1 var(--mono);color:var(--muted2)}
+.footer-links{display:flex;gap:18px}
+.footer-links a{font:400 10px/1 var(--mono);color:var(--muted);transition:color .3s;cursor:none}
+.footer-links a:hover{color:var(--accent)}
+
+@media(max-width:900px){
+  .lw-panel{grid-template-columns:1fr;padding:0 20px}
+  .lw-visual{height:50vh}.lw-content{padding:20px 0}
+  .lw-labels{display:none}
+  .timeline{padding:80px 20px}
+  .tl-burst{display:none}
+  .contact{padding:80px 20px 60px}
+  .footer{padding:20px;flex-direction:column;gap:8px}
+  .pill-nav{width:calc(100% - 24px);left:12px;transform:translateX(0) translateY(-60px);max-width:none}
+  .pill-nav.on{transform:translateX(0) translateY(0)}
+  .pn-ticker{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-d" id="curD"></div>
+
+<!-- Corner brackets -->
+<div class="bracket b-tl" id="bTL"><svg viewBox="0 0 28 28"><line x1="0" y1="0" x2="10" y2="0"/><line x1="0" y1="0" x2="0" y2="10"/></svg></div>
+<div class="bracket b-tr" id="bTR"><svg viewBox="0 0 28 28"><line x1="18" y1="0" x2="28" y2="0"/><line x1="28" y1="0" x2="28" y2="10"/></svg></div>
+<div class="bracket b-bl" id="bBL"><svg viewBox="0 0 28 28"><line x1="0" y1="28" x2="10" y2="28"/><line x1="0" y1="18" x2="0" y2="28"/></svg></div>
+<div class="bracket b-br" id="bBR"><svg viewBox="0 0 28 28"><line x1="18" y1="28" x2="28" y2="28"/><line x1="28" y1="18" x2="28" y2="28"/></svg></div>
+
+<!-- Elastic pill nav -->
+<nav class="pill-nav" id="pillNav">
+  <span class="pn-name">Paul Taylor</span>
+  <div class="pn-sep"></div>
+  <div class="pn-nav">
+    <a href="#work" data-cursor="link">Work</a>
+    <a href="#timeline" data-cursor="link">Story</a>
+    <a href="#contact" data-cursor="link">Contact</a>
+  </div>
+  <div class="pn-sep"></div>
+  <div class="pn-status"><div class="pn-dot"></div>BUILD: ACTIVE</div>
+  <div class="pn-ticker"><div class="pn-ticker-inner">MEALMATCH_AI &gt; 40_USERS // BALLRS &gt; APP_STORE // LOUPE &gt; VISION_AI // JETSWEAT &gt; +25%_SIGNUPS //</div></div>
+</nav>
+
+<!-- Subtitle testimonials -->
+<div class="subtitle-bar" id="subBar">
+  <div class="sub-q" id="subQ"></div>
+  <div class="sub-a" id="subA"></div>
+</div>
+
+<!-- ================================================================
+     PARTICLE HERO
+     ================================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-sticky">
+    <canvas class="hero-canvas" id="heroCanvas"></canvas>
+    <div class="hero-content">
+      <div class="hero-hl">I design apps. Then I <em>build</em> them.</div>
+      <div class="hero-sub">Lead designer at MealMatch AI. Three apps on the App Store. Brooklyn, NY.</div>
+      <div class="hero-chips">
+        <span class="hc"><span class="hd" style="background:#34d399"></span>MealMatch AI</span>
+        <span class="hc"><span class="hd" style="background:var(--accent)"></span>3 Apps Shipped</span>
+        <span class="hc"><span class="hd" style="background:#60a5fa"></span>Brooklyn, NY</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     LIQUIFIED WORK
+     ================================================================ -->
+<section class="liquid-work" id="work">
+  <div class="lw-runway" id="lwRunway">
+    <div class="lw-sticky">
+
+      <div class="lw-panel" data-p="mealmatch" id="lp0"
+           data-quote="He consistently transformed complex challenges into elegant, user-centered solutions."
+           data-attr="Alex Leite — Sr. Director, Microsoft 365">
+        <div class="lw-visual">
+          <div class="lw-visual-bg"></div>
+          <div class="lw-mockup"><div class="lm-in" style="background:linear-gradient(180deg,#2D5A3D,#1a3d28)"><div class="lm-top"><span>9:41</span><span>MealMatch</span></div><div class="lm-h">Your Plan</div><div class="lm-s">3 meals curated</div><div class="lm-bl"><div class="lm-b"></div><div class="lm-b"></div><div class="lm-b"></div></div><div class="lm-rl"><div class="lm-r"></div><div class="lm-r"></div><div class="lm-r"></div></div></div></div>
+          <div class="lw-labels left"><span class="lw-lbl">40+ RESEARCH PARTICIPANTS</span><span class="lw-lbl">DESIGN SYSTEM LEAD</span></div>
+        </div>
+        <div class="lw-content">
+          <div class="lw-num">01 — Case Study</div>
+          <h3 class="lw-title">MealMatch AI</h3>
+          <p class="lw-desc">AI-powered meal planning. Scaled a design system from zero. Ran 40+ participant research studies.</p>
+          <div class="lw-tags"><span class="lw-tag">AI UX</span><span class="lw-tag">Design Systems</span><span class="lw-tag">Research</span></div>
+          <div class="lw-super">40+ participant studies, full design system</div>
+        </div>
+      </div>
+
+      <div class="lw-panel" data-p="ballrs" id="lp1"
+           data-quote="He is strong in all areas of UX from research to design, with an aptitude for prototyping."
+           data-attr="Kim Hartford — Founding Product Designer">
+        <div class="lw-visual">
+          <div class="lw-visual-bg"></div>
+          <div class="lw-mockup"><div class="lm-in" style="background:linear-gradient(180deg,#1A1A2E,#111528)"><div class="lm-top"><span>9:41</span><span>Ballrs</span></div><div class="lm-h">Daily Pick</div><div class="lm-s">Who scored more?</div><div class="lm-bl"><div class="lm-b" style="height:55px"></div><div class="lm-b" style="height:55px"></div></div><div class="lm-rl"><div class="lm-r"></div><div class="lm-r"></div></div></div></div>
+          <div class="lw-labels right"><span class="lw-lbl">REACT NATIVE / TS</span><span class="lw-lbl">APP STORE LIVE</span></div>
+        </div>
+        <div class="lw-content">
+          <div class="lw-num">02 — Case Study</div>
+          <h3 class="lw-title">Ballrs</h3>
+          <p class="lw-desc">End-to-end design and engineering. React Native & TypeScript. Designed, coded, shipped.</p>
+          <div class="lw-tags"><span class="lw-tag">React Native</span><span class="lw-tag">TypeScript</span><span class="lw-tag">Full-Stack</span></div>
+          <div class="lw-super">Designed + engineered, live on App Store</div>
+        </div>
+      </div>
+
+      <div class="lw-panel" data-p="loupe" id="lp2"
+           data-quote="He excels in team settings, always welcoming diverse perspectives and ensuring everyone feels valued."
+           data-attr="Joella Degollado — Experience Designer">
+        <div class="lw-visual">
+          <div class="lw-visual-bg"></div>
+          <div class="lw-mockup"><div class="lm-in" style="background:linear-gradient(180deg,#5B4FA0,#3D3578)"><div class="lm-top"><span>Loupe</span><span>v1.2</span></div><div class="lm-h">Library</div><div class="lm-s">2,481 tagged</div><div class="lm-bl"><div class="lm-b"></div><div class="lm-b"></div><div class="lm-b"></div></div><div class="lm-rl"><div class="lm-r"></div><div class="lm-r"></div><div class="lm-r"></div><div class="lm-r"></div></div></div></div>
+          <div class="lw-labels left"><span class="lw-lbl">SWIFTUI / VISION</span><span class="lw-lbl">ON-DEVICE AI</span></div>
+        </div>
+        <div class="lw-content">
+          <div class="lw-num">03 — Shipped App</div>
+          <h3 class="lw-title">Loupe</h3>
+          <p class="lw-desc">Native Mac app for photographers. Local AI tags your library. No cloud, no subscriptions.</p>
+          <div class="lw-tags"><span class="lw-tag">macOS</span><span class="lw-tag">Vision AI</span><span class="lw-tag">SwiftUI</span></div>
+          <div class="lw-super">On-device AI, zero cloud dependency</div>
+        </div>
+      </div>
+
+      <div class="lw-panel" data-p="jetsweat" id="lp3"
+           data-quote="A unique ability to distill complex features into clean designs and seamless user flows."
+           data-attr="Alexandra Dantzig — CEO, JetSweat">
+        <div class="lw-visual">
+          <div class="lw-visual-bg"></div>
+          <div class="lw-mockup"><div class="lm-in" style="background:linear-gradient(180deg,#D4582A,#a84420)"><div class="lm-top"><span>9:41</span><span>JetSweat</span></div><div class="lm-h">Dashboard</div><div class="lm-s">Analytics</div><div class="lm-ch"><div class="lm-cv" style="height:25%"></div><div class="lm-cv" style="height:45%"></div><div class="lm-cv hi" style="height:75%"></div><div class="lm-cv" style="height:38%"></div><div class="lm-cv hi" style="height:92%"></div><div class="lm-cv" style="height:55%"></div><div class="lm-cv hi" style="height:68%"></div></div></div></div>
+          <div class="lw-labels right"><span class="lw-lbl">25% SIGNUP INCREASE</span><span class="lw-lbl">75% LESS MANUAL SETUP</span></div>
+        </div>
+        <div class="lw-content">
+          <div class="lw-num">04 — Case Study</div>
+          <h3 class="lw-title">JetSweat</h3>
+          <p class="lw-desc">Product-led growth for B2B fitness SaaS. 25% more sign-ups, 75% less manual CMS setup.</p>
+          <div class="lw-tags"><span class="lw-tag">Growth</span><span class="lw-tag">SaaS</span><span class="lw-tag">CMS</span></div>
+          <div class="lw-super">25% sign-up lift, 75% less manual work</div>
+        </div>
+      </div>
+
+      <div class="lw-pips" id="lwPips"><div class="lw-pip active"></div><div class="lw-pip"></div><div class="lw-pip"></div><div class="lw-pip"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     STRING TIMELINE
+     ================================================================ -->
+<section class="timeline" id="timeline">
+  <div class="tl-header">
+    <div class="sec-label">The Backstory</div>
+    <h2 class="sec-title">How I got here.</h2>
+  </div>
+
+  <div class="tl-string">
+    <div class="tl-node" data-burst="0">
+      <div class="tl-era">London</div>
+      <div class="tl-title">Product Manager</div>
+      <div class="tl-desc">Learned how products ship, what breaks, and why metrics matter. Managed roadmaps and cross-functional teams.</div>
+      <div class="tl-burst"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&h=280&fit=crop" alt="" loading="lazy"><div class="tl-burst-grain"></div></div>
+    </div>
+
+    <div class="tl-node" data-burst="1">
+      <div class="tl-era">Freelance, NYC</div>
+      <div class="tl-title">Photographer</div>
+      <div class="tl-desc">Shot for Netflix, HBO, National Geographic. Trained my eye for composition, narrative, and emotional impact.</div>
+      <div class="tl-burst"><img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&h=280&fit=crop" alt="" loading="lazy"><div class="tl-burst-grain"></div></div>
+    </div>
+
+    <div class="tl-node" data-burst="2">
+      <div class="tl-era">Brooklyn, NY</div>
+      <div class="tl-title">Designer & Builder</div>
+      <div class="tl-desc">Lead designer at MealMatch AI. Shipped 3 apps to the App Store. Designs intelligent experiences and writes the code to ship them.</div>
+      <div class="tl-burst"><img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=400&h=280&fit=crop" alt="" loading="lazy"><div class="tl-burst-grain"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     CONTACT
+     ================================================================ -->
+<section class="contact" id="contact">
+  <div class="sec-label" style="justify-content:center">Get In Touch</div>
+  <h2>Got a project?<br>Let's talk.</h2>
+  <p>Open to full-time roles, contract work, and collaborations. Building something that matters? I want to hear about it.</p>
+  <a href="mailto:hello@paultaylormade.com" class="cta" data-cursor="link">
+    hello@paultaylormade.com
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</section>
+<footer class="footer">
+  <span>&copy; 2026 Paul Taylor. Liquid Logic.</span>
+  <div class="footer-links">
+    <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer" data-cursor="link">LinkedIn</a>
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" data-cursor="link">Instagram</a>
+    <a href="https://github.com" target="_blank" rel="noopener noreferrer" data-cursor="link">GitHub</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── CURSOR ── */
+  const cur=document.getElementById('cur'),curD=document.getElementById('curD');
+  let cx=0,cy=0,dxx=0,dyy=0,mx=window.innerWidth/2,my=window.innerHeight/2;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+  (function cT(){cx+=(mx-cx)*.08;cy+=(my-cy)*.08;dxx+=(mx-dxx)*.22;dyy+=(my-dyy)*.22;cur.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;curD.style.transform=`translate(${dxx}px,${dyy}px) translate(-50%,-50%)`;requestAnimationFrame(cT)})();
+  document.querySelectorAll('[data-cursor]').forEach(el=>{const t=el.getAttribute('data-cursor');el.addEventListener('mouseenter',()=>{cur.className='cur is-'+t[0];curD.style.opacity='0'});el.addEventListener('mouseleave',()=>{cur.className='cur';curD.style.opacity='1'})});
+
+  /* ── PARTICLE SYSTEM ── */
+  const canvas=document.getElementById('heroCanvas');
+  const ctx=canvas.getContext('2d');
+  let W,H;
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+
+  // Sample text positions
+  const textToSample='PAUL TAYLOR';
+  let textPoints=[];
+
+  function sampleText(){
+    const offscreen=document.createElement('canvas');
+    const octx=offscreen.getContext('2d');
+    offscreen.width=W;offscreen.height=H;
+    const fontSize=Math.min(W*.12,140);
+    octx.font=`700 ${fontSize}px "DM Serif Display",serif`;
+    octx.textAlign='center';octx.textBaseline='middle';
+    octx.fillStyle='#fff';
+    octx.fillText(textToSample,W/2,H/2-40);
+    const data=octx.getImageData(0,0,W,H).data;
+    textPoints=[];
+    const gap=4;
+    for(let y=0;y<H;y+=gap){
+      for(let x=0;x<W;x+=gap){
+        if(data[(y*W+x)*4+3]>128){
+          textPoints.push({x,y});
+        }
+      }
+    }
+  }
+  // Delay to let font load
+  setTimeout(sampleText,300);
+  window.addEventListener('resize',()=>setTimeout(sampleText,100));
+
+  // Particles
+  const PARTICLE_COUNT=2000;
+  const particles=[];
+  for(let i=0;i<PARTICLE_COUNT;i++){
+    particles.push({
+      x:Math.random()*W,y:Math.random()*H,
+      tx:W/2,ty:H/2,
+      vx:0,vy:0,
+      size:1+Math.random()*1.5,
+      alpha:.3+Math.random()*.5
+    });
+  }
+
+  function assignTargets(){
+    for(let i=0;i<PARTICLE_COUNT;i++){
+      if(textPoints.length>0){
+        const tp=textPoints[i%textPoints.length];
+        particles[i].tx=tp.x;
+        particles[i].ty=tp.y;
+      }
+    }
+  }
+  setTimeout(assignTargets,400);
+  window.addEventListener('resize',()=>setTimeout(assignTargets,200));
+
+  function drawParticles(){
+    ctx.clearRect(0,0,W,H);
+
+    for(let i=0;i<PARTICLE_COUNT;i++){
+      const p=particles[i];
+
+      // Spring toward target
+      const dx=p.tx-p.x;
+      const dy=p.ty-p.y;
+      p.vx+=dx*.03;
+      p.vy+=dy*.03;
+
+      // Mouse repulsion
+      const mdx=p.x-mx;
+      const mdy=p.y-my;
+      const mDist=Math.sqrt(mdx*mdx+mdy*mdy);
+      if(mDist<120){
+        const force=(120-mDist)/120*6;
+        p.vx+=mdx/mDist*force;
+        p.vy+=mdy/mDist*force;
+      }
+
+      // Friction
+      p.vx*=.88;p.vy*=.88;
+      p.x+=p.vx;p.y+=p.vy;
+
+      // Draw
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+      ctx.fillStyle=`rgba(237,237,237,${p.alpha})`;
+      ctx.fill();
+    }
+
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+
+  /* ── ELEMENTS ── */
+  const brackets=[document.getElementById('bTL'),document.getElementById('bTR'),document.getElementById('bBL'),document.getElementById('bBR')];
+  const pillNav=document.getElementById('pillNav');
+  const heroSection=document.getElementById('hero');
+  const lwRunway=document.getElementById('lwRunway');
+  const panels=[document.getElementById('lp0'),document.getElementById('lp1'),document.getElementById('lp2'),document.getElementById('lp3')];
+  const pips=document.querySelectorAll('.lw-pip');
+  const subBar=document.getElementById('subBar');
+  const subQ=document.getElementById('subQ');
+  const subA=document.getElementById('subA');
+  const PCOUNT=panels.length;
+  const PVH=1.3;
+  const vh=()=>window.innerHeight;
+
+  lwRunway.style.height=(PCOUNT*PVH*vh())+'px';
+  window.addEventListener('resize',()=>{lwRunway.style.height=(PCOUNT*PVH*vh())+'px'});
+
+  /* ── TIMELINE IO ── */
+  const tlNodes=document.querySelectorAll('.tl-node');
+  const tlObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{e.target.classList.toggle('active',e.isIntersecting)});
+  },{threshold:.5,rootMargin:'0px 0px -20% 0px'});
+  tlNodes.forEach(n=>tlObs.observe(n));
+
+  /* ── SCROLL ── */
+  let pillShown=false;
+  let activePanel=null;
+
+  function onScroll(){
+    const sy=window.scrollY;
+
+    // Brackets → pill
+    const heroBottom=heroSection.getBoundingClientRect().bottom;
+    if(heroBottom<vh()*.35&&!pillShown){
+      pillShown=true;
+      brackets.forEach(b=>b.classList.add('hide'));
+      pillNav.classList.add('on');
+    }else if(heroBottom>=vh()*.35&&pillShown){
+      pillShown=false;
+      brackets.forEach(b=>b.classList.remove('hide'));
+      pillNav.classList.remove('on');
+    }
+
+    // Work panels — crossfade with liquid-like transition
+    const lwTop=lwRunway.getBoundingClientRect().top;
+    if(lwTop<=0){
+      const scrolled=Math.abs(lwTop);
+      const slideH=(PCOUNT*PVH*vh())/PCOUNT;
+      const idx=Math.min(PCOUNT-1,Math.floor(scrolled/slideH));
+
+      panels.forEach((p,i)=>{
+        p.classList.toggle('active',i===idx);
+        // Apply liquid distortion via CSS filter on background during transition
+        const progress=(scrolled%slideH)/slideH;
+        if(i===idx){
+          const bg=p.querySelector('.lw-visual-bg');
+          if(bg)bg.style.filter=`blur(${progress*4}px)`;
+        }
+      });
+      pips.forEach((p,i)=>p.classList.toggle('active',i===idx));
+
+      // Subtitles
+      const panel=panels[idx];
+      if(panel!==activePanel){
+        activePanel=panel;
+        const q=panel.getAttribute('data-quote');
+        const a=panel.getAttribute('data-attr');
+        if(q){
+          subQ.textContent='"'+q+'"';
+          subA.textContent='— '+a;
+          subBar.classList.add('on');
+        }
+      }
+    }else{
+      subBar.classList.remove('on');
+      activePanel=null;
+    }
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ── SMOOTH NAV ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+
+})();
+</script>
+</body>
+</html>

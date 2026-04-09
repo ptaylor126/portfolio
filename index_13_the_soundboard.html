@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — The Soundboard</title>
+<meta name="description" content="Product Designer in Brooklyn. I design apps. Then I build them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#1A1A1A;--bg2:#222;--bg3:#2a2a2a;--metal:#252525;
+  --led:#32CD32;--led-dim:rgba(50,205,50,.15);--led-glow:rgba(50,205,50,.4);
+  --orange:#D4582A;--text:#EDEDED;--muted:#666;--muted2:#444;
+  --groove:#111;--screw:#333;
+  --serif:'DM Serif Display',Georgia,serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --heavy:cubic-bezier(.22,1,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+html,body{height:100%;-webkit-font-smoothing:antialiased}
+body{font-family:var(--mono);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.6;cursor:default}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--orange);color:#fff}
+
+/* Brushed metal texture */
+.metal-tex{
+  position:fixed;inset:0;pointer-events:none;z-index:9000;
+  background:repeating-linear-gradient(90deg,transparent,transparent 2px,rgba(255,255,255,.008) 2px,rgba(255,255,255,.008) 3px);
+  opacity:.5;
+}
+
+/* ================================================================
+   MASTER FADER BOOT SCREEN
+   ================================================================ */
+.boot{
+  position:fixed;inset:0;z-index:8000;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:32px;transition:opacity .6s .3s,visibility .6s .3s;
+}
+.boot.off{opacity:0;visibility:hidden}
+
+.boot-label{font:500 8px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+/* Fader track */
+.fader-wrap{position:relative;width:60px;height:240px}
+.fader-track{
+  position:absolute;left:50%;transform:translateX(-50%);
+  width:8px;height:100%;border-radius:4px;
+  background:var(--groove);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.6);
+}
+/* dB scale marks */
+.fader-marks{position:absolute;top:0;bottom:0;left:-20px;width:16px;display:flex;flex-direction:column;justify-content:space-between;padding:8px 0}
+.fader-mark{font:300 7px/1 var(--mono);color:var(--muted);text-align:right}
+
+/* Fader knob */
+.fader-knob{
+  position:absolute;left:50%;transform:translateX(-50%);
+  width:48px;height:20px;border-radius:3px;
+  background:linear-gradient(180deg,#555,#333,#444);
+  border:1px solid #4a4a4a;
+  box-shadow:0 2px 8px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1);
+  cursor:grab;z-index:2;
+  bottom:8px; /* start at 0% */
+  transition:box-shadow .3s;
+}
+.fader-knob:active{cursor:grabbing}
+.fader-knob.powered{box-shadow:0 2px 12px var(--led-glow),inset 0 1px 0 rgba(255,255,255,.1)}
+/* Center groove on knob */
+.fader-knob::after{content:'';position:absolute;top:50%;left:8px;right:8px;height:1px;background:rgba(255,255,255,.15)}
+
+/* Fill bar */
+.fader-fill{
+  position:absolute;left:50%;transform:translateX(-50%);
+  width:8px;bottom:0;height:0;border-radius:0 0 4px 4px;
+  background:linear-gradient(to top,var(--led-dim),var(--led));
+  transition:none;
+}
+
+.boot-pct{font:600 24px/1 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums;transition:color .3s}
+.boot-pct.hot{color:var(--led)}
+.boot-hint{font:300 9px/1 var(--mono);color:var(--muted);letter-spacing:.08em}
+
+/* ================================================================
+   MAIN CONSOLE
+   ================================================================ */
+.console{opacity:0;transition:opacity .6s .2s;pointer-events:none}
+.console.on{opacity:1;pointer-events:auto}
+
+/* Top bar — identity + LED */
+.top-bar{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  height:44px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;background:rgba(26,26,26,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--muted2);
+}
+.tb-name{
+  font-family:var(--serif);font-size:16px;color:var(--text);
+  letter-spacing:.02em;opacity:.6;
+}
+.tb-headline{
+  font:400 10px/1 var(--mono);color:var(--led);
+  letter-spacing:.06em;
+  text-shadow:0 0 8px var(--led-glow);
+}
+.tb-right{display:flex;align-items:center;gap:14px}
+.tb-status{display:flex;align-items:center;gap:5px;font:400 8px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tb-dot{width:5px;height:5px;border-radius:50%;background:var(--led);box-shadow:0 0 6px var(--led);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ================================================================
+   VU METER NAV
+   ================================================================ */
+.vu-nav{
+  position:fixed;z-index:600;
+  /* Start as bottom bar */
+  bottom:0;left:0;right:0;height:48px;
+  background:rgba(26,26,26,.95);backdrop-filter:blur(16px);
+  border-top:1px solid var(--muted2);
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:0 20px;
+  transition:all .6s var(--heavy);
+}
+.vu-nav.morphed{
+  bottom:auto;top:52px;left:50%;right:auto;
+  width:520px;margin-left:-260px;height:40px;
+  border-radius:100px;border:1px solid var(--muted2);
+}
+
+/* VU bars */
+.vu-bars{display:flex;align-items:flex-end;gap:2px;height:24px;flex-shrink:0}
+.vu-bar{
+  width:4px;border-radius:1px 1px 0 0;
+  background:var(--led);transition:height .08s;
+}
+.vu-bar:nth-child(n+9){background:var(--orange)}
+.vu-bar:nth-child(n+11){background:#e33}
+
+.vu-sep{width:1px;height:16px;background:var(--muted2)}
+.vu-nav a{font:400 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .2s;cursor:default}
+.vu-nav a:hover{color:var(--led)}
+.vu-data{font:300 8px/1 var(--mono);letter-spacing:.08em;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* ================================================================
+   CHANNEL STRIP REEL (HORIZONTAL WORK)
+   ================================================================ */
+.reel{position:relative;margin-top:44px}
+.reel-runway{position:relative}
+.reel-sticky{position:sticky;top:44px;height:calc(100vh - 44px);overflow:hidden;display:flex;align-items:stretch}
+
+.reel-header{position:absolute;top:20px;left:24px;z-index:10}
+.rh-label{font:500 8px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--orange);display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.rh-label::before{content:'';width:14px;height:1.5px;background:var(--orange)}
+.rh-title{font:400 20px/1.2 var(--serif);color:var(--text)}
+
+.reel-track{display:flex;height:100%;will-change:transform}
+
+/* Channel strip */
+.channel{
+  flex-shrink:0;width:360px;height:100%;
+  background:var(--bg2);border-right:1px solid var(--muted2);
+  display:flex;flex-direction:column;padding:60px 20px 20px;
+  position:relative;overflow:hidden;
+}
+/* Screw corners */
+.channel::before,.channel::after{
+  content:'';position:absolute;width:8px;height:8px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,var(--screw),#1a1a1a);
+  border:1px solid var(--muted2);z-index:2;
+}
+.channel::before{top:8px;left:8px}
+.channel::after{top:8px;right:8px}
+
+.ch-label{
+  font:600 7px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--orange);margin-bottom:8px;
+}
+.ch-name{font:400 22px/1.1 var(--serif);margin-bottom:4px}
+.ch-sub{font:400 9px/1 var(--mono);color:var(--muted);letter-spacing:.06em;margin-bottom:16px}
+
+/* Monitor — video/mockup area */
+.ch-monitor{
+  flex:1;border-radius:8px;overflow:hidden;
+  background:var(--groove);border:2px solid var(--muted2);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;margin-bottom:16px;
+  box-shadow:inset 0 4px 12px rgba(0,0,0,.4);
+}
+.ch-mockup{
+  width:140px;height:200px;border-radius:18px;overflow:hidden;
+  box-shadow:0 12px 30px rgba(0,0,0,.3);position:relative;
+  transition:transform .5s var(--heavy);
+}
+.channel:hover .ch-mockup{transform:translateY(-4px) scale(1.02)}
+.cm{position:absolute;inset:6px;border-radius:13px;display:flex;flex-direction:column;padding:10px 8px;overflow:hidden}
+.cm-top{display:flex;justify-content:space-between;font:400 6px/1 var(--mono);color:rgba(255,255,255,.25);margin-bottom:8px}
+.cm-h{font:400 12px/1 var(--serif);color:#fff;margin-bottom:2px}
+.cm-s{font:400 6px/1 var(--mono);color:rgba(255,255,255,.18)}
+.cm-bl{display:flex;gap:3px;margin-top:8px}
+.cm-b{flex:1;height:24px;border-radius:4px;background:rgba(255,255,255,.04)}
+.cm-rl{display:flex;flex-direction:column;gap:3px;margin-top:6px}
+.cm-r{height:14px;border-radius:3px;background:rgba(255,255,255,.03)}
+.cm-ch{display:flex;align-items:flex-end;gap:2px;height:40px;margin-top:auto;padding-top:4px}
+.cm-cv{flex:1;border-radius:2px 2px 0 0;background:rgba(255,255,255,.05)}
+.cm-cv.hi{background:rgba(255,255,255,.2)}
+
+/* Impact tags on monitor */
+.ch-tags{
+  position:absolute;bottom:8px;left:8px;z-index:3;
+  display:flex;flex-direction:column;gap:3px;
+}
+.ch-tag{font:500 6px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--led);background:rgba(0,0,0,.5);padding:3px 6px;border-radius:2px;width:fit-content}
+
+/* Knobs row */
+.ch-knobs{display:flex;gap:12px;justify-content:center;margin-bottom:12px}
+.knob-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.knob{
+  width:28px;height:28px;border-radius:50%;
+  background:radial-gradient(circle at 45% 40%,#555,#2a2a2a);
+  border:1.5px solid var(--muted2);position:relative;
+  box-shadow:0 2px 6px rgba(0,0,0,.3);
+  will-change:transform;
+}
+.knob::after{content:'';position:absolute;top:3px;left:50%;width:1.5px;height:8px;background:var(--led);border-radius:1px;transform-origin:bottom;transform:translateX(-50%)}
+.knob-label{font:300 6px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+/* Channel fader */
+.ch-fader{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--muted2)}
+.ch-fader-label{font:300 7px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);flex-shrink:0}
+.ch-fader-track{flex:1;height:4px;border-radius:2px;background:var(--groove);position:relative;box-shadow:inset 0 1px 3px rgba(0,0,0,.5)}
+.ch-fader-fill{position:absolute;left:0;top:0;bottom:0;border-radius:2px;background:linear-gradient(90deg,var(--led-dim),var(--led));width:75%}
+.ch-fader-val{font:500 9px/1 var(--mono);color:var(--led);font-variant-numeric:tabular-nums;flex-shrink:0}
+
+/* Channel themes */
+.channel[data-p="mealmatch"] .ch-mockup{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.channel[data-p="ballrs"] .ch-mockup{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.channel[data-p="loupe"] .ch-mockup{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.channel[data-p="jetsweat"] .ch-mockup{background:linear-gradient(150deg,#D4582A,#A84420)}
+
+/* Peak limit testimonial */
+.peak-warn{
+  position:absolute;top:12px;right:12px;z-index:10;
+  background:rgba(227,51,51,.9);color:#fff;
+  padding:10px 12px;border-radius:4px;
+  font:300 9px/1.5 var(--mono);max-width:200px;
+  box-shadow:0 4px 16px rgba(227,51,51,.3);
+  opacity:0;transform:translateY(-8px);
+  transition:opacity .4s var(--heavy),transform .4s var(--heavy);
+  pointer-events:none;
+}
+.channel:hover .peak-warn{opacity:1;transform:translateY(0)}
+.pw-label{font:700 7px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;color:rgba(255,255,255,.6)}
+.pw-attr{font:500 7px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--orange);margin-top:6px}
+
+/* ================================================================
+   STEP SEQUENCER (TIMELINE)
+   ================================================================ */
+.sequencer{padding:80px 48px;max-width:900px;margin:0 auto}
+.seq-label{font:500 8px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--orange);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.seq-label::before{content:'';width:14px;height:1.5px;background:var(--orange)}
+.seq-title{font:400 28px/1.2 var(--serif);margin-bottom:40px}
+
+.seq-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+
+/* 4x3 pad grid */
+.seq-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.seq-pad{
+  aspect-ratio:1;border-radius:6px;
+  background:var(--bg2);border:1px solid var(--muted2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;cursor:default;
+  transition:background .15s,border-color .15s,box-shadow .15s;
+  position:relative;overflow:hidden;
+}
+.seq-pad:hover{background:var(--bg3);border-color:var(--led);box-shadow:0 0 12px var(--led-dim)}
+.seq-pad:active{transform:scale(.95)}
+.seq-pad .pad-led{width:4px;height:4px;border-radius:50%;background:var(--muted2);transition:background .15s,box-shadow .15s}
+.seq-pad:hover .pad-led{background:var(--led);box-shadow:0 0 6px var(--led)}
+.seq-pad .pad-label{font:400 7px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);transition:color .15s}
+.seq-pad:hover .pad-label{color:var(--led)}
+.seq-pad .pad-sub{font:300 6px/1 var(--mono);color:var(--muted2)}
+
+/* Preview window */
+.seq-preview{
+  border-radius:8px;overflow:hidden;
+  background:var(--groove);border:2px solid var(--muted2);
+  box-shadow:inset 0 4px 12px rgba(0,0,0,.4);
+  aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.seq-preview img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:grayscale(80%) contrast(1.2);opacity:0;transition:opacity .4s;
+}
+.seq-preview img.active{opacity:1}
+.seq-preview-grain{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;opacity:.25;pointer-events:none;z-index:2;
+}
+.seq-preview-label{
+  position:absolute;bottom:8px;left:8px;z-index:3;
+  font:500 7px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--led);background:rgba(0,0,0,.5);padding:3px 6px;border-radius:2px;
+  opacity:0;transition:opacity .3s;
+}
+.seq-preview-label.active{opacity:1}
+.seq-default-text{font:300 9px/1 var(--mono);color:var(--muted);letter-spacing:.08em;text-transform:uppercase;z-index:1}
+
+/* ================================================================
+   CONTACT
+   ================================================================ */
+.contact{padding:80px 48px;max-width:700px;margin:0 auto;text-align:center;border-top:1px solid var(--muted2)}
+.contact h2{font:400 clamp(24px,4vw,40px)/1.1 var(--serif);margin-bottom:14px}
+.contact p{font:400 12px/1.7 var(--mono);color:var(--muted);max-width:380px;margin:0 auto 36px}
+.cta{display:inline-flex;align-items:center;gap:8px;font:500 11px/1 var(--mono);color:var(--led);border:1.5px solid var(--led);padding:12px 28px;border-radius:100px;transition:background .3s,color .3s,transform .3s var(--spring);cursor:default}
+.cta:hover{background:var(--led);color:var(--bg);transform:scale(1.04)}
+.footer{padding:24px 48px;display:flex;justify-content:space-between;align-items:center;max-width:900px;margin:0 auto;border-top:1px solid var(--muted2)}
+.footer span{font:400 9px/1 var(--mono);color:var(--muted2)}
+.footer-links{display:flex;gap:16px}
+.footer-links a{font:400 9px/1 var(--mono);color:var(--muted);transition:color .3s}
+.footer-links a:hover{color:var(--led)}
+
+@media(max-width:900px){
+  .channel{width:85vw;padding:50px 16px 16px}
+  .vu-nav.morphed{width:calc(100% - 24px);left:12px;right:12px;margin-left:0}
+  .seq-layout{grid-template-columns:1fr;gap:24px}
+  .sequencer,.contact{padding:60px 20px}
+  .footer{padding:20px;flex-direction:column;gap:8px}
+}
+</style>
+</head>
+<body>
+
+<div class="metal-tex"></div>
+
+<!-- ================================================================
+     MASTER FADER BOOT
+     ================================================================ -->
+<div class="boot" id="boot">
+  <div class="boot-label">Master Output</div>
+  <div class="fader-wrap" id="faderWrap">
+    <div class="fader-track"></div>
+    <div class="fader-fill" id="faderFill"></div>
+    <div class="fader-marks">
+      <span class="fader-mark">+12</span><span class="fader-mark">+6</span>
+      <span class="fader-mark">0</span><span class="fader-mark">-6</span>
+      <span class="fader-mark">-12</span><span class="fader-mark">-∞</span>
+    </div>
+    <div class="fader-knob" id="faderKnob"></div>
+  </div>
+  <div class="boot-pct" id="bootPct">0%</div>
+  <div class="boot-hint">Drag fader to 100%</div>
+</div>
+
+<!-- ================================================================
+     MAIN CONSOLE
+     ================================================================ -->
+<div class="console" id="console">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <span class="tb-name">PAUL TAYLOR</span>
+    <span class="tb-headline" id="tbHeadline"></span>
+    <div class="tb-right">
+      <div class="tb-status"><div class="tb-dot"></div>STABLE</div>
+    </div>
+  </div>
+
+  <!-- VU Meter Nav -->
+  <div class="vu-nav" id="vuNav">
+    <div class="vu-bars" id="vuBars"></div>
+    <div class="vu-sep"></div>
+    <a href="#work">Work</a>
+    <a href="#sequencer">Timeline</a>
+    <a href="#contact">Contact</a>
+    <div class="vu-sep"></div>
+    <span class="vu-data" id="vuData">BPM: 120</span>
+  </div>
+
+  <!-- ================================================================
+       CHANNEL STRIP REEL
+       ================================================================ -->
+  <section class="reel" id="work">
+    <div class="reel-runway" id="reelRunway">
+      <div class="reel-sticky">
+        <div class="reel-header">
+          <div class="rh-label">Channel Strips</div>
+          <div class="rh-title">Selected Work</div>
+        </div>
+
+        <div class="reel-track" id="reelTrack">
+
+          <!-- MealMatch AI -->
+          <div class="channel" data-p="mealmatch">
+            <div class="peak-warn">
+              <div class="pw-label">Peak Limit // Microsoft</div>
+              "He consistently transformed complex challenges into elegant, user-centered solutions."
+              <div class="pw-attr">Alex Leite — Sr. Director</div>
+            </div>
+            <div class="ch-label">CH 01 — Case Study</div>
+            <div class="ch-name">MealMatch AI</div>
+            <div class="ch-sub">AI UX & Research</div>
+            <div class="ch-monitor">
+              <div class="ch-mockup"><div class="cm"><div class="cm-top"><span>9:41</span><span>MealMatch</span></div><div class="cm-h">Your Plan</div><div class="cm-s">3 meals curated</div><div class="cm-bl"><div class="cm-b"></div><div class="cm-b"></div><div class="cm-b"></div></div><div class="cm-rl"><div class="cm-r"></div><div class="cm-r"></div><div class="cm-r"></div></div></div></div>
+              <div class="ch-tags"><span class="ch-tag">40+ Participants</span><span class="ch-tag">Design System Lead</span></div>
+            </div>
+            <div class="ch-knobs">
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">Research</span></div>
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">Systems</span></div>
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">AI UX</span></div>
+            </div>
+            <div class="ch-fader"><span class="ch-fader-label">Level</span><div class="ch-fader-track"><div class="ch-fader-fill" style="width:85%"></div></div><span class="ch-fader-val">-3dB</span></div>
+          </div>
+
+          <!-- Ballrs -->
+          <div class="channel" data-p="ballrs">
+            <div class="ch-label">CH 02 — Case Study</div>
+            <div class="ch-name">Ballrs</div>
+            <div class="ch-sub">React Native / TypeScript</div>
+            <div class="ch-monitor">
+              <div class="ch-mockup"><div class="cm"><div class="cm-top"><span>9:41</span><span>Ballrs</span></div><div class="cm-h">Daily Pick</div><div class="cm-s">Who scored more?</div><div class="cm-bl"><div class="cm-b" style="height:45px"></div><div class="cm-b" style="height:45px"></div></div><div class="cm-rl"><div class="cm-r"></div><div class="cm-r"></div></div></div></div>
+              <div class="ch-tags"><span class="ch-tag">Solo Ship</span><span class="ch-tag">App Store Live</span></div>
+            </div>
+            <div class="ch-knobs">
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">RN</span></div>
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">TS</span></div>
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">Ship</span></div>
+            </div>
+            <div class="ch-fader"><span class="ch-fader-label">Level</span><div class="ch-fader-track"><div class="ch-fader-fill" style="width:92%"></div></div><span class="ch-fader-val">-1dB</span></div>
+          </div>
+
+          <!-- Loupe -->
+          <div class="channel" data-p="loupe">
+            <div class="peak-warn">
+              <div class="pw-label">Peak Limit // Design</div>
+              "He is strong in all areas of UX from research to design, with an aptitude for prototyping."
+              <div class="pw-attr">Kim Hartford — Product Designer</div>
+            </div>
+            <div class="ch-label">CH 03 — Shipped App</div>
+            <div class="ch-name">Loupe</div>
+            <div class="ch-sub">macOS / Vision AI</div>
+            <div class="ch-monitor">
+              <div class="ch-mockup"><div class="cm"><div class="cm-top"><span>Loupe</span><span>v1.2</span></div><div class="cm-h">Library</div><div class="cm-s">2,481 tagged</div><div class="cm-bl"><div class="cm-b"></div><div class="cm-b"></div><div class="cm-b"></div></div><div class="cm-rl"><div class="cm-r"></div><div class="cm-r"></div><div class="cm-r"></div><div class="cm-r"></div></div></div></div>
+              <div class="ch-tags"><span class="ch-tag">On-Device AI</span><span class="ch-tag">Zero Cloud</span></div>
+            </div>
+            <div class="ch-knobs">
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">Swift</span></div>
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">Vision</span></div>
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">ML</span></div>
+            </div>
+            <div class="ch-fader"><span class="ch-fader-label">Level</span><div class="ch-fader-track"><div class="ch-fader-fill" style="width:80%"></div></div><span class="ch-fader-val">-4dB</span></div>
+          </div>
+
+          <!-- JetSweat -->
+          <div class="channel" data-p="jetsweat">
+            <div class="peak-warn">
+              <div class="pw-label">Peak Limit // JetSweat</div>
+              "A unique ability to distill complex features into clean designs and seamless user flows."
+              <div class="pw-attr">Alexandra Dantzig — CEO</div>
+            </div>
+            <div class="ch-label">CH 04 — Case Study</div>
+            <div class="ch-name">JetSweat</div>
+            <div class="ch-sub">Growth / SaaS / CMS</div>
+            <div class="ch-monitor">
+              <div class="ch-mockup"><div class="cm"><div class="cm-top"><span>9:41</span><span>JetSweat</span></div><div class="cm-h">Dashboard</div><div class="cm-s">Analytics</div><div class="cm-ch"><div class="cm-cv" style="height:25%"></div><div class="cm-cv" style="height:45%"></div><div class="cm-cv hi" style="height:75%"></div><div class="cm-cv" style="height:38%"></div><div class="cm-cv hi" style="height:92%"></div><div class="cm-cv" style="height:55%"></div><div class="cm-cv hi" style="height:68%"></div></div></div></div>
+              <div class="ch-tags"><span class="ch-tag">+25% Sign-ups</span><span class="ch-tag">-75% Manual</span></div>
+            </div>
+            <div class="ch-knobs">
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">PLG</span></div>
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">CMS</span></div>
+              <div class="knob-wrap"><div class="knob" data-rot="0"></div><span class="knob-label">Conv</span></div>
+            </div>
+            <div class="ch-fader"><span class="ch-fader-label">Level</span><div class="ch-fader-track"><div class="ch-fader-fill" style="width:95%"></div></div><span class="ch-fader-val">0dB</span></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       STEP SEQUENCER
+       ================================================================ -->
+  <section class="sequencer" id="sequencer">
+    <div class="seq-label">Step Sequencer</div>
+    <h2 class="seq-title">Career Timeline</h2>
+    <div class="seq-layout">
+      <div class="seq-grid" id="seqGrid">
+        <div class="seq-pad" data-img="0"><div class="pad-led"></div><span class="pad-label">London</span><span class="pad-sub">PM</span></div>
+        <div class="seq-pad" data-img="1"><div class="pad-led"></div><span class="pad-label">Strategy</span><span class="pad-sub">Roadmap</span></div>
+        <div class="seq-pad" data-img="2"><div class="pad-led"></div><span class="pad-label">Netflix</span><span class="pad-sub">Photo</span></div>
+        <div class="seq-pad" data-img="3"><div class="pad-led"></div><span class="pad-label">HBO</span><span class="pad-sub">Photo</span></div>
+        <div class="seq-pad" data-img="4"><div class="pad-led"></div><span class="pad-label">Nat Geo</span><span class="pad-sub">Photo</span></div>
+        <div class="seq-pad" data-img="2"><div class="pad-led"></div><span class="pad-label">Editorial</span><span class="pad-sub">Shoot</span></div>
+        <div class="seq-pad" data-img="1"><div class="pad-led"></div><span class="pad-label">UX</span><span class="pad-sub">Design</span></div>
+        <div class="seq-pad" data-img="0"><div class="pad-led"></div><span class="pad-label">Systems</span><span class="pad-sub">Tokens</span></div>
+        <div class="seq-pad" data-img="3"><div class="pad-led"></div><span class="pad-label">React</span><span class="pad-sub">Native</span></div>
+        <div class="seq-pad" data-img="4"><div class="pad-led"></div><span class="pad-label">Swift</span><span class="pad-sub">macOS</span></div>
+        <div class="seq-pad" data-img="1"><div class="pad-led"></div><span class="pad-label">Ship</span><span class="pad-sub">Store</span></div>
+        <div class="seq-pad" data-img="0"><div class="pad-led"></div><span class="pad-label">Build</span><span class="pad-sub">2026</span></div>
+      </div>
+      <div class="seq-preview" id="seqPreview">
+        <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=500&h=375&fit=crop" alt="" data-idx="0" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=500&h=375&fit=crop" alt="" data-idx="1" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=500&h=375&fit=crop" alt="" data-idx="2" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=375&fit=crop" alt="" data-idx="3" loading="lazy">
+        <img src="https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=500&h=375&fit=crop" alt="" data-idx="4" loading="lazy">
+        <div class="seq-preview-grain"></div>
+        <div class="seq-preview-label" id="seqLabel">—</div>
+        <span class="seq-default-text" id="seqDefault">Hover a pad to preview</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <h2>Got a project?<br>Let's talk.</h2>
+    <p>Open to full-time roles, contract work, and collaborations. Building something that matters? I want to hear about it.</p>
+    <a href="mailto:hello@paultaylormade.com" class="cta">hello@paultaylormade.com</a>
+  </section>
+  <footer class="footer">
+    <span>&copy; 2026 Paul Taylor. The Soundboard.</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── MASTER FADER ── */
+  const boot=document.getElementById('boot');
+  const faderKnob=document.getElementById('faderKnob');
+  const faderFill=document.getElementById('faderFill');
+  const bootPct=document.getElementById('bootPct');
+  const consoleEl=document.getElementById('console');
+  const tbHeadline=document.getElementById('tbHeadline');
+  const faderWrap=document.getElementById('faderWrap');
+  let faderDrag=false,faderStart=0,currentBottom=8;
+  const minBottom=8,maxBottom=210; // full range the knob can travel
+  let powered=false;
+
+  // Set initial inline style so reads work
+  faderKnob.style.bottom=currentBottom+'px';
+
+  function updateFader(clientY){
+    if(!faderDrag||powered)return;
+    const dy=faderStart-clientY;
+    currentBottom=Math.max(minBottom,Math.min(maxBottom,currentBottom+dy));
+    faderStart=clientY; // track continuously, not from origin
+    faderKnob.style.bottom=currentBottom+'px';
+    const pct=Math.round(((currentBottom-minBottom)/(maxBottom-minBottom))*100);
+    faderFill.style.height=(((currentBottom-minBottom)/(maxBottom-minBottom))*100)+'%';
+    bootPct.textContent=pct+'%';
+    if(pct>60)bootPct.classList.add('hot');else bootPct.classList.remove('hot');
+    if(pct>=95)powerOn();
+  }
+
+  faderKnob.addEventListener('mousedown',e=>{faderDrag=true;faderStart=e.clientY;e.preventDefault()});
+  document.addEventListener('mousemove',e=>updateFader(e.clientY));
+  document.addEventListener('mouseup',()=>{faderDrag=false});
+  // Touch support
+  faderKnob.addEventListener('touchstart',e=>{faderDrag=true;faderStart=e.touches[0].clientY;e.preventDefault()},{passive:false});
+  document.addEventListener('touchmove',e=>{updateFader(e.touches[0].clientY)},{passive:false});
+  document.addEventListener('touchend',()=>{faderDrag=false});
+
+  function powerOn(){
+    if(powered)return;powered=true;
+    faderKnob.classList.add('powered');
+    bootPct.textContent='100%';bootPct.classList.add('hot');
+    setTimeout(()=>{boot.classList.add('off');consoleEl.classList.add('on');typeLED()},500);
+  }
+
+  /* ── LED HEADLINE TYPING ── */
+  const ledText='I design apps. Then I build them.';
+  function typeLED(){
+    let i=0;
+    (function t(){
+      if(i>ledText.length)return;
+      tbHeadline.textContent=ledText.substring(0,i);
+      i++;setTimeout(t,50);
+    })();
+  }
+
+  /* ── VU METER BARS ── */
+  const vuBars=document.getElementById('vuBars');
+  const BAR_COUNT=12;
+  const barEls=[];
+  for(let i=0;i<BAR_COUNT;i++){
+    const b=document.createElement('div');
+    b.className='vu-bar';b.style.height='2px';
+    vuBars.appendChild(b);barEls.push(b);
+  }
+
+  /* ── SCROLL VELOCITY FOR VU ── */
+  let lastSy=0,lastT=performance.now(),velocity=0;
+  const vuNav=document.getElementById('vuNav');
+  const vuData=document.getElementById('vuData');
+
+  /* ── HORIZONTAL REEL ── */
+  const reelRunway=document.getElementById('reelRunway');
+  const reelTrack=document.getElementById('reelTrack');
+  const channels=reelTrack.querySelectorAll('.channel');
+  const vh=()=>window.innerHeight;
+  const chanW=()=>{let w=0;channels.forEach(c=>w+=c.offsetWidth);return w};
+  let hDist=chanW()-window.innerWidth;
+  reelRunway.style.height=(vh()-44+Math.max(0,hDist))+'px';
+  window.addEventListener('resize',()=>{hDist=chanW()-window.innerWidth;reelRunway.style.height=(vh()-44+Math.max(0,hDist))+'px'});
+
+  let vuMorphed=false;
+
+  function onScroll(){
+    const sy=window.scrollY;
+    const now=performance.now();
+    const dt=now-lastT;
+    if(dt>0)velocity=Math.min(3000,Math.abs(sy-lastSy)/(dt/1000));
+    lastSy=sy;lastT=now;
+
+    // VU bars respond to velocity
+    const velNorm=Math.min(1,velocity/1500);
+    barEls.forEach((b,i)=>{
+      const base=2;
+      const maxH=22;
+      const threshold=(i/BAR_COUNT);
+      const h=velNorm>threshold?base+(velNorm-threshold)*maxH*3:base;
+      b.style.height=Math.min(maxH,h)+'px';
+    });
+
+    // BPM from velocity
+    const bpm=Math.round(80+velNorm*100);
+    vuData.textContent='BPM: '+bpm;
+
+    // VU morph
+    const workTop=reelRunway.getBoundingClientRect().top;
+    if(workTop<vh()*.5&&!vuMorphed){vuMorphed=true;vuNav.classList.add('morphed')}
+    else if(workTop>=vh()*.5&&vuMorphed){vuMorphed=false;vuNav.classList.remove('morphed')}
+
+    // Horizontal scroll
+    if(workTop<=44){
+      const scrolled=Math.abs(workTop-44);
+      const max=reelRunway.offsetHeight-(vh()-44);
+      const progress=Math.min(1,scrolled/max);
+      reelTrack.style.transform=`translateX(${-progress*hDist}px)`;
+
+      // Rotate knobs based on progress
+      const knobs=document.querySelectorAll('.knob');
+      knobs.forEach((k,i)=>{
+        const rotation=progress*270+i*30;
+        k.style.transform=`rotate(${rotation}deg)`;
+      });
+    }
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ── STEP SEQUENCER ── */
+  const seqPreview=document.getElementById('seqPreview');
+  const seqLabel=document.getElementById('seqLabel');
+  const seqDefault=document.getElementById('seqDefault');
+  const previewImgs=seqPreview.querySelectorAll('img');
+  document.querySelectorAll('.seq-pad').forEach(pad=>{
+    pad.addEventListener('mouseenter',()=>{
+      const idx=pad.getAttribute('data-img');
+      previewImgs.forEach(img=>{img.classList.toggle('active',img.getAttribute('data-idx')===idx)});
+      seqLabel.textContent=pad.querySelector('.pad-label').textContent+' // '+pad.querySelector('.pad-sub').textContent;
+      seqLabel.classList.add('active');
+      seqDefault.style.display='none';
+    });
+    pad.addEventListener('mouseleave',()=>{
+      previewImgs.forEach(img=>img.classList.remove('active'));
+      seqLabel.classList.remove('active');
+      seqDefault.style.display='';
+    });
+  });
+
+  /* ── SMOOTH NAV ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+
+})();
+</script>
+</body>
+</html>

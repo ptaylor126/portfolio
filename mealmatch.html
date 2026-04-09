@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MealMatch AI — Case Study</title>
+<meta name="description" content="MealMatch AI case study. Lead Designer, founding team.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F9F9F9;--ink:#000;--green:#4CAF50;--grey:#6B6B6B;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --frame:12px;
+  --pad:clamp(24px,5vw,64px);
+}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);overflow-x:hidden;line-height:1.6}
+a{color:inherit}img{display:block;max-width:100%}
+::selection{background:var(--green);color:var(--ink)}
+
+.frame{position:fixed;inset:0;border:var(--frame) solid var(--ink);pointer-events:none;z-index:900}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+
+/* ================================================================
+   TOP BAR
+   ================================================================ */
+.topbar{
+  position:sticky;top:var(--frame);z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:48px clamp(32px,8vw,96px);
+  background:var(--bg);
+}
+.topbar-name{font:700 16px/1 var(--mono);color:var(--ink);text-decoration:none}
+.topbar-menu{
+  font:600 12px/1 var(--mono);color:var(--ink);letter-spacing:.03em;
+  cursor:pointer;background:none;border:none;border-radius:0;
+  outline:none;-webkit-appearance:none;appearance:none;
+  padding:0;transition:color .12s;
+}
+.topbar-menu:hover{color:var(--green)}
+.topbar-menu:focus{outline:none}
+
+/* Dropdown menu */
+.dropdown{
+  position:fixed;top:calc(var(--frame) + 70px);right:clamp(32px,8vw,96px);
+  z-index:200;
+  background:var(--bg);border:2px solid var(--ink);
+  box-shadow:8px 8px 0 var(--ink);
+  padding:24px 28px;min-width:250px;
+  clip-path:inset(0 0 100% 0);
+  pointer-events:none;
+  transition:clip-path .12s linear;
+}
+.dropdown.open{
+  clip-path:inset(0 0 0 0);
+  pointer-events:auto;
+}
+.dd-link{
+  display:block;font:800 20px/1 var(--sans);text-transform:uppercase;
+  letter-spacing:-.02em;text-decoration:none;color:var(--ink);
+  padding:8px 0;transition:color .12s;
+}
+.dd-link:hover{color:var(--green)}
+.dd-sep{height:1px;background:var(--ink);margin:16px 0}
+.dd-label{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555;margin-bottom:12px}
+.dd-case{
+  display:block;font:600 13px/1 var(--mono);text-decoration:none;color:var(--ink);
+  padding:6px 8px;margin-bottom:4px;transition:background .12s,color .12s;
+}
+.dd-case:hover{color:var(--green)}
+.dd-case.active{background:var(--green);color:var(--ink)}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+.case-hero{
+  padding:calc(var(--frame) + 20px) clamp(32px,8vw,96px) 60px;
+}
+.case-hero h1{
+  font:900 clamp(36px,8vw,96px)/0.85 var(--sans);
+  text-transform:uppercase;letter-spacing:-.05em;
+  margin-bottom:16px;
+}
+.case-hero-meta{
+  display:flex;flex-wrap:wrap;gap:12px;
+  font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.03em;
+}
+.case-hero-meta span{
+  padding:6px 14px;border:2px solid var(--ink);
+  transition:background .15s,color .15s;cursor:default;
+}
+.case-hero-meta span:hover{background:var(--green);color:var(--ink)}
+
+/* ================================================================
+   PROGRESS BAR
+   ================================================================ */
+.progress-track{
+  position:fixed;right:calc(var(--frame) + 1px);
+  top:var(--frame);bottom:var(--frame);
+  width:3px;background:rgba(0,0,0,.06);z-index:800;
+}
+.progress-fill{
+  position:absolute;top:0;left:0;width:100%;height:0%;
+  background:var(--green);transition:height .05s linear;
+}
+
+/* ================================================================
+   FLOATING MINIMAP NAV
+   ================================================================ */
+.minimap{
+  position:fixed;right:calc(var(--frame) + 20px);
+  top:50%;transform:translateY(-50%);
+  z-index:200;
+  display:flex;flex-direction:column;gap:0;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+  background:var(--bg);
+  padding:8px 0;
+}
+.minimap.on{opacity:1;pointer-events:auto}
+
+.minimap a{
+  display:block;padding:5px 10px;
+  font:600 9px/1 var(--mono);letter-spacing:.04em;
+  color:#555;text-decoration:none;
+  text-transform:uppercase;white-space:nowrap;
+  transition:color .12s,background .12s;
+}
+.minimap a:hover{color:var(--ink)}
+.minimap a.active{
+  background:var(--ink);color:var(--bg);
+}
+
+/* ================================================================
+   FULL-WIDTH CONTENT
+   ================================================================ */
+.case-body{
+  padding:0 clamp(32px,8vw,96px);
+  padding-right:calc(clamp(32px,8vw,96px) + 140px);
+  border-top:2px solid var(--ink);
+}
+
+/* Section label — inline above content */
+.case-section{padding-top:64px}
+.case-label{
+  font:700 12px/1.3 var(--mono);
+  text-transform:uppercase;letter-spacing:.03em;
+  color:var(--ink);margin-bottom:24px;
+  padding:6px 8px;display:inline-block;
+}
+.case-label .lb{color:rgba(0,0,0,.2)}
+.case-label.highlight{background:var(--green);color:var(--ink)}
+.case-label.highlight .lb{color:rgba(0,0,0,.35)}
+.problem-headline{font:900 clamp(28px,4vw,52px)/1.05 var(--sans);letter-spacing:-.04em;margin-bottom:20px}
+
+/* Content */
+.case-content{padding:0 0 80px}
+
+.case-content h2{
+  font:800 clamp(24px,3vw,36px)/1.1 var(--sans);
+  letter-spacing:-.03em;margin-bottom:20px;
+}
+.case-content h3{
+  font:700 18px/1.2 var(--sans);margin-bottom:12px;margin-top:32px;
+}
+.case-content p{
+  font:400 15px/1.8 var(--sans);color:#555;
+  max-width:58ch;margin-bottom:16px;
+}
+.case-content ul{
+  font:400 15px/1.8 var(--sans);color:#555;
+  max-width:58ch;margin-bottom:16px;padding-left:20px;
+}
+.case-content li{margin-bottom:8px}
+
+/* Image placeholder */
+.case-img{
+  width:100%;aspect-ratio:16/9;background:#ddd;
+  margin:24px 0;
+  display:flex;align-items:center;justify-content:center;
+  font:500 12px/1 var(--mono);color:rgba(0,0,0,.25);text-transform:uppercase;letter-spacing:.08em;
+}
+.case-img.square{aspect-ratio:1}
+.case-img.tall{aspect-ratio:3/4}
+.case-img-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}
+.ds-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:32px 0}
+.ds-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin:32px 0;align-items:start}
+.ds-grid-2 img{width:100%;display:block}
+.ds-grid-3 img{width:100%;display:block;height:400px;object-fit:contain;object-position:top}
+.case-img-row .case-img{margin:0}
+
+/* Quote */
+.case-quote{
+  font:500 clamp(18px,2vw,24px)/1.4 var(--sans);
+  color:var(--ink);margin:32px 0;padding-left:20px;
+  border-left:3px solid var(--ink);max-width:560px;
+}
+
+/* ================================================================
+   SECTION 1 — phone + stats split
+   ================================================================ */
+.s1-split{
+  display:grid;grid-template-columns:auto 1fr;gap:clamp(48px,8vw,120px);
+  align-items:start;margin-top:40px;
+}
+.s1-phone{flex-shrink:0}
+.s1-phone img{
+  width:360px;max-height:80vh;height:auto;object-fit:contain;
+  border-radius:32px;
+  box-shadow:0 24px 48px rgba(0,0,0,.15),0 8px 16px rgba(0,0,0,.1);
+}
+.s1-stats{display:flex;flex-direction:column;gap:36px;margin-top:25%}
+.s1-stat-num{
+  font:900 clamp(28px,4vw,48px)/1 var(--sans);
+  text-transform:uppercase;letter-spacing:-.03em;
+  color:var(--ink);
+}
+.s1-stat-label{
+  font:400 11px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#555;
+  margin-top:4px;
+}
+@media(max-width:600px){
+  .s1-split{grid-template-columns:1fr;text-align:center}
+  .s1-phone img{width:200px;margin:0 auto}
+  .s1-stats{align-items:center}
+}
+
+/* ================================================================
+   RESEARCH SECTION — brutalist inline
+   ================================================================ */
+.research{margin-top:48px;margin-bottom:40px}
+.r-label{font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#555;margin-bottom:24px}
+.r-divider{height:2px;background:var(--ink);margin:64px 0}
+
+/* Stats */
+.r-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin:48px 0}
+.r-stat{padding-top:20px}
+.r-stat-num{font:900 clamp(40px,5vw,64px)/1 var(--sans);letter-spacing:-.03em;margin-bottom:12px}
+.r-stat-num span{font-size:.7em}
+.r-stat-desc{font:400 14px/1.6 var(--sans);color:#555}
+
+/* Quotes */
+.r-quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:16px}
+.r-quote{border:2px solid var(--ink);padding:20px}
+.r-quote-text{font:500 14px/1.6 var(--sans);color:var(--ink);margin-bottom:12px}
+.r-quote-src{font:400 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555}
+
+/* Feature bars */
+.r-features{margin-top:24px}
+.r-bars{display:flex;flex-direction:column;gap:16px}
+.r-bar{display:flex;align-items:center;gap:12px}
+.r-bar-name{font:400 13px/1 var(--sans);color:#555;width:160px;flex-shrink:0}
+.r-bar-track{flex:1;height:28px;background:transparent;border:1px solid var(--ink);position:relative;overflow:hidden}
+.r-bar-fill{height:100%;background:var(--green);width:0;transition:width .6s ease-out}
+.r-bar-fill.animated{/* width set by JS */}
+.r-bar-pct{font:500 11px/1 var(--mono);color:#555;flex-shrink:0;width:32px}
+
+/* Planning habits */
+.r-habits{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.r-habit{border:2px solid var(--ink);padding:16px}
+.r-habit-num{font:800 28px/1 var(--sans);letter-spacing:-.02em;margin-bottom:4px}
+.r-habit-desc{font:400 12px/1.4 var(--sans);color:#555}
+
+/* Method bar */
+.r-method{display:flex;gap:48px;margin-top:8px}
+.r-method-item{display:flex;align-items:baseline;gap:10px}
+.r-method-num{font:800 32px/1 var(--sans);letter-spacing:-.02em}
+.r-method-text{font:400 13px/1.3 var(--sans);color:#555}
+
+@media(max-width:800px){
+  .r-stats,.r-quotes{grid-template-columns:1fr}
+  .r-features{grid-template-columns:1fr}
+  .r-habits{grid-template-columns:1fr}
+  .r-method{flex-direction:column;gap:24px}
+  .r-bar-name{width:120px}
+}
+
+/* ================================================================
+   FILMSTRIP
+   ================================================================ */
+.filmstrip-controls{
+  display:flex;gap:8px;justify-content:flex-end;
+  margin-bottom:8px;
+}
+.filmstrip-btn{
+  width:48px;height:48px;
+  border:1px solid var(--ink);border-radius:0;
+  background:var(--bg);color:var(--ink);
+  font:500 14px/1 var(--mono);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  white-space:nowrap;
+  transition:background .12s,color .12s;
+  -webkit-appearance:none;appearance:none;padding:0;
+  outline:none;
+}
+.filmstrip-btn:focus{outline:none}
+.filmstrip-btn:hover{background:var(--ink);color:var(--bg)}
+
+.filmstrip-wrap{
+  width:calc(100% + 32px);margin-left:-16px;
+  overflow-x:auto;overflow-y:visible;
+  margin-top:40px;margin-bottom:0;padding-bottom:24px;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  -ms-overflow-style:none;scrollbar-width:none;
+}
+.filmstrip-wrap::-webkit-scrollbar{display:none}
+.filmstrip{
+  display:flex;flex-wrap:nowrap;gap:32px;
+  width:max-content;
+  padding:24px 48px 24px 16px;
+  margin-left:0;
+}
+.filmstrip-card{flex-shrink:0;width:260px;scroll-snap-align:center;position:relative}
+img.filmstrip-img{
+  width:260px;height:auto;object-fit:cover;
+  border-radius:0;border:none;
+  background:transparent;display:block;
+  filter:drop-shadow(0 8px 16px rgba(0,0,0,.12));
+}
+.filmstrip-cap{
+  font:500 10px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#555;
+  margin-top:20px;position:relative;z-index:1;
+}
+
+/* ================================================================
+   CALLOUT BOX
+   ================================================================ */
+.callout-box{
+  border:none;
+  padding:0 0 0 16px;margin:8px 0 0;
+  max-width:fit-content;
+  position:relative;
+}
+.callout-box::before{
+  content:'';position:absolute;left:0;top:0;
+  width:2px;height:0;
+  background:var(--green);
+  transition:height .6s ease-out;
+}
+.callout-box .callout-tag,
+.callout-box .callout-text{
+  opacity:0;
+  transition:opacity .4s ease-out .3s;
+}
+.callout-box.reveal::before{height:100%}
+.callout-box.reveal .callout-tag,
+.callout-box.reveal .callout-text{opacity:1}
+
+/* Filmstrip shift annotation */
+.filmstrip-shift{
+  flex-shrink:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:6px;width:32px;
+  align-self:stretch;
+}
+.filmstrip-shift-line{
+  width:1px;flex:1;
+  background:rgba(0,0,0,.15);
+}
+.filmstrip-shift-label{
+  font:700 10px/1 var(--mono);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--green);
+  writing-mode:vertical-lr;
+  white-space:nowrap;
+}
+.callout-tag{
+  font:700 11px/1 var(--mono);letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink);
+  margin-bottom:12px;
+}
+.callout-tag .lb{color:rgba(0,0,0,.2)}
+.callout-text{
+  font:400 13px/1.7 var(--sans);color:#999;
+  max-width:65ch;margin:0;
+}
+
+/* ================================================================
+   FUNNEL
+   ================================================================ */
+.funnel{max-width:580px}
+.funnel-row{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:10px;
+}
+.funnel-label{
+  font:500 11px/1 var(--mono);letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink);
+  width:180px;flex-shrink:0;text-align:right;
+}
+.funnel-track{
+  flex:1;height:28px;background:rgba(0,0,0,.04);
+  border-radius:4px;overflow:hidden;
+}
+.funnel-bar{
+  height:100%;background:var(--green);
+  border-radius:4px;
+  width:0;transition:width .8s ease-out;
+}
+.funnel-row:nth-child(2) .funnel-bar{opacity:.8}
+.funnel-row:nth-child(3) .funnel-bar{opacity:.6}
+.funnel-row:nth-child(4) .funnel-bar{opacity:.5}
+.funnel-row:nth-child(5) .funnel-bar{opacity:.4}
+.funnel-num{
+  font:700 13px/1 var(--mono);color:var(--ink);
+  width:36px;flex-shrink:0;
+}
+
+/* ================================================================
+   HARD CALLS
+   ================================================================ */
+.hc-block{
+  border-top:1px solid var(--ink);
+  padding:48px 0;
+}
+.hc-grid{
+  display:grid;grid-template-columns:5fr 7fr;gap:48px;
+  align-items:start;
+}
+.hc-tag{
+  font:700 11px/1 var(--mono);letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink);
+  margin-bottom:16px;
+}
+.hc-tag .lb{color:rgba(0,0,0,.2)}
+.hc-title{
+  font:700 22px/1.2 var(--sans);letter-spacing:-.02em;
+  margin-bottom:16px;
+}
+.hc-body{
+  font:400 15px/1.8 var(--sans);color:#555;
+  max-width:48ch;
+}
+.hc-visual{display:flex;align-items:flex-start}
+
+/* Call 01 — document style */
+.hc-doc{
+  width:100%;height:auto;display:block;
+  border:1px solid var(--ink);border-radius:0;
+}
+
+/* Call 02 — quote cards */
+.hc-quotes-grid{
+  display:flex;flex-direction:column;gap:16px;width:100%;
+}
+.hc-quote-card{
+  border:1px solid var(--ink);border-radius:0;
+  padding:24px;
+}
+.hc-quote-text{
+  font:500 14px/1.6 var(--sans);color:var(--ink);
+  margin-bottom:10px;
+}
+.hc-quote-src{
+  font:400 9px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#555;
+}
+
+/* Call 03 — UI artifact style */
+.hc-visual-center{justify-content:center}
+.hc-ui-wrap{
+  max-width:400px;
+  padding:32px;
+  box-shadow:0 20px 25px -5px rgba(0,0,0,.3);
+  border-radius:24px;
+}
+.hc-ui{
+  width:100%;height:auto;display:block;
+  border-radius:24px;
+  overflow:hidden;
+  border:none;box-shadow:none;
+}
+
+@media(max-width:800px){
+  .hc-grid{grid-template-columns:1fr;gap:32px}
+  .hc-ui{max-width:300px;margin:0 auto}
+}
+
+/* ================================================================
+   BEFORE / AFTER COMPARISONS
+   ================================================================ */
+.ba-block{
+  border-top:1px solid var(--ink);
+  padding:48px 0;
+}
+.ba-context{margin-bottom:32px}
+.ba-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;
+  align-items:start;overflow:visible;padding-bottom:80px;
+}
+.ba-col{display:flex;flex-direction:column;align-items:center}
+.ba-label{
+  font:700 10px/1 var(--mono);letter-spacing:.08em;
+  text-transform:uppercase;color:#555;
+  margin-bottom:16px;
+}
+.ba-phone-wrap{position:relative}
+.ba-annotated{position:relative}
+.ba-marker{
+  position:absolute;width:24px;height:24px;
+  background:var(--green);color:var(--ink);
+  font:700 11px/24px var(--mono);text-align:center;
+  border-radius:50%;z-index:2;
+}
+.ba-legend{margin-top:44px;max-width:260px}
+.ba-legend p{
+  font:400 12px/1.6 var(--sans);color:#555;
+  margin-bottom:8px;
+}
+.ba-legend-num{
+  font:700 10px/1 var(--mono);color:var(--ink);
+  margin-right:6px;
+}
+.ba-phone{
+  width:260px;height:auto;display:block;
+  border-radius:2.5rem;
+  box-shadow:0 20px 25px -5px rgba(0,0,0,.3);
+}
+.ba-quote{
+  background:#f0f0f0;padding:20px;margin-top:16px;
+}
+.ba-quote-text{
+  font:500 14px/1.6 var(--sans);color:var(--ink);
+  margin-bottom:8px;
+}
+.ba-quote-src{
+  font:400 9px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#555;
+}
+
+@media(max-width:800px){
+  .ba-row{grid-template-columns:1fr;gap:32px}
+  .ba-phone{width:200px}
+}
+
+/* ================================================================
+   KOFI — SPLIT-SCREEN + VAULT
+   ================================================================ */
+.kofi-rail{
+  position:relative;
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  min-height:1000vh;
+}
+.kofi-stage-col{position:relative;border-right:1px solid var(--ink);transition:border-color .5s}
+.kofi-stage-col.no-border{border-right-color:transparent}
+.kofi-stage{
+  position:sticky;top:var(--frame);
+  height:calc(100vh - var(--frame)*2);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;background:#f5f5f3;
+}
+.kofi-floor{display:none}
+
+/* Characters */
+.kofi-char{
+  position:absolute;max-height:400px;max-width:70%;
+  width:auto;height:auto;object-fit:contain;
+  opacity:0;transition:opacity .5s ease;z-index:4;
+}
+.kofi-char.active{opacity:1}
+.kofi-char-outline{
+  z-index:5;
+  filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 4px #fff);
+}
+.kofi-char[data-jitter]{transition:opacity .6s ease}
+.kofi-jitter-label{
+  position:absolute;top:20px;left:50%;transform:translateX(-50%);
+  font:700 10px/1 var(--mono);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink);
+  background:var(--bg);border:1px solid var(--ink);
+  padding:6px 14px;white-space:nowrap;
+  opacity:0;transition:opacity .3s;z-index:10;
+}
+.kofi-jitter-label.active{opacity:1}
+
+/* Vertical column (stage 5) */
+.kofi-vee{
+  position:absolute;
+  display:flex;flex-direction:column;gap:48px;
+  align-items:center;justify-content:center;
+  height:80%;
+  opacity:0;transition:opacity 1.5s;z-index:4;
+}
+.kofi-vee.active{opacity:1}
+.kofi-vee-cell{
+  width:120px;height:120px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.kofi-vee-cell img{
+  max-height:100%;max-width:100%;object-fit:contain;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .4s ease-out,transform .4s ease-out;
+}
+.kofi-vee-cell img.pop{opacity:1;transform:translateY(0)}
+
+/* Vault marquee bg (stage 4 only) */
+.vault-bg{
+  position:absolute;inset:0;z-index:2;
+  opacity:0;transition:opacity 1.5s;
+}
+.vault-bg.active{opacity:1}
+.vault-meta{
+  position:absolute;top:20px;right:20px;z-index:10;
+  font:500 9px/1.8 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--green);
+  opacity:.7;
+}
+.vault-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:0;
+  height:100%;
+}
+.vault-col{position:relative;overflow:hidden;height:100%}
+.vault-strip{
+  display:flex;flex-direction:column;gap:0;
+  position:absolute;left:0;right:0;
+  will-change:transform;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.vault-strip img{
+  width:100%;aspect-ratio:1;object-fit:cover;display:block;
+  border:none;
+  filter:grayscale(20%);
+  image-rendering:auto;
+  background:#e5e5e5;
+}
+@keyframes vaultDown{0%{transform:translateY(0)}100%{transform:translateY(-33.333%)}}
+@keyframes vaultUp{0%{transform:translateY(-33.333%)}100%{transform:translateY(0)}}
+
+/* Narrative column */
+.kofi-narr-col{
+  padding:100vh clamp(24px,3vw,48px) 0;
+  display:flex;flex-direction:column;gap:0;background:var(--bg);
+}
+.kofi-narr-block{
+  position:relative;
+  height:200vh;
+}
+.kofi-narr-inner{
+  position:sticky;top:50%;transform:translateY(-50%);
+  padding:48px 0;
+  opacity:.15;
+  transition:opacity .5s;
+}
+.kofi-narr-block.active .kofi-narr-inner{opacity:1}
+.kofi-stage-num{
+  font:900 clamp(48px,6vw,80px)/1 var(--sans);letter-spacing:-.04em;
+  -webkit-text-stroke:1px rgba(0,0,0,.1);color:transparent;
+  position:absolute;right:0;top:0;
+  pointer-events:none;user-select:none;
+}
+.kofi-heading{
+  font:800 clamp(24px,3vw,36px)/1.1 var(--sans);
+  letter-spacing:-.03em;margin:12px 0 16px;
+}
+.kofi-body{font:400 17px/1.8 var(--sans);color:#555;max-width:48ch}
+
+@media(max-width:800px){
+  .kofi-rail{grid-template-columns:1fr;min-height:auto}
+  .kofi-stage-col{display:none}
+  .kofi-narr-col{padding:0 20px}
+  .kofi-narr-block{height:auto;min-height:auto}
+  .kofi-narr-inner{position:relative;top:0;opacity:1;padding:48px 0}
+  .kofi-stage-num{font-size:80px}
+  .vault-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ================================================================
+   REFLECTION — REDLINE AUDIT
+   ================================================================ */
+.reflection{padding-bottom:128px}
+.redline-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:64px;
+}
+.redline-card{
+  padding-left:20px;
+  border-left:1px solid var(--green);
+  opacity:.35;
+  transition:opacity .4s;
+}
+.redline-card.lit{opacity:1}
+.redline-num{
+  font:700 clamp(36px,4vw,56px)/1 var(--sans);
+  letter-spacing:-.03em;
+  -webkit-text-stroke:1px rgba(0,0,0,.1);
+  color:transparent;
+  margin-bottom:12px;
+}
+.redline-title{
+  font:700 18px/1.2 var(--sans);
+  margin-bottom:12px;
+}
+.redline-body{
+  font:400 15px/1.8 var(--sans);
+  color:#555;max-width:36ch;
+}
+
+@media(max-width:800px){
+  .redline-grid{grid-template-columns:1fr;gap:40px}
+}
+
+/* Brutalist highlight */
+.bhl{background:var(--green);color:var(--ink);padding:2px 6px;font-weight:700;display:inline}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+.contact-footer{
+  padding:48px clamp(32px,8vw,96px);
+  border-top:2px solid var(--ink);
+}
+.contact-label{
+  font:700 10px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#999;
+  margin-bottom:20px;
+}
+.contact-row{
+  display:flex;gap:48px;flex-wrap:wrap;align-items:center;
+}
+.contact-row a,.contact-row span{
+  font:500 14px/1.4 var(--sans);
+  color:var(--ink);text-decoration:none;
+  transition:color .12s;
+}
+.contact-row a:hover{color:var(--green)}
+.contact-row a:visited{color:var(--ink)}
+.contact-icons{display:flex;gap:16px;align-items:center}
+.contact-icons .icon-link{display:inline-flex;align-items:center}
+.contact-icons .icon-link svg{width:20px;height:20px;fill:var(--ink);transition:fill .12s}
+.contact-icons .icon-link:hover svg{fill:var(--green)}
+.contact-copy{
+  margin-top:32px;
+  font:400 10px/1 var(--mono);color:rgba(0,0,0,.3);
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media(max-width:800px){
+  .case-body{padding:0 20px;padding-right:20px}
+  .case-section{padding-top:40px}
+  .case-content{padding:0 0 48px}
+  .case-img-row{grid-template-columns:1fr}
+  .ds-grid-2{grid-template-columns:1fr}
+  .ds-grid-3{grid-template-columns:1fr}
+  .funnel-label{width:120px;font-size:9px}
+  .funnel-track{height:22px}
+  .case-hero{padding-left:calc(var(--frame) + 20px);padding-right:calc(var(--frame) + 20px)}
+  .topbar{padding:20px 20px}
+  .contact-footer{padding:32px 20px}
+  .contact-row{flex-direction:column;gap:16px}
+  .minimap{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="frame"></div>
+<div class="grain"></div>
+
+<!-- Top bar -->
+<nav class="topbar">
+  <a class="topbar-name" href="index.html">PAUL TAYLOR</a>
+  <button class="topbar-menu" id="menuBtn">[ MENU ]</button>
+</nav>
+
+<!-- Dropdown menu -->
+<div class="dropdown" id="dropdown">
+  <a class="dd-link" href="index.html">Home</a>
+  <a class="dd-link" href="about.html">About</a>
+  <div class="dd-sep"></div>
+  <div class="dd-label">[ Case Studies ]</div>
+  <a class="dd-case active" href="mealmatch.html">MealMatch AI</a>
+  <a class="dd-case" href="ballrs.html">Ballrs</a>
+  <a class="dd-case" href="jetsweat.html">JetSweat</a>
+  <a class="dd-case" href="loupe.html">Loupe</a>
+</div>
+
+<!-- Hero -->
+<section class="case-hero" id="hero">
+  <h1>MealMatch AI</h1>
+  <div class="case-hero-meta">
+    <span>Lead Designer</span>
+    <span>Founding Team</span>
+    <span>0 to 1</span>
+    <span>Early-Stage Startup</span>
+    <span>2024 — Present</span>
+  </div>
+</section>
+
+<!-- Progress bar -->
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- Floating minimap -->
+<nav class="minimap" id="minimap" aria-label="Table of Contents">
+  <a href="#s01" data-idx="0">01 What Is MealMatch</a>
+  <a href="#s02" data-idx="1">02 The Problem</a>
+  <a href="#s03" data-idx="2">03 Onboarding</a>
+  <a href="#s04" data-idx="3">04 Kofi</a>
+  <a href="#s05" data-idx="4">05 Hard Calls</a>
+  <a href="#s06" data-idx="5">06 Testing</a>
+  <a href="#s07" data-idx="6">07 Design System</a>
+  <a href="#s08" data-idx="7">08 Reflection</a>
+</nav>
+
+<!-- Case study content -->
+<div class="case-body">
+
+  <div class="case-section" id="s01">
+    <div class="case-label highlight"><span class="lb">[</span> 01 What Is MealMatch <span class="lb">]</span></div>
+    <div class="case-content">
+      <p style="text-wrap:pretty">MealMatch AI is a meal planning app that uses AI to take the decision out of what to eat. Tell it your goals, budget, and food preferences — it builds your&nbsp;week.</p>
+      <div class="s1-split">
+        <div class="s1-phone">
+          <img src="public/images/mealmatch/section-1/mealmatch-hero-screen.png" alt="MealMatch AI app screen">
+        </div>
+        <div class="s1-stats">
+          <div class="s1-stat">
+            <div class="s1-stat-num" data-final="46">—</div>
+            <div class="s1-stat-label">Survey Participants</div>
+          </div>
+          <div class="s1-stat">
+            <div class="s1-stat-num" data-final="5">—</div>
+            <div class="s1-stat-label">Usability Tests</div>
+          </div>
+          <div class="s1-stat">
+            <div class="s1-stat-num" data-final="3">—</div>
+            <div class="s1-stat-label">Designers Led</div>
+          </div>
+          <div class="s1-stat">
+            <div class="s1-stat-num" data-final="Live" style="font-size:clamp(20px,3vw,36px)">—</div>
+            <div class="s1-stat-label">App Store</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section" id="s02">
+    <div class="case-label highlight"><span class="lb">[</span> 02 The Problem <span class="lb">]</span></div>
+    <div class="case-content">
+      <h2 class="problem-headline">Meal planning is broken by decision fatigue.</h2>
+      <p>The team was ready to start building. I pushed for research first — if we were going to build the right thing, we needed data behind the problem. We surveyed 46 people about how they plan meals and buy groceries.</p>
+
+      <!-- Research findings — inline brutalist -->
+      <div class="research">
+
+        <!-- Stats row -->
+        <div class="r-stats">
+          <div class="r-stat">
+            <div class="r-stat-num">47<span>%</span></div>
+            <div class="r-stat-desc">wanted AI meal suggestions. The most requested feature by far.</div>
+          </div>
+          <div class="r-stat">
+            <div class="r-stat-num">35<span>%</span></div>
+            <div class="r-stat-desc">don't plan meals at all. They decide at the store or when they're already hungry.</div>
+          </div>
+          <div class="r-stat">
+            <div class="r-stat-num">#1</div>
+            <div class="r-stat-desc">pain point was decision fatigue. Not knowing what to cook, not having the energy to think about it.</div>
+          </div>
+        </div>
+
+        <div class="r-divider"></div>
+
+        <!-- Quotes -->
+        <div class="r-label">From The Survey</div>
+        <div class="r-quotes">
+          <div class="r-quote">
+            <div class="r-quote-text">"Even when I get an idea of what I want, by the time I need to eat, I'm out of energy to think and cook."</div>
+            <div class="r-quote-src">Participant — Age 25-34, cooks for 2</div>
+          </div>
+          <div class="r-quote">
+            <div class="r-quote-text">"3 different people with 3 different likes/dislikes. Trying to find enough vegetarian protein options."</div>
+            <div class="r-quote-src">Participant — Age 35-44, cooks for 3-4</div>
+          </div>
+          <div class="r-quote">
+            <div class="r-quote-text">"All the ingredients + a plan on when to do the cooking would make this absolutely perfect."</div>
+            <div class="r-quote-src">Participant — Age 25-34, cooks for 2</div>
+          </div>
+        </div>
+
+        <div class="r-divider"></div>
+
+        <!-- Features + Breakdown -->
+        <div class="r-features">
+          <div>
+            <div class="r-label">Most Requested Features</div>
+            <div class="r-bars">
+              <div class="r-bar"><span class="r-bar-name">AI meal suggestions</span><div class="r-bar-track"><div class="r-bar-fill" data-width="47%"></div></div><span class="r-bar-pct">47%</span></div>
+              <div class="r-bar"><span class="r-bar-name">Price comparison</span><div class="r-bar-track"><div class="r-bar-fill" data-width="24%"></div></div><span class="r-bar-pct">24%</span></div>
+              <div class="r-bar"><span class="r-bar-name">Recipe suggestions</span><div class="r-bar-track"><div class="r-bar-fill" data-width="15%"></div></div><span class="r-bar-pct">15%</span></div>
+              <div class="r-bar"><span class="r-bar-name">Sales notifications</span><div class="r-bar-track"><div class="r-bar-fill" data-width="15%"></div></div><span class="r-bar-pct">15%</span></div>
+              <div class="r-bar"><span class="r-bar-name">Pantry tracker</span><div class="r-bar-track"><div class="r-bar-fill" data-width="12%"></div></div><span class="r-bar-pct">12%</span></div>
+              <div class="r-bar"><span class="r-bar-name">Budget tracking</span><div class="r-bar-track"><div class="r-bar-fill" data-width="12%"></div></div><span class="r-bar-pct">12%</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section" id="s03" style="padding-top:96px">
+    <div class="case-label highlight"><span class="lb">[</span> 03 Onboarding <span class="lb">]</span></div>
+    <div class="case-content">
+      <h2 class="problem-headline">Earning the right to ask personal questions.</h2>
+      <p>We ordered the onboarding to make people feel comfortable first. Easy stuff like goals and food preferences up front, personal details like height, weight, and biological sex at the end.</p>
+
+      <!-- Filmstrip controls -->
+      <div class="filmstrip-controls">
+        <button class="filmstrip-btn" id="filmPrev" aria-label="Scroll left">[ &larr; ]</button>
+        <button class="filmstrip-btn" id="filmNext" aria-label="Scroll right">[ &rarr; ]</button>
+      </div>
+
+      <!-- UI Filmstrip -->
+      <div class="filmstrip-wrap" id="filmstripWrap">
+        <div class="filmstrip">
+          <div class="filmstrip-card">
+            <img class="filmstrip-img" src="public/images/mealmatch/onboarding/onboarding-1.png" alt="Goals screen">
+            <div class="filmstrip-cap">Goals</div>
+          </div>
+          <div class="filmstrip-card">
+            <img class="filmstrip-img" src="public/images/mealmatch/onboarding/onboarding-2.png" alt="Food Prefs screen">
+            <div class="filmstrip-cap">Food Prefs</div>
+          </div>
+          <div class="filmstrip-card">
+            <img class="filmstrip-img" src="public/images/mealmatch/onboarding/onboarding-3.png" alt="Kofi Transition screen">
+            <div class="filmstrip-cap">Kofi Transition</div>
+          </div>
+          <div class="filmstrip-card">
+            <img class="filmstrip-img" src="public/images/mealmatch/onboarding/onboarding-4.png" alt="Budget screen">
+            <div class="filmstrip-cap">Budget</div>
+          </div>
+          <div class="filmstrip-card">
+            <img class="filmstrip-img" src="public/images/mealmatch/onboarding/onboarding-5.png" alt="Household screen">
+            <div class="filmstrip-cap">Household</div>
+          </div>
+          <div class="filmstrip-shift">
+            <div class="filmstrip-shift-line"></div>
+            <div class="filmstrip-shift-label">The Shift</div>
+            <div class="filmstrip-shift-line"></div>
+          </div>
+          <div class="filmstrip-card">
+            <img class="filmstrip-img" src="public/images/mealmatch/onboarding/onboarding-6.png" alt="Sex screen">
+            <div class="filmstrip-cap">Sex</div>
+          </div>
+          <div class="filmstrip-card">
+            <img class="filmstrip-img" src="public/images/mealmatch/onboarding/onboarding-7.png" alt="Age screen">
+            <div class="filmstrip-cap">Age</div>
+          </div>
+          <div class="filmstrip-card">
+            <img class="filmstrip-img" src="public/images/mealmatch/onboarding/onboarding-8.png" alt="Plan Ready screen">
+            <div class="filmstrip-cap">Plan Ready</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design Decision Callout -->
+      <div class="callout-box">
+        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <p class="callout-text">This follows the progressive disclosure principle. Start with low-stakes questions to build investment before asking for anything personal. Research shows each additional personal field increases drop-off. By placing height, weight, and biological sex at the very end, users are already invested in the process.</p>
+      </div>
+
+      <!-- Onboarding Funnel -->
+      <h3 style="margin-top:64px">Where users dropped off</h3>
+      <p>Post-launch data from the first month. 142 people opened the app. Only 86 started onboarding. That's a 39% drop before the flow even begins. Another 22% dropped at the age question, the first screen asking for personal data. After that, almost everyone who got past it finished.</p>
+
+      <div class="funnel" style="margin:32px 0">
+        <div class="funnel-row">
+          <span class="funnel-label">App opened</span>
+          <div class="funnel-track"><div class="funnel-bar" data-width="100"></div></div>
+          <span class="funnel-num">142</span>
+        </div>
+        <div class="funnel-row">
+          <span class="funnel-label">Onboarding started</span>
+          <div class="funnel-track"><div class="funnel-bar" data-width="60.6"></div></div>
+          <span class="funnel-num">86</span>
+        </div>
+        <div class="funnel-row">
+          <span class="funnel-label">Age completed</span>
+          <div class="funnel-track"><div class="funnel-bar" data-width="47.2"></div></div>
+          <span class="funnel-num">67</span>
+        </div>
+        <div class="funnel-row">
+          <span class="funnel-label">Zipcode completed</span>
+          <div class="funnel-track"><div class="funnel-bar" data-width="47.2"></div></div>
+          <span class="funnel-num">67</span>
+        </div>
+        <div class="funnel-row">
+          <span class="funnel-label">Onboarding completed</span>
+          <div class="funnel-track"><div class="funnel-bar" data-width="45.1"></div></div>
+          <span class="funnel-num">64</span>
+        </div>
+      </div>
+
+      <div class="callout-box" style="margin-top:32px">
+        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <p class="callout-text">Two clear problems. First: 39% of users never started onboarding. Something between the app opening and the first screen isn't working. Second: the age question caused a 22% drop. That's the personal data wall. Both of these validate what the reflection section covers: we needed event tracking from day one, and removing the skip button cost us users.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section" id="s04" style="padding-top:128px">
+    <div class="case-label highlight"><span class="lb">[</span> 04 Kofi <span class="lb">]</span></div>
+    <div class="case-content" style="padding-bottom:0">
+      <h2 class="problem-headline">500+ iterations. One consistent character.</h2>
+      <p style="max-width:42rem;margin-bottom:32px">Kofi is MealMatch's AI character. The founder's concept, my job to make it consistent everywhere. Getting an AI-generated character to look the same across different poses was one of the hardest problems on the project.</p>
+    </div>
+
+    <!-- Split-screen sticky narrative -->
+    <div class="kofi-rail" id="kofiRail">
+      <!-- Left: sticky observation stage -->
+      <div class="kofi-stage-col">
+        <div class="kofi-stage" id="kofiStage">
+          <div class="kofi-floor"></div>
+          <!-- Vault marquee bg (stage 4) -->
+          <div class="vault-bg" id="vaultBg">
+            <div class="vault-grid" id="vaultGrid">
+              <div class="vault-col" data-dir="down" data-speed="120"></div>
+              <div class="vault-col" data-dir="up" data-speed="100"></div>
+              <div class="vault-col" data-dir="down" data-speed="80"></div>
+              <div class="vault-col" data-dir="up" data-speed="100"></div>
+              <div class="vault-col" data-dir="down" data-speed="120"></div>
+            </div>
+            <div class="vault-meta" id="vaultMeta">
+              SEED_LOCKED: 401<br>CONSISTENCY: 98.2%<br>STATUS: DEPLOYED
+            </div>
+          </div>
+          <!-- Jitter label -->
+          <div class="kofi-jitter-label" id="kofiJitterLabel">Glossy / Too Detailed</div>
+          <!-- Single characters -->
+          <img class="kofi-char active" data-stage="0" src="public/images/mealmatch/section-6/kofi-01-original.png" alt="Kofi — original">
+          <img class="kofi-char" data-stage="1" data-jitter="0" src="public/images/mealmatch/section-6/kofi-02-gpt-1.png" alt="Kofi — GPT 1">
+          <img class="kofi-char" data-stage="1" data-jitter="1" src="public/images/mealmatch/section-6/kofi-02-gpt-2.png" alt="Kofi — GPT 2">
+          <img class="kofi-char" data-stage="1" data-jitter="2" src="public/images/mealmatch/section-6/kofi-02-gpt-3.png" alt="Kofi — GPT 3">
+          <img class="kofi-char" data-stage="2" src="public/images/mealmatch/section-6/kofi-03-simplified.png" alt="Kofi — North Star">
+          <!-- Stage 5: V-formation -->
+          <div class="kofi-vee" id="kofiVee">
+            <div class="kofi-vee-cell"><img src="public/images/mealmatch/section-6/kofi-05-imagen-1.png" alt="Kofi pose 1"></div>
+            <div class="kofi-vee-cell"><img src="public/images/mealmatch/section-6/kofi-05-imagen-2.png" alt="Kofi pose 2"></div>
+            <div class="kofi-vee-cell"><img src="public/images/mealmatch/section-6/kofi-05-imagen-3.png" alt="Kofi pose 3"></div>
+            <div class="kofi-vee-cell"><img src="public/images/mealmatch/section-6/kofi-05-imagen-4.png" alt="Kofi pose 4"></div>
+            <div class="kofi-vee-cell"><img src="public/images/mealmatch/section-6/kofi-05-imagen-5.png" alt="Kofi pose 5"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: scrolling narrative -->
+      <div class="kofi-narr-col">
+        <div class="kofi-narr-block" data-stage="0">
+          <div class="kofi-narr-inner">
+            <div class="kofi-stage-num">01</div>
+            <div class="hc-tag"><span class="lb">[</span> Stage 01: The Original <span class="lb">]</span></div>
+            <h3 class="kofi-heading">The Original.</h3>
+            <p class="kofi-body">The founder's original concept. It worked as a one-off but we needed Kofi in multiple poses across the app.</p>
+          </div>
+        </div>
+        <div class="kofi-narr-block" data-stage="1">
+          <div class="kofi-narr-inner">
+            <div class="kofi-stage-num">02</div>
+            <div class="hc-tag"><span class="lb">[</span> Stage 02: ChatGPT <span class="lb">]</span></div>
+            <h3 class="kofi-heading">ChatGPT.</h3>
+            <p class="kofi-body">Another designer tried ChatGPT. The results were too detailed and every version looked like a different character.</p>
+          </div>
+        </div>
+        <div class="kofi-narr-block" data-stage="2">
+          <div class="kofi-narr-inner">
+            <div class="kofi-stage-num">03</div>
+            <div class="hc-tag"><span class="lb">[</span> Stage 03: Stripped Back <span class="lb">]</span></div>
+            <h3 class="kofi-heading">Stripped Back.</h3>
+            <p class="kofi-body">I simplified the character. Bold lines, flat colours, no extra detail. This became the version everything else was measured against.</p>
+          </div>
+        </div>
+        <div class="kofi-narr-block" data-stage="3">
+          <div class="kofi-narr-inner">
+            <div class="kofi-stage-num">04</div>
+            <div class="hc-tag"><span class="lb">[</span> Stage 04: Midjourney <span class="lb">]</span></div>
+            <h3 class="kofi-heading">The Midjourney Grind.</h3>
+            <p class="kofi-body">500+ attempts to get the simplified version into different poses. Most of them didn't match. The wall shows the scale of it.</p>
+          </div>
+        </div>
+        <div class="kofi-narr-block" data-stage="4">
+          <div class="kofi-narr-inner">
+            <div class="kofi-stage-num">05</div>
+            <div class="hc-tag"><span class="lb">[</span> Stage 05: Cracked It <span class="lb">]</span></div>
+            <h3 class="kofi-heading">Cracked It.</h3>
+            <p class="kofi-body">Switched to Google Imagen when it became available. The tool finally made consistency possible. Same proportions, same style, every pose.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-section" id="s05" style="padding-top:128px">
+    <div class="case-label highlight"><span class="lb">[</span> 05 Hard Calls <span class="lb">]</span></div>
+    <div class="case-content">
+      <h2 class="problem-headline">Defending the product direction.</h2>
+
+      <!-- Call 01 -->
+      <div class="hc-block">
+        <div class="hc-grid">
+          <div class="hc-text">
+            <div class="hc-tag"><span class="lb">[</span> Call 01 <span class="lb">]</span></div>
+            <h3 class="hc-title">Biological sex vs. gender.</h3>
+            <p class="hc-body">A teammate suggested changing 'biological sex' to 'gender' in the onboarding. I pushed back because our calorie calculations depend on physiology, not identity. Get it wrong and the AI gives inaccurate numbers.</p>
+          </div>
+          <div class="hc-visual">
+            <img class="hc-doc" src="public/images/mealmatch/section-4/discord.png" alt="Discord screenshot of the biological sex discussion">
+          </div>
+        </div>
+        <div class="callout-box" style="margin-top:32px">
+          <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+          <p class="callout-text">Biological sex and gender identity aren't interchangeable. Calorie calculations use basal metabolic rate, which depends on physiology. Using gender instead of sex would produce inaccurate recommendations for some users.</p>
+        </div>
+      </div>
+
+      <!-- Call 02 -->
+      <div class="hc-block">
+        <div class="hc-grid">
+          <div class="hc-text">
+            <div class="hc-tag"><span class="lb">[</span> Call 02 <span class="lb">]</span></div>
+            <h3 class="hc-title">Was the onboarding too long?</h3>
+            <p class="hc-body">During a team review, several stakeholders flagged the onboarding as too long, raising concerns about drop-off. So we tested it with 5 users.</p>
+          </div>
+          <div class="hc-visual">
+            <div class="hc-quotes-grid">
+              <div class="hc-quote-card">
+                <div class="hc-quote-text">"It didn't seem too long. Appropriate amount of questions. What I imagined it would need. Not annoying questions. Standard."</div>
+                <div class="hc-quote-src">Participant 1, Usability Test</div>
+              </div>
+              <div class="hc-quote-card">
+                <div class="hc-quote-text">"Average length. Asked things I expected. Just the right amount."</div>
+                <div class="hc-quote-src">Participant 2, Usability Test</div>
+              </div>
+              <div class="hc-quote-card">
+                <div class="hc-quote-text">"Nice. Easy. Straight forward. I liked it."</div>
+                <div class="hc-quote-src">Participant 3, Usability Test</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="callout-box" style="margin-top:32px">
+          <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+          <p class="callout-text">Rather than cutting screens based on internal opinion, we let users decide. The data backed the original length. Every screen collected data the AI needed to personalise recommendations.</p>
+        </div>
+      </div>
+
+      <!-- Call 03 -->
+      <div class="hc-block">
+        <div class="hc-grid">
+          <div class="hc-text">
+            <div class="hc-tag"><span class="lb">[</span> Call 03 <span class="lb">]</span></div>
+            <h3 class="hc-title">Turning a limit into a win.</h3>
+            <p class="hc-body">Hitting a paywall feels like a punishment. We framed the free tier limit as a milestone of progress rather than a dead end.</p>
+          </div>
+          <div class="hc-visual hc-visual-center">
+            <img class="hc-ui" src="public/images/mealmatch/section-4/modal.png" alt="Quota limit modal with celebratory copy">
+          </div>
+        </div>
+        <div class="callout-box" style="margin-top:32px">
+          <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+          <p class="callout-text">Most apps treat limits as a wall. We used Kofi and celebratory language to frame it as progress, making the upgrade feel like a reward rather than a restriction.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-section" id="s06" style="padding-top:128px">
+    <div class="case-label highlight"><span class="lb">[</span> 06 Testing <span class="lb">]</span></div>
+    <div class="case-content">
+      <h2 class="problem-headline">5 usability tests. 23 changes.</h2>
+      <p>We tested the onboarding prototype with 5 users and found three major friction points.</p>
+
+      <!-- Block 01: Budget -->
+      <div class="ba-block">
+        <div class="ba-context">
+          <div class="hc-tag"><span class="lb">[</span> Change 01 <span class="lb">]</span></div>
+          <h3 class="hc-title">The budget input.</h3>
+          <p class="hc-body">Users expected to type a number, not scroll through options.</p>
+          <div class="ba-quote">
+            <div class="ba-quote-text">"Option to type it in for really budget conscious people. What are the increments?"</div>
+            <div class="ba-quote-src">Participant 1, Usability Test</div>
+          </div>
+        </div>
+        <div class="ba-row">
+          <div class="ba-col">
+            <div class="ba-label">Before</div>
+            <div class="ba-phone-wrap">
+              <img class="ba-phone" src="public/images/mealmatch/section-5/budget-1.png" alt="Budget input before — slider">
+            </div>
+          </div>
+          <div class="ba-col">
+            <div class="ba-label">After</div>
+            <div class="ba-phone-wrap">
+              <img class="ba-phone" src="public/images/mealmatch/section-5/budget-2.png" alt="Budget input after — discrete buttons">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 02: Cuisine -->
+      <div class="ba-block">
+        <div class="ba-context">
+          <div class="hc-tag"><span class="lb">[</span> Change 02 <span class="lb">]</span></div>
+          <h3 class="hc-title">Cuisine selection.</h3>
+          <p class="hc-body">Three choices felt limiting. Users wanted to express what they loved and what they didn't.</p>
+          <div class="ba-quote">
+            <div class="ba-quote-text">"Maybe the ability to pick more than 3 cuisines. Or something to say that other cuisines would be included."</div>
+            <div class="ba-quote-src">Participant 2, Usability Test</div>
+          </div>
+        </div>
+        <div class="ba-row">
+          <div class="ba-col">
+            <div class="ba-label">Before</div>
+            <div class="ba-phone-wrap">
+              <img class="ba-phone" src="public/images/mealmatch/section-5/cuisines-1.png" alt="Cuisine selection before — limited options">
+            </div>
+          </div>
+          <div class="ba-col">
+            <div class="ba-label">After</div>
+            <div class="ba-phone-wrap">
+              <img class="ba-phone" src="public/images/mealmatch/section-5/cuisines-2.png" alt="Cuisine selection after — expanded options">
+            </div>
+            <div class="ba-legend">
+              <p>Added like/dislike so the AI knows what you actually want, not just what you picked from a list.</p>
+              <p>Swapped the typeface. The original didn't have a commercial licence.</p>
+              <p>Increased the minimum from 3 to 5 cuisines. More data means better AI recommendations.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Block 03: Plan Review -->
+      <div class="ba-block">
+        <div class="ba-context">
+          <div class="hc-tag"><span class="lb">[</span> Change 03 <span class="lb">]</span></div>
+          <h3 class="hc-title">Plan review.</h3>
+          <p class="hc-body">The summary screen listed everything without structure. We grouped it into clear sections and added an edit option so people could check their details before continuing.</p>
+          <div class="ba-quote">
+            <div class="ba-quote-text">"I would like to have option to edit summary page."</div>
+            <div class="ba-quote-src">Participant 2, Usability Test</div>
+          </div>
+        </div>
+        <div class="ba-row">
+          <div class="ba-col">
+            <div class="ba-label">Before</div>
+            <div class="ba-phone-wrap">
+              <img class="ba-phone" src="public/images/mealmatch/section-5/plan-1.png" alt="Plan review before">
+            </div>
+          </div>
+          <div class="ba-col">
+            <div class="ba-label">After</div>
+            <div class="ba-phone-wrap">
+              <img class="ba-phone" src="public/images/mealmatch/section-5/plan-2.png" alt="Plan review after">
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+  <div class="case-section" id="s07">
+    <div class="case-label"><span class="lb">[</span> 07 Design System <span class="lb">]</span></div>
+    <div class="case-content">
+      <h2>110+ tokens, built from zero.</h2>
+      <p>I built the design system from scratch. 88 primitive color tokens across 8 scales, 22 semantic tokens that map to specific uses, and a component library tied to all of it. Everything references the token system, so changing a color in one place updates it everywhere.</p>
+
+      <img src="public/images/mealmatch/section-7/token-system.png" alt="Token System" style="width:100%;display:block;margin:32px 0">
+
+      <h3>Variables in Figma</h3>
+      <p>Two collections: Primitives hold the raw color scales (50 to 950 per color). Semantic tokens reference the primitives and define how colors are actually used — Brand/Primary, Text/Secondary, Surface/Card, and so on. Change a primitive value and every semantic token that references it updates automatically.</p>
+
+      <div class="ds-grid-2">
+        <div>
+          <img src="public/images/mealmatch/section-7/variables-primitives.png" alt="Primitives variables">
+          <div class="ba-label" style="margin-top:12px">Primitives — 88 tokens</div>
+        </div>
+        <div>
+          <img src="public/images/mealmatch/section-7/variables-semantic.png" alt="Semantic variables">
+          <div class="ba-label" style="margin-top:12px">Semantic — 22 tokens</div>
+        </div>
+      </div>
+
+      <h3>Component library</h3>
+      <p>Components follow atomic design. Small pieces (icons, text, stars) combine into molecules (rating bars, metric rows), which combine into full organisms (recipe cards, nav bars). Every component pulls its colors, spacing, and typography from the token system.</p>
+
+      <div class="ds-grid-3">
+        <div>
+          <img src="public/images/mealmatch/section-7/atomic-design-atoms.png" alt="Atomic design — Atoms">
+          <div class="ba-label" style="margin-top:12px">Atoms</div>
+        </div>
+        <div>
+          <img src="public/images/mealmatch/section-7/atomic-design-molecules.png" alt="Atomic design — Molecules">
+          <div class="ba-label" style="margin-top:12px">Molecules</div>
+        </div>
+        <div>
+          <img src="public/images/mealmatch/section-7/atomic-design-organism.png" alt="Atomic design — Organism">
+          <div class="ba-label" style="margin-top:12px">Organism</div>
+        </div>
+      </div>
+
+      <img src="public/images/mealmatch/section-7/components.png" alt="Component library" style="width:100%;display:block;margin:32px 0 64px">
+
+      <h3>Spacing</h3>
+      <p>Everything sits on an 8px grid. Component padding, section gaps, and touch targets are all multiples of 8. Touch targets are minimum 44px for accessibility.</p>
+
+      <img src="public/images/mealmatch/section-7/spacing.png" alt="Spacing system" style="max-width:50%;display:block;margin:32px auto">
+    </div>
+  </div>
+
+  <div class="case-section" id="s08" style="padding-top:128px">
+    <div class="case-label highlight"><span class="lb">[</span> 08 Reflection <span class="lb">]</span></div>
+    <div class="case-content reflection">
+      <h2 class="problem-headline" style="margin-bottom:64px">If I could go back, I'd change three things.</h2>
+
+      <div class="redline-grid">
+        <div class="redline-card" data-redline>
+          <div class="redline-num">01</div>
+          <h3 class="redline-title">The Design System.</h3>
+          <p class="redline-body">I built the system, the tokens, and the components. What I didn't build was proper usage documentation. At a startup moving fast with a small team, building the system came first. But when I handed direction to the other two designers, they had the components without the rules. Next time, I'd write the guidelines alongside the system, not after.</p>
+        </div>
+        <div class="redline-card" data-redline>
+          <div class="redline-num">02</div>
+          <h3 class="redline-title">Analytics.</h3>
+          <p class="redline-body">I should have pushed harder to get analytics into the onboarding flow before launch. We know users drop off, but I can't tell you which screen or why. If I'd set up event tracking from the start, the design decisions after launch would have been based on data instead of guesses.</p>
+        </div>
+        <div class="redline-card" data-redline>
+          <div class="redline-num">03</div>
+          <h3 class="redline-title">The Skip Button.</h3>
+          <p class="redline-body">We removed the option to skip entering personal data like height and weight. Users had to provide it or they couldn't continue. That was too blunt. A confirmation modal explaining why the data matters and what they'd miss without it would have been more respectful of the user's choice.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Contact footer -->
+<footer class="contact-footer">
+  <div class="contact-label">Get In Touch</div>
+  <div class="contact-row">
+    <a href="mailto:thisispaultaylor@icloud.com">thisispaultaylor@icloud.com</a>
+    <span>(929) 539-2992</span>
+    <div class="contact-icons">
+      <a class="icon-link" href="https://linkedin.com/in/paultaylormade" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      <a class="icon-link" href="https://instagram.com/thisispaultaylor" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 100 12.324 6.162 6.162 0 100-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 11-2.88 0 1.441 1.441 0 012.88 0z"/></svg></a>
+    </div>
+  </div>
+  <div class="contact-copy">&copy; 2026 Paul Taylor</div>
+</footer>
+
+<script>
+(function(){
+  /* ── MENU TOGGLE ── */
+  var menuBtn=document.getElementById('menuBtn');
+  var dropdown=document.getElementById('dropdown');
+  var menuOpen=false;
+  menuBtn.addEventListener('click',function(){
+    menuOpen=!menuOpen;
+    dropdown.classList.toggle('open',menuOpen);
+    menuBtn.textContent=menuOpen?'[ CLOSE ]':'[ MENU ]';
+  });
+  // Close on outside click
+  document.addEventListener('click',function(e){
+    if(menuOpen&&!dropdown.contains(e.target)&&e.target!==menuBtn){
+      menuOpen=false;dropdown.classList.remove('open');
+      menuBtn.textContent='[ MENU ]';
+    }
+  });
+
+  var fill=document.getElementById('progressFill');
+  var minimap=document.getElementById('minimap');
+  var mmLinks=minimap.querySelectorAll('a');
+  var sections=document.querySelectorAll('.case-section');
+  var heroEl=document.getElementById('hero');
+  var activeIdx=-1;
+
+  function onScroll(){
+    var sy=window.scrollY;
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+
+    // Progress bar
+    fill.style.height=(h>0?(sy/h)*100:0)+'%';
+
+    // Show minimap after hero
+    var heroBottom=heroEl.getBoundingClientRect().bottom;
+    if(heroBottom<0){minimap.classList.add('on')}else{minimap.classList.remove('on')}
+
+    // Scroll spy
+    var newIdx=0;
+    for(var i=0;i<sections.length;i++){
+      if(sections[i].getBoundingClientRect().top<window.innerHeight*.4)newIdx=i;
+    }
+    if(newIdx!==activeIdx){
+      if(activeIdx>=0&&mmLinks[activeIdx]){
+        mmLinks[activeIdx].classList.remove('active');
+        mmLinks[activeIdx].removeAttribute('aria-current');
+      }
+      activeIdx=newIdx;
+      if(mmLinks[activeIdx]){
+        mmLinks[activeIdx].classList.add('active');
+        mmLinks[activeIdx].setAttribute('aria-current','true');
+      }
+    }
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ── TERMINAL SCRAMBLE ── */
+  var scrambleEls=document.querySelectorAll('[data-final]');
+  var pool='0123456789#%X@&!?$';
+  var scrambled=false;
+
+  var scrambleObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting&&!scrambled){
+        scrambled=true;
+        scrambleEls.forEach(function(el,idx){
+          var final=el.getAttribute('data-final');
+          var len=final.length;
+          var start=performance.now();
+          var duration=400+idx*80; // stagger each stat
+
+          function tick(now){
+            var elapsed=now-start;
+            if(elapsed>=duration){
+              el.textContent=final;
+              return;
+            }
+            // Build string: resolved chars from left + random chars for the rest
+            var resolved=Math.floor((elapsed/duration)*len);
+            var out='';
+            for(var i=0;i<len;i++){
+              if(i<resolved){
+                out+=final[i];
+              }else{
+                out+=pool[Math.floor(Math.random()*pool.length)];
+              }
+            }
+            el.textContent=out;
+            requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        });
+      }
+    });
+  },{threshold:0.3});
+
+  var statsBlock=document.querySelector('.s1-stats');
+  if(statsBlock)scrambleObs.observe(statsBlock);
+
+  /* ── BAR CHART ANIMATION ── */
+  var barFills=document.querySelectorAll('.r-bar-fill[data-width]');
+  var barsAnimated=false;
+
+  var barObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting&&!barsAnimated){
+        barsAnimated=true;
+        barFills.forEach(function(bar){
+          bar.style.width=bar.getAttribute('data-width');
+        });
+      }
+    });
+  },{threshold:0.2});
+
+  var barsBlock=document.querySelector('.r-bars');
+  if(barsBlock)barObs.observe(barsBlock);
+
+  /* ── KOFI SPLIT-SCREEN + VAULT ── */
+  (function(){
+    // Populate vault columns — unique shuffle per column, triple-stacked
+    var cols=document.querySelectorAll('.vault-col');
+    var total=401;
+    function shuffle(){
+      var a=[];for(var i=1;i<=total;i++)a.push(i);
+      for(var i=a.length-1;i>0;i--){
+        var j=Math.floor(Math.random()*(i+1));
+        var t=a[i];a[i]=a[j];a[j]=t;
+      }
+      return a;
+    }
+    var perCol=Math.ceil(total/cols.length);
+    cols.forEach(function(col,ci){
+      var dir=col.getAttribute('data-dir');
+      var speed=+col.getAttribute('data-speed');
+      // Unique shuffle for this column, take a slice
+      var shuffled=shuffle();
+      var slice=shuffled.slice(0,perCol);
+      var html='';
+      // Triple-stack for seamless infinite loop
+      for(var pass=0;pass<3;pass++){
+        slice.forEach(function(idx,i){
+          var load=(pass===0&&i<15)?'eager':'lazy';
+          html+='<img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-'+idx+'.png" alt="" loading="'+load+'" decoding="async">';
+        });
+      }
+      var strip=document.createElement('div');
+      strip.className='vault-strip';
+      strip.innerHTML=html;
+      var delay=-(Math.random()*speed).toFixed(1);
+      strip.style.animation=(dir==='down'?'vaultDown':'vaultUp')+' '+speed+'s linear infinite';
+      strip.style.animationDelay=delay+'s';
+      col.appendChild(strip);
+    });
+
+    // Stage driver
+    var kofiChars=document.querySelectorAll('.kofi-char');
+    var kofiBlocks=document.querySelectorAll('.kofi-narr-block');
+    var vaultBg=document.getElementById('vaultBg');
+    var kofiJitterLabel=document.getElementById('kofiJitterLabel');
+    var kofiVee=document.getElementById('kofiVee');
+    var kofiVeeImgs=kofiVee.querySelectorAll('.kofi-vee-cell img');
+    var kofiStageCol=document.querySelector('.kofi-stage-col');
+    var currentStage=-1;
+    var jitterInterval=null;
+
+    function setStage(s){
+      if(s===currentStage)return;
+      currentStage=s;
+      kofiBlocks.forEach(function(b){b.classList.toggle('active',+b.getAttribute('data-stage')===s)});
+      kofiChars.forEach(function(c){c.classList.remove('active')});
+      vaultBg.classList.remove('active');
+      kofiJitterLabel.classList.remove('active');
+      kofiVee.classList.remove('active');
+      kofiVeeImgs.forEach(function(i){i.classList.remove('pop')});
+      kofiStageCol.classList.toggle('no-border',s===4);
+      if(jitterInterval){clearInterval(jitterInterval);jitterInterval=null}
+
+      if(s===0){
+        document.querySelector('.kofi-char[data-stage="0"]').classList.add('active');
+      }else if(s===1){
+        kofiJitterLabel.classList.add('active');
+        var gpts=document.querySelectorAll('.kofi-char[data-stage="1"]');
+        var gi=0;gpts[0].classList.add('active');
+        jitterInterval=setInterval(function(){
+          gpts[gi].classList.remove('active');
+          gi=(gi+1)%gpts.length;
+          gpts[gi].classList.add('active');
+        },1500);
+      }else if(s===2){
+        document.querySelector('.kofi-char[data-stage="2"]').classList.add('active');
+      }else if(s===3){
+        vaultBg.classList.add('active');
+      }else if(s===4){
+        kofiVee.classList.add('active');
+        kofiVeeImgs.forEach(function(img,i){
+          setTimeout(function(){img.classList.add('pop')},i*100);
+        });
+      }
+    }
+
+    function onKofiScroll(){
+      var vc=window.innerHeight*0.4;
+      var best=0;
+      for(var i=0;i<kofiBlocks.length;i++){
+        if(kofiBlocks[i].getBoundingClientRect().top<vc)best=i;
+      }
+      setStage(best);
+    }
+    window.addEventListener('scroll',onKofiScroll,{passive:true});
+    onKofiScroll();
+  })();
+
+  /* ── DESIGN DECISION REVEAL ── */
+  var callouts=document.querySelectorAll('.callout-box');
+  if(callouts.length){
+    var calloutObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting)e.target.classList.add('reveal');
+      });
+    },{threshold:0.3});
+    callouts.forEach(function(c){calloutObs.observe(c)});
+  }
+
+  /* ── FUNNEL ANIMATION ── */
+  var funnelBars=document.querySelectorAll('.funnel-bar');
+  if(funnelBars.length){
+    var funnelObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.style.width=e.target.dataset.width+'%';
+        }
+      });
+    },{threshold:0.3});
+    funnelBars.forEach(function(b){funnelObs.observe(b)});
+  }
+
+  /* ── REFLECTION REDLINE SCROLL ── */
+  var redlineCards=document.querySelectorAll('.redline-card');
+  if(redlineCards.length){
+    var redlineObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        e.target.classList.toggle('lit',e.isIntersecting);
+      });
+    },{threshold:0.5});
+    redlineCards.forEach(function(c){redlineObs.observe(c)});
+  }
+
+
+  /* ── FILMSTRIP SCROLL BUTTONS ── */
+  var filmWrap=document.getElementById('filmstripWrap');
+  var filmPrev=document.getElementById('filmPrev');
+  var filmNext=document.getElementById('filmNext');
+  var scrollAmt=260+32; // card width + gap
+
+  filmPrev.addEventListener('click',function(){
+    filmWrap.scrollBy({left:-scrollAmt,behavior:'smooth'});
+  });
+  filmNext.addEventListener('click',function(){
+    filmWrap.scrollBy({left:scrollAmt,behavior:'smooth'});
+  });
+  document.addEventListener('keydown',function(e){
+    // Only trigger when filmstrip is in view
+    var rect=filmWrap.getBoundingClientRect();
+    if(rect.bottom<0||rect.top>window.innerHeight)return;
+    if(e.key==='ArrowLeft'){filmWrap.scrollBy({left:-scrollAmt,behavior:'smooth'});e.preventDefault()}
+    if(e.key==='ArrowRight'){filmWrap.scrollBy({left:scrollAmt,behavior:'smooth'});e.preventDefault()}
+  });
+})();
+</script>
+</body>
+</html>

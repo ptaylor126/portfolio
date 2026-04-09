@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — Product Designer Who Ships</title>
+<meta name="description" content="Product Designer & Builder. I bridge the gap between Figma and the App Store. 3 apps shipped. Brooklyn, NY.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5F5F5;--black:#000;--white:#fff;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:auto}
+body{font-family:var(--sans);font-weight:400;color:var(--black);background:var(--bg);overflow-x:hidden;line-height:1.5}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--black);color:var(--white)}
+
+/* Grid overlay */
+.grid-border{position:fixed;inset:0;border:12px solid var(--black);pointer-events:none;z-index:900}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:32px 48px 48px;border-bottom:2px solid var(--black);
+  position:relative;
+}
+.hero-coords{
+  font:400 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  margin-bottom:16px;color:rgba(0,0,0,.5);
+}
+.hero-headline{
+  font:900 clamp(56px,10vw,160px)/0.85 var(--sans);
+  text-transform:uppercase;letter-spacing:-.06em;
+}
+.hero-outline{
+  -webkit-text-stroke:2px var(--black);color:#F5F5F5;paint-order:stroke fill;
+}
+.hero-bottom{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;margin-top:48px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;background:var(--black);color:var(--white);
+  font:700 12px/1 var(--sans);text-transform:uppercase;letter-spacing:.04em;
+}
+.hero-badge svg{width:16px;height:16px}
+.hero-desc{font:500 17px/1.4 var(--sans);max-width:420px;display:flex;align-items:flex-start;gap:12px}
+
+/* 3 APPS sticker */
+.hero-sticker{
+  position:absolute;z-index:10;
+  width:30px;height:30px;border-radius:50%;
+  background:var(--black);color:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font:700 6px/1.1 var(--mono);letter-spacing:.01em;text-align:center;
+  transform:rotate(15deg) scale(0);opacity:0;
+  transition:opacity .12s,transform .3s cubic-bezier(.175,.885,.32,1.275);
+  pointer-events:none;
+}
+.hero-headline:hover .hero-sticker{opacity:1;transform:rotate(15deg) scale(1)}
+
+/* ================================================================
+   PROJECT SECTION
+   ================================================================ */
+.project{padding:48px;border-bottom:2px solid var(--black)}
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.proj-grid.reverse{direction:rtl}
+.proj-grid.reverse>*{direction:ltr}
+
+/* Sticky content */
+.proj-info{position:sticky;top:80px}
+.proj-num{font:900 clamp(36px,5vw,56px)/1 var(--sans);text-transform:uppercase;margin-bottom:20px;letter-spacing:-.04em}
+.proj-desc{font:400 17px/1.6 var(--sans);margin-bottom:28px;max-width:420px}
+.proj-stats{margin-bottom:32px}
+.proj-stat{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 0;border-bottom:1px solid rgba(0,0,0,.08);
+  font:400 12px/1 var(--mono);
+}
+.proj-stat strong{font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.proj-cta{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:16px 32px;background:var(--black);color:var(--white);
+  font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;
+  border:none;cursor:pointer;transition:background .2s;
+}
+.proj-cta:hover{background:#222}
+.proj-cta svg{width:18px;height:18px;transition:transform .2s}
+.proj-cta:hover svg{transform:translateX(4px)}
+
+/* Video / media card */
+.proj-media{
+  aspect-ratio:4/5;background:var(--black);overflow:hidden;
+  position:relative;border:4px solid var(--black);
+  box-shadow:12px 12px 0 0 var(--black);
+  cursor:pointer;transition:box-shadow .3s,transform .3s;
+}
+.proj-media:hover{box-shadow:8px 8px 0 0 var(--black);transform:translate(2px,2px)}
+/* Mockup inside */
+.proj-mockup{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:200px;height:280px;border-radius:24px;overflow:hidden;
+  box-shadow:0 16px 40px rgba(0,0,0,.3);z-index:2;
+}
+.pm{position:absolute;inset:7px;border-radius:18px;display:flex;flex-direction:column;padding:14px 11px;overflow:hidden}
+.pm-top{display:flex;justify-content:space-between;font:400 8px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:12px}
+.pm-h{font:700 16px/1.2 var(--sans);color:#fff;margin-bottom:2px}
+.pm-s{font:400 8px/1 var(--mono);color:rgba(255,255,255,.2)}
+.pm-bl{display:flex;gap:4px;margin-top:12px}
+.pm-b{flex:1;height:30px;border-radius:6px;background:rgba(255,255,255,.06)}
+.pm-rl{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.pm-r{height:16px;border-radius:5px;background:rgba(255,255,255,.04)}
+.pm-ch{display:flex;align-items:flex-end;gap:2px;height:50px;margin-top:auto;padding-top:6px}
+.pm-cv{flex:1;border-radius:2px 2px 0 0;background:rgba(255,255,255,.06)}
+.pm-cv.hi{background:rgba(255,255,255,.2)}
+
+/* Mockup bg themes */
+.proj-media[data-p="mealmatch"]{background:linear-gradient(135deg,#1a3329,#0d1f16)}
+.proj-media[data-p="mealmatch"] .proj-mockup{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.proj-media[data-p="ballrs"]{background:linear-gradient(135deg,#0e1225,#070a14)}
+.proj-media[data-p="ballrs"] .proj-mockup{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.proj-media[data-p="loupe"]{background:linear-gradient(135deg,#15112a,#0c0918)}
+.proj-media[data-p="loupe"] .proj-mockup{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.proj-media[data-p="jetsweat"]{background:linear-gradient(135deg,#1f100a,#100804)}
+.proj-media[data-p="jetsweat"] .proj-mockup{background:linear-gradient(150deg,#D4582A,#A84420)}
+.proj-media[data-p="allergytracker"]{background:linear-gradient(135deg,#0d1a26,#081220)}
+.proj-media[data-p="allergytracker"] .proj-mockup{background:linear-gradient(150deg,#1B4B72,#0F3150)}
+
+/* Media label */
+.proj-media-label{
+  position:absolute;bottom:16px;left:16px;z-index:3;
+  font:500 9px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);
+}
+
+/* ================================================================
+   TESTIMONIAL BLOCK
+   ================================================================ */
+.testi-block{
+  padding:64px 48px;border-bottom:2px solid var(--black);
+  background:var(--black);color:var(--white);
+}
+.tb-text{font:900 clamp(24px,4vw,48px)/1.15 var(--sans);text-transform:uppercase;max-width:800px;margin-bottom:16px;letter-spacing:-.02em}
+.tb-attr{font:400 12px/1 var(--mono);color:rgba(255,255,255,.4)}
+
+/* Lighter quote variant */
+.testi-light{
+  padding:48px;border-bottom:2px solid var(--black);
+  text-align:center;
+}
+.tl-text{font:600 clamp(18px,2.5vw,28px)/1.4 var(--sans);max-width:640px;margin:0 auto 12px}
+.tl-attr{font:400 11px/1 var(--mono);color:rgba(0,0,0,.4)}
+
+/* ================================================================
+   SHIPPED SECTION
+   ================================================================ */
+.shipped{padding:48px;border-bottom:2px solid var(--black)}
+.shipped-header{margin-bottom:32px}
+.shipped-header h2{font:900 clamp(36px,5vw,64px)/0.9 var(--sans);text-transform:uppercase;letter-spacing:-.04em}
+.shipped-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.shipped-card{
+  border:2px solid var(--black);padding:24px;
+  display:flex;flex-direction:column;gap:12px;
+  transition:background .2s;
+}
+.shipped-card:hover{background:rgba(0,0,0,.03)}
+.sc-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--black);
+}
+.sc-icon svg{width:24px;height:24px}
+.sc-name{font:800 20px/1 var(--sans);text-transform:uppercase}
+.sc-type{font:400 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:rgba(0,0,0,.4)}
+.sc-desc{font:400 13px/1.5 var(--sans);color:rgba(0,0,0,.6)}
+.sc-badges{display:flex;flex-wrap:wrap;gap:4px}
+.sc-badge{
+  font:600 8px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;
+  padding:4px 8px;border:2px solid var(--black);
+}
+.sc-badge.live{background:var(--black);color:var(--white)}
+.sc-link{
+  font:600 11px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;
+  display:flex;align-items:center;gap:4px;margin-top:auto;
+  border-bottom:2px solid var(--black);width:fit-content;padding-bottom:2px;
+}
+
+/* ================================================================
+   BACKSTORY
+   ================================================================ */
+.backstory{padding:48px;border-bottom:2px solid var(--black)}
+.bs-header{margin-bottom:32px}
+.bs-header h2{font:900 clamp(28px,4vw,48px)/0.9 var(--sans);text-transform:uppercase;letter-spacing:-.04em}
+.bs-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.bs-text{font:400 15px/1.7 var(--sans);color:rgba(0,0,0,.6);margin-bottom:16px}
+.bs-text strong{color:var(--black);font-weight:600}
+.bs-timeline{margin-top:20px}
+.bt-row{
+  display:flex;gap:16px;padding:12px 0;
+  border-bottom:1px solid rgba(0,0,0,.08);
+}
+.bt-year{font:700 11px/1 var(--mono);text-transform:uppercase;flex-shrink:0;width:80px}
+.bt-desc{font:400 12px/1.5 var(--sans);color:rgba(0,0,0,.5)}
+.bt-desc strong{color:var(--black);font-weight:600}
+
+/* Photo strip */
+.bs-strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:8px}
+.bs-strip::-webkit-scrollbar{display:none}
+.bs-frame{
+  flex-shrink:0;width:180px;height:240px;
+  border:4px solid var(--black);overflow:hidden;
+  box-shadow:6px 6px 0 0 var(--black);
+  transition:box-shadow .2s,transform .2s;
+}
+.bs-frame:hover{box-shadow:3px 3px 0 0 var(--black);transform:translate(1.5px,1.5px)}
+.bs-frame img{width:100%;height:100%;object-fit:cover;filter:grayscale(60%) contrast(1.1);transition:filter .3s}
+.bs-frame:hover img{filter:grayscale(0%)}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+.footer{padding:48px;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+.ft-headline{font:900 clamp(24px,3vw,40px)/1.1 var(--sans);text-transform:uppercase;letter-spacing:-.03em;margin-bottom:8px}
+.ft-sub{font:400 14px/1.5 var(--sans);color:rgba(0,0,0,.5);margin-bottom:20px;max-width:400px}
+.ft-links{display:flex;gap:8px;flex-wrap:wrap}
+.ft-link{
+  padding:12px 24px;background:var(--black);color:var(--white);
+  font:700 12px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;
+  border:none;cursor:pointer;display:flex;align-items:center;gap:6px;
+  transition:background .2s;
+}
+.ft-link:hover{background:#222}
+.ft-link svg{width:14px;height:14px}
+.ft-right{text-align:right}
+.ft-copy{font:400 10px/1 var(--mono);color:rgba(0,0,0,.3);margin-bottom:8px}
+.ft-socials{display:flex;gap:12px;justify-content:flex-end}
+.ft-socials a{font:600 11px/1 var(--sans);text-transform:uppercase;border-bottom:2px solid var(--black);padding-bottom:1px;transition:opacity .2s}
+.ft-socials a:hover{opacity:.5}
+
+@media(max-width:900px){
+  .grid-border{border-width:6px}
+  .hero,.project,.testi-block,.testi-light,.shipped,.backstory,.footer{padding:24px}
+  .proj-grid,.proj-grid.reverse{grid-template-columns:1fr;direction:ltr}
+  .proj-info{position:relative;top:0}
+  .shipped-grid{grid-template-columns:1fr}
+  .bs-grid{grid-template-columns:1fr;gap:24px}
+  .footer{grid-template-columns:1fr}
+  .ft-right{text-align:left}.ft-socials{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- Grid overlay -->
+<div class="grid-border"></div>
+
+<!-- ================================================================
+     HERO
+     ================================================================ -->
+<section class="hero">
+  <span class="hero-coords">[ Brooklyn, NY — 40.6782° N, 73.9442° W ]</span>
+  <h1 class="hero-headline">
+    Product<br>Designer<br><span class="hero-outline" style="position:relative">Who Ships.<span class="hero-sticker">3<br>APPS</span></span>
+  </h1>
+  <div class="hero-bottom">
+    <div class="hero-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      3 APPS SHIPPED
+    </div>
+    <p class="hero-desc">
+      Currently leading design at MealMatch AI. From product management and photography.
+    </p>
+  </div>
+</section>
+
+<!-- ================================================================
+     01 / MEALMATCH AI
+     ================================================================ -->
+<section class="project">
+  <div class="proj-grid">
+    <div class="proj-info">
+      <h2 class="proj-num">01 / MealMatch AI</h2>
+      <p class="proj-desc">Lead designer on the founding team. Built the design system from zero, ran 40+ participant research studies, and designed the AI assistant character that powers personalized meal recommendations.</p>
+      <div class="proj-stats">
+        <div class="proj-stat"><strong>Role:</strong> Lead Designer, Founding Team</div>
+        <div class="proj-stat"><strong>Impact:</strong> 40+ Participant Research Studies</div>
+        <div class="proj-stat"><strong>System:</strong> 128 Design Tokens, Full Component Library</div>
+        <div class="proj-stat"><strong>Focus:</strong> AI Assistant UX, Onboarding Flow</div>
+      </div>
+      <button class="proj-cta">View Case Study <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+    <div class="proj-media" data-p="mealmatch">
+      <div class="proj-mockup"><div class="pm"><div class="pm-top"><span>9:41</span><span>MealMatch</span></div><div class="pm-h">Your Plan</div><div class="pm-s">AI character + onboarding</div><div class="pm-bl"><div class="pm-b"></div><div class="pm-b"></div><div class="pm-b"></div></div><div class="pm-rl"><div class="pm-r"></div><div class="pm-r"></div><div class="pm-r"></div></div></div></div>
+      <span class="proj-media-label">MEALMATCH_AI_DEMO.MP4</span>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<div class="testi-block">
+  <div class="tb-text">"A true visionary in product design. His Figma expertise is unmatched and his testing is meticulous."</div>
+  <div class="tb-attr">— MEALMATCH AI, FOUNDING TEAM // INTERNAL REVIEW</div>
+</div>
+
+<!-- ================================================================
+     02 / BALLRS
+     ================================================================ -->
+<section class="project">
+  <div class="proj-grid reverse">
+    <div class="proj-info">
+      <h2 class="proj-num">02 / Ballrs</h2>
+      <p class="proj-desc">A multi-sport trivia app built with React Native and Supabase. Designed a neubrutalist identity for a high-engagement sports community. End-to-end — designed every screen, wrote every component.</p>
+      <div class="proj-stats">
+        <div class="proj-stat"><strong>Impact:</strong> 13.8% Conversion Rate</div>
+        <div class="proj-stat"><strong>Stack:</strong> React Native, Expo, Supabase</div>
+        <div class="proj-stat"><strong>Role:</strong> Designed & Built (Full-Stack)</div>
+        <div class="proj-stat"><strong>Status:</strong> Live on App Store</div>
+      </div>
+      <button class="proj-cta">View Case Study <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+    <div class="proj-media" data-p="ballrs">
+      <div class="proj-mockup"><div class="pm"><div class="pm-top"><span>9:41</span><span>Ballrs</span></div><div class="pm-h">Daily Pick</div><div class="pm-s">Who scored more?</div><div class="pm-bl"><div class="pm-b" style="height:55px"></div><div class="pm-b" style="height:55px"></div></div><div class="pm-rl"><div class="pm-r"></div><div class="pm-r"></div></div></div></div>
+      <span class="proj-media-label">BALLRS_DEMO.MP4</span>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<div class="testi-light">
+  <div class="tl-text">"He consistently transformed complex challenges into elegant, user-centered solutions that elevated the entire product experience."</div>
+  <div class="tl-attr">— ALEX LEITE // SENIOR DIRECTOR, MICROSOFT 365</div>
+</div>
+
+<!-- ================================================================
+     03 / LOUPE
+     ================================================================ -->
+<section class="project">
+  <div class="proj-grid">
+    <div class="proj-info">
+      <h2 class="proj-num">03 / Loupe</h2>
+      <p class="proj-desc">Native Mac app for photographers. Uses Apple's Vision framework to auto-tag your entire library on-device. No cloud, no subscriptions. Built because I needed it — then shipped it.</p>
+      <div class="proj-stats">
+        <div class="proj-stat"><strong>Stack:</strong> SwiftUI, Apple Vision, CoreML</div>
+        <div class="proj-stat"><strong>AI:</strong> On-Device Machine Learning</div>
+        <div class="proj-stat"><strong>Role:</strong> Designed & Built (Solo)</div>
+        <div class="proj-stat"><strong>Status:</strong> Live on Mac App Store</div>
+      </div>
+      <button class="proj-cta">View on App Store <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+    <div class="proj-media" data-p="loupe">
+      <div class="proj-mockup"><div class="pm"><div class="pm-top"><span>Loupe</span><span>v1.2</span></div><div class="pm-h">Library</div><div class="pm-s">2,481 photos tagged</div><div class="pm-bl"><div class="pm-b"></div><div class="pm-b"></div><div class="pm-b"></div></div><div class="pm-rl"><div class="pm-r"></div><div class="pm-r"></div><div class="pm-r"></div><div class="pm-r"></div></div></div></div>
+      <span class="proj-media-label">LOUPE_FLOW.MP4</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     04 / JETSWEAT
+     ================================================================ -->
+<section class="project">
+  <div class="proj-grid reverse">
+    <div class="proj-info">
+      <h2 class="proj-num">04 / JetSweat</h2>
+      <p class="proj-desc">B2B fitness SaaS. Redesigned the onboarding flow, rebuilt the CMS from scratch, and introduced self-serve studio management tools. Numbers that moved the business.</p>
+      <div class="proj-stats">
+        <div class="proj-stat"><strong>Impact:</strong> +25% Sign-up Lift</div>
+        <div class="proj-stat"><strong>Efficiency:</strong> -75% Manual CMS Setup</div>
+        <div class="proj-stat"><strong>Role:</strong> Product Designer</div>
+        <div class="proj-stat"><strong>Type:</strong> B2B SaaS, Product-Led Growth</div>
+      </div>
+      <button class="proj-cta">View Case Study <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+    <div class="proj-media" data-p="jetsweat">
+      <div class="proj-mockup"><div class="pm"><div class="pm-top"><span>9:41</span><span>JetSweat</span></div><div class="pm-h">Dashboard</div><div class="pm-s">Studio analytics</div><div class="pm-ch"><div class="pm-cv" style="height:25%"></div><div class="pm-cv" style="height:45%"></div><div class="pm-cv hi" style="height:75%"></div><div class="pm-cv" style="height:38%"></div><div class="pm-cv hi" style="height:92%"></div><div class="pm-cv" style="height:55%"></div><div class="pm-cv hi" style="height:68%"></div></div></div></div>
+      <span class="proj-media-label">JETSWEAT_DASH.MP4</span>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<div class="testi-block">
+  <div class="tb-text">"Paul is a talented UX designer with a unique ability to distill complex features into clean designs and seamless user flows."</div>
+  <div class="tb-attr">— ALEXANDRA DANTZIG // CO-FOUNDER & CEO, JETSWEAT</div>
+</div>
+
+<!-- ================================================================
+     05 / ALLERGYTRACKER
+     ================================================================ -->
+<section class="project">
+  <div class="proj-grid">
+    <div class="proj-info">
+      <h2 class="proj-num">05 / AllergyTracker</h2>
+      <p class="proj-desc">Designing for cognitive impairment during allergic episodes. Accessibility-first UX with voice UI integration. Research-driven redesign tested with users under real-time cognitive load.</p>
+      <div class="proj-stats">
+        <div class="proj-stat"><strong>Impact:</strong> 20% Task Time Reduction</div>
+        <div class="proj-stat"><strong>Focus:</strong> Cognitive Impairment UX</div>
+        <div class="proj-stat"><strong>Input:</strong> Voice UI Integration</div>
+        <div class="proj-stat"><strong>Role:</strong> UX Researcher & Designer</div>
+      </div>
+    </div>
+    <div class="proj-media" data-p="allergytracker">
+      <div class="proj-mockup"><div class="pm"><div class="pm-top"><span>9:41</span><span>AllergyTracker</span></div><div class="pm-h">Log Symptoms</div><div class="pm-s">Voice input active</div><div class="pm-bl"><div class="pm-b" style="height:44px"></div><div class="pm-b" style="height:44px"></div></div><div class="pm-rl"><div class="pm-r"></div><div class="pm-r"></div><div class="pm-r"></div></div></div></div>
+      <span class="proj-media-label">ALLERGYTRACKER_FLOW.MP4</span>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<div class="testi-light">
+  <div class="tl-text">"He is strong in all areas of UX from research to design, with an aptitude for prototyping. Paul would make a great addition to any team."</div>
+  <div class="tl-attr">— KIM HARTFORD // FOUNDING PRODUCT DESIGNER</div>
+</div>
+
+<!-- ================================================================
+     SHIPPED
+     ================================================================ -->
+<section class="shipped">
+  <div class="shipped-header">
+    <h2>I Design<br>And Build.</h2>
+  </div>
+  <div class="shipped-grid">
+    <div class="shipped-card">
+      <div class="sc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+      <div class="sc-name">Ballrs</div>
+      <span class="sc-type">iOS — Sports Trivia</span>
+      <p class="sc-desc">Daily sports trivia. React Native & TypeScript. Full-stack from Figma to production.</p>
+      <div class="sc-badges">
+        <span class="sc-badge live">LIVE</span>
+        <span class="sc-badge">13.8% CONV</span>
+        <span class="sc-badge">RN / TS</span>
+      </div>
+      <a class="sc-link" href="#">APP STORE <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+    <div class="shipped-card">
+      <div class="sc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="4" height="12" rx="1"/><rect x="10" y="3" width="4" height="18" rx="1"/><rect x="18" y="8" width="4" height="8" rx="1"/></svg></div>
+      <div class="sc-name">Beat Block</div>
+      <span class="sc-type">iOS — Music Production</span>
+      <p class="sc-desc">Music sequencing playground. Tap out beats, layer sounds, create tracks.</p>
+      <div class="sc-badges">
+        <span class="sc-badge live">LIVE</span>
+        <span class="sc-badge">SEQUENCER</span>
+      </div>
+      <a class="sc-link" href="#">APP STORE <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+    <div class="shipped-card">
+      <div class="sc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+      <div class="sc-name">Loupe</div>
+      <span class="sc-type">macOS — Photography AI</span>
+      <p class="sc-desc">Native Mac app. Local AI tags your photo library. No cloud, no subscriptions.</p>
+      <div class="sc-badges">
+        <span class="sc-badge live">LIVE</span>
+        <span class="sc-badge">VISION AI</span>
+        <span class="sc-badge">SWIFTUI</span>
+      </div>
+      <a class="sc-link" href="#">MAC APP STORE <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     BACKSTORY
+     ================================================================ -->
+<section class="backstory">
+  <div class="bs-header">
+    <h2>The<br>Backstory.</h2>
+  </div>
+  <div class="bs-grid">
+    <div>
+      <p class="bs-text"><strong>Started in product management in London.</strong> Followed the camera — shot for Netflix, HBO, National Geographic, Amazon. Now I design and build apps, with the eye of a photographer and the instincts of someone who's shipped real products.</p>
+      <div class="bs-timeline">
+        <div class="bt-row"><span class="bt-year">2014–2016</span><span class="bt-desc"><strong>Product Manager</strong> — London. Roadmaps, sprints, metrics.</span></div>
+        <div class="bt-row"><span class="bt-year">2016–2020</span><span class="bt-desc"><strong>Photographer</strong> — Netflix, HBO, Nat Geo, Amazon.</span></div>
+        <div class="bt-row"><span class="bt-year">2020–2024</span><span class="bt-desc"><strong>GA & Freelance</strong> — UX immersion, freelance design work.</span></div>
+        <div class="bt-row"><span class="bt-year">2024–Now</span><span class="bt-desc"><strong>Lead Designer</strong> — MealMatch AI. 3 apps shipped to the store.</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="bs-strip">
+        <div class="bs-frame"><img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=360&h=480&fit=crop" alt="" loading="lazy"></div>
+        <div class="bs-frame"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=360&h=480&fit=crop" alt="" loading="lazy"></div>
+        <div class="bs-frame"><img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=360&h=480&fit=crop" alt="" loading="lazy"></div>
+        <div class="bs-frame"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=360&h=480&fit=crop" alt="" loading="lazy"></div>
+        <div class="bs-frame"><img src="https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=360&h=480&fit=crop" alt="" loading="lazy"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     FOOTER
+     ================================================================ -->
+<footer class="footer">
+  <div>
+    <div class="ft-headline">Open For<br>Opportunities.</div>
+    <p class="ft-sub">Product design roles, contract work, or interesting collaborations in New York City.</p>
+    <div class="ft-links">
+      <a href="mailto:hello@paultaylormade.com" class="ft-link">
+        Contact
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer" class="ft-link">LinkedIn</a>
+      <a href="https://drive.google.com/file/d/1XDFRARRMCelp--CW1QSG9yTvu3VQGOKT/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="ft-link">Resume</a>
+    </div>
+  </div>
+  <div class="ft-right">
+    <div class="ft-copy">&copy; 2026 PAUL TAYLOR</div>
+    <div class="ft-socials">
+      <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

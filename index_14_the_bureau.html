@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — The Bureau</title>
+<meta name="description" content="Product Designer in Brooklyn. I design apps. Then I build them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F6F1EB;--desk:#EDE8E1;--folder:#E8DFD2;--folder-dark:#D4C9B8;
+  --tab:#C8B89C;--accent:#D4582A;--text:#1A1A1A;--muted:#918A82;
+  --muted2:#C0B8AE;--yellow:#FFF9C4;--yellow2:#FFF176;
+  --label-bg:#1A1A1A;--label-text:#F6F1EB;
+  --wire:rgba(26,26,26,.06);
+  --serif:'DM Serif Display',Georgia,serif;
+  --gara:'Cormorant Garamond',Georgia,serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --heavy:cubic-bezier(.22,1,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:auto}
+body{font-family:var(--mono);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.6;cursor:default}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--accent);color:#fff}
+
+/* Paper texture */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.45' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='.3'/%3E%3C/svg%3E");
+  opacity:.05;mix-blend-mode:multiply;
+}
+
+/* ================================================================
+   LABEL-MAKER NAV
+   ================================================================ */
+.label-nav{
+  position:fixed;top:16px;right:16px;z-index:600;
+  display:flex;align-items:center;
+  background:var(--label-bg);color:var(--label-text);
+  padding:6px 16px;border-radius:3px;
+  font:600 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+  max-width:180px;overflow:hidden;white-space:nowrap;
+  transition:max-width .8s var(--heavy),padding .4s;
+}
+.label-nav.expanded{max-width:600px;padding:6px 20px}
+.label-nav .ln-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--accent);
+  margin-right:8px;flex-shrink:0;
+  animation:lnPulse 2s ease-in-out infinite;
+}
+@keyframes lnPulse{0%,100%{opacity:1}50%{opacity:.3}}
+.label-nav .ln-sep{margin:0 10px;color:rgba(246,241,235,.2)}
+/* Embossed effect */
+.label-nav::before{
+  content:'';position:absolute;inset:0;border-radius:3px;
+  background:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(255,255,255,.02) 1px,rgba(255,255,255,.02) 2px);
+  pointer-events:none;
+}
+
+/* Nav links */
+.ln-links{display:flex;gap:12px;margin-left:12px}
+.ln-links a{color:rgba(246,241,235,.5);transition:color .2s;cursor:default;font-weight:400}
+.ln-links a:hover{color:var(--label-text)}
+
+/* ================================================================
+   EMBOSSED HERO
+   ================================================================ */
+.hero{position:relative;height:300vh}
+.hero-sticky{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--desk);
+}
+/* Desk surface texture — subtle ruled lines */
+.hero-sticky::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(26,26,26,.02) 79px,rgba(26,26,26,.02) 80px);
+}
+
+/* Embossed name */
+.embossed-name{
+  position:absolute;font-family:var(--serif);
+  font-size:clamp(80px,16vw,220px);line-height:1;
+  letter-spacing:-.03em;
+  color:transparent;
+  text-shadow:1px 1px 0 rgba(255,255,255,.4),-1px -1px 0 rgba(0,0,0,.06);
+  user-select:none;pointer-events:none;
+}
+
+/* Central folder */
+.folder{
+  position:relative;z-index:2;
+  width:min(560px,85vw);
+}
+/* Folder tab */
+.folder-tab{
+  width:140px;height:28px;
+  background:var(--tab);border-radius:6px 6px 0 0;
+  margin-left:40px;
+  display:flex;align-items:center;justify-content:center;
+  font:500 8px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
+}
+/* Folder body — the cover that slides up */
+.folder-cover{
+  position:relative;
+  background:var(--folder);border-radius:4px;
+  padding:40px;min-height:200px;
+  box-shadow:0 4px 20px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.4);
+  will-change:transform;
+  transform-origin:bottom center;
+  z-index:3;
+}
+/* Staple detail */
+.folder-cover::before{
+  content:'';position:absolute;top:12px;left:20px;
+  width:12px;height:3px;background:linear-gradient(180deg,#aaa,#888);
+  border-radius:1px;box-shadow:0 1px 2px rgba(0,0,0,.15);
+}
+/* Contents revealed underneath */
+.folder-contents{
+  position:absolute;top:28px;left:0;right:0;
+  background:var(--bg);border-radius:4px;
+  padding:48px 40px;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.04);
+  z-index:1;
+}
+.fc-pre{font:500 9px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.fc-pre::before{content:'';width:16px;height:1px;background:var(--accent)}
+.fc-hl{font-family:var(--serif);font-size:clamp(24px,4vw,40px);line-height:1.15;margin-bottom:12px}
+.fc-hl em{font-style:italic;color:var(--accent)}
+.fc-sub{font:400 12px/1.7 var(--mono);color:var(--muted);max-width:400px}
+.fc-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.fc-chip{font:400 9px/1 var(--mono);letter-spacing:.06em;padding:5px 12px;border:1px solid var(--wire);border-radius:100px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.fc-chip .cd{width:4px;height:4px;border-radius:50%}
+
+/* ================================================================
+   SPATIAL FOLDERS STACK (WORK)
+   ================================================================ */
+.folders{position:relative}
+.folders-runway{position:relative}
+.folders-sticky{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  perspective:1200px;
+  background:var(--bg);
+}
+.folders-header{position:absolute;top:40px;left:48px;z-index:20}
+.fh-label{font:500 9px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.fh-label::before{content:'';width:16px;height:1px;background:var(--accent)}
+.fh-title{font:400 22px/1.2 var(--serif)}
+
+/* Individual folder */
+.stack-folder{
+  position:absolute;
+  width:min(700px,88vw);
+  background:var(--folder);border-radius:6px;
+  box-shadow:0 6px 24px rgba(0,0,0,.08),inset 0 1px 0 rgba(255,255,255,.35);
+  will-change:transform;
+  transform-style:preserve-3d;
+  display:grid;grid-template-columns:1fr 220px;
+  overflow:hidden;
+}
+.sf-tab{
+  position:absolute;top:-24px;left:32px;
+  width:120px;height:24px;
+  background:var(--tab);border-radius:5px 5px 0 0;
+  display:flex;align-items:center;justify-content:center;
+  font:500 7px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
+}
+.sf-main{padding:32px 28px}
+.sf-visual{
+  border-radius:8px;overflow:hidden;aspect-ratio:16/10;
+  margin-bottom:20px;display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.sf-mockup{
+  width:160px;height:220px;border-radius:20px;overflow:hidden;
+  box-shadow:0 16px 40px rgba(0,0,0,.12);position:relative;
+  transition:transform .5s var(--heavy);z-index:2;
+}
+.stack-folder:hover .sf-mockup{transform:translateY(-4px) rotate(-1deg) scale(1.02)}
+.sfm{position:absolute;inset:6px;border-radius:15px;display:flex;flex-direction:column;padding:12px 10px;overflow:hidden}
+.sfm-top{display:flex;justify-content:space-between;font:400 7px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:9px}
+.sfm-h{font:400 13px/1.2 var(--serif);color:#fff;margin-bottom:2px}
+.sfm-s{font:400 7px/1 var(--mono);color:rgba(255,255,255,.2)}
+.sfm-bl{display:flex;gap:3px;margin-top:9px}
+.sfm-b{flex:1;height:26px;border-radius:5px;background:rgba(255,255,255,.05)}
+.sfm-rl{display:flex;flex-direction:column;gap:3px;margin-top:7px}
+.sfm-r{height:14px;border-radius:4px;background:rgba(255,255,255,.04)}
+.sfm-ch{display:flex;align-items:flex-end;gap:2px;height:44px;margin-top:auto;padding-top:5px}
+.sfm-cv{flex:1;border-radius:2px 2px 0 0;background:rgba(255,255,255,.06)}
+.sfm-cv.hi{background:rgba(255,255,255,.22)}
+
+/* Tags on visual */
+.sf-labels{position:absolute;bottom:10px;left:10px;z-index:3;display:flex;flex-direction:column;gap:3px}
+.sf-lbl{font:500 6px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);background:rgba(0,0,0,.3);backdrop-filter:blur(5px);padding:3px 6px;border-radius:2px;width:fit-content}
+
+.sf-title{font:400 24px/1.1 var(--serif);margin-bottom:6px}
+.sf-desc{font:400 11px/1.7 var(--mono);color:var(--muted);margin-bottom:12px}
+.sf-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.sf-tag{font:400 8px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--wire);border-radius:100px;color:var(--muted)}
+.sf-super{font:500 9px/1 var(--mono);color:var(--accent);display:flex;align-items:center;gap:5px}
+.sf-super::before{content:'';width:4px;height:4px;background:var(--accent);border-radius:50%}
+
+/* Spec sheet sidebar */
+.sf-spec{padding:28px 20px;background:rgba(26,26,26,.02);border-left:1px solid var(--wire)}
+.spec-title{font:600 7px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.spec-row{display:flex;justify-content:space-between;padding:5px 0;font:400 9px/1.4 var(--mono);color:var(--muted);border-bottom:1px solid var(--wire)}
+.spec-row:last-child{border-bottom:none}
+.spec-val{color:var(--text);font-weight:500;text-align:right}
+.spec-val.hi{color:var(--accent)}
+
+/* Folder themes */
+.stack-folder[data-p="mealmatch"] .sf-visual{background:linear-gradient(135deg,#dce8e0,#c8d8ce)}
+.stack-folder[data-p="mealmatch"] .sf-mockup{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.stack-folder[data-p="ballrs"] .sf-visual{background:linear-gradient(135deg,#d8dbe4,#c4c8d6)}
+.stack-folder[data-p="ballrs"] .sf-mockup{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.stack-folder[data-p="loupe"] .sf-visual{background:linear-gradient(135deg,#dcd8ea,#cac6dc)}
+.stack-folder[data-p="loupe"] .sf-mockup{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.stack-folder[data-p="jetsweat"] .sf-visual{background:linear-gradient(135deg,#e8ddd6,#daced0)}
+.stack-folder[data-p="jetsweat"] .sf-mockup{background:linear-gradient(150deg,#D4582A,#A84420)}
+
+/* Progress dots */
+.stack-pips{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:20;display:flex;gap:8px}
+.stack-pip{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--muted2);background:transparent;transition:background .3s,border-color .3s}
+.stack-pip.active{background:var(--accent);border-color:var(--accent)}
+
+/* ================================================================
+   SLIDE BOX + NOTEPAD
+   ================================================================ */
+.below-fold{padding:80px 48px 0;max-width:1000px;margin:0 auto}
+.bf-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+
+/* Slide box */
+.slide-box{position:relative}
+.sb-label{font:500 9px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.sb-label::before{content:'';width:16px;height:1px;background:var(--accent)}
+.sb-title{font:400 24px/1.2 var(--serif);margin-bottom:24px}
+
+.slides-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+.slide-thumb{
+  aspect-ratio:3/4;border-radius:3px;overflow:hidden;
+  position:relative;background:var(--desk);
+  border:3px solid rgba(246,241,235,.95);
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+  cursor:default;transition:transform .3s var(--heavy),box-shadow .3s;
+}
+.slide-thumb:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 6px 16px rgba(0,0,0,.1)}
+.slide-thumb img{
+  width:100%;height:100%;object-fit:cover;
+  filter:grayscale(50%) contrast(1.1);transition:filter .4s;
+}
+.slide-thumb:hover img{filter:grayscale(0%)}
+.slide-thumb-label{
+  position:absolute;bottom:3px;left:3px;
+  font:400 6px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(26,26,26,.4);
+}
+
+/* Projector overlay */
+.projector{
+  position:fixed;inset:0;z-index:700;
+  background:rgba(26,26,26,.85);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;
+  transition:opacity .4s,visibility .4s;
+  cursor:default;
+}
+.projector.on{opacity:1;visibility:visible}
+.projector img{
+  max-width:80vw;max-height:80vh;border-radius:4px;
+  filter:grayscale(60%) contrast(1.2);
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+.projector-close{
+  position:absolute;top:24px;right:24px;
+  font:400 24px/1 var(--mono);color:rgba(246,241,235,.5);
+  cursor:default;transition:color .2s;
+}
+.projector-close:hover{color:#fff}
+.projector-grain{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;opacity:.2;
+}
+
+/* Career text */
+.career-text{margin-top:24px}
+.career-text h3{font:400 20px/1.2 var(--serif);margin-bottom:12px}
+.career-text h3 em{font-style:italic;color:var(--accent)}
+.ct-p{font:400 11px/1.7 var(--mono);color:var(--muted);margin-bottom:10px}
+.ct-tl{display:flex;flex-direction:column;margin-top:16px}
+.ct-i{display:flex;gap:14px;padding:10px 0;border-top:1px solid var(--wire)}
+.ct-era{font:400 8px/1 var(--mono);letter-spacing:.08em;color:var(--accent);flex-shrink:0;width:56px;padding-top:2px}
+.ct-d{font:400 10px/1.5 var(--mono);color:var(--muted)}.ct-d strong{color:var(--text);font-weight:500}
+
+/* Legal pad — notepad testimonials */
+.notepad{
+  background:var(--yellow);border-radius:4px;padding:0;
+  box-shadow:0 4px 16px rgba(0,0,0,.08);
+  position:relative;overflow:hidden;
+  transform:rotate(1.5deg);
+}
+/* Red margin line */
+.notepad::before{
+  content:'';position:absolute;top:0;bottom:0;left:48px;
+  width:1px;background:rgba(220,80,80,.25);z-index:2;
+}
+/* Horizontal rules */
+.notepad::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(0,0,0,.05) 27px,rgba(0,0,0,.05) 28px);
+}
+/* Pad binding */
+.notepad-binding{
+  height:20px;background:linear-gradient(180deg,var(--yellow2),var(--yellow));
+  border-bottom:2px solid rgba(0,0,0,.08);position:relative;
+}
+.notepad-content{padding:16px 20px 24px 60px;position:relative;z-index:1}
+.np-title{
+  font:600 8px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:16px;
+}
+.np-quote{
+  font:400 13px/1.7 var(--gara);font-style:italic;
+  color:rgba(26,26,26,.7);margin-bottom:16px;
+  padding-bottom:16px;border-bottom:1px solid rgba(0,0,0,.06);
+}
+.np-attr{font:500 8px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.np-role{font:400 8px/1 var(--mono);color:var(--muted);margin-bottom:20px}
+
+/* ================================================================
+   CONTACT
+   ================================================================ */
+.contact{padding:80px 48px;max-width:700px;margin:0 auto;text-align:center}
+.contact h2{font:400 clamp(28px,4vw,48px)/1.1 var(--serif);margin-bottom:14px}
+.contact p{font:400 12px/1.7 var(--mono);color:var(--muted);max-width:400px;margin:0 auto 36px}
+.cta{display:inline-flex;align-items:center;gap:8px;font:500 11px/1 var(--mono);color:var(--accent);border:1.5px solid var(--accent);padding:12px 28px;border-radius:100px;transition:background .3s,color .3s,transform .3s var(--spring);cursor:default}
+.cta:hover{background:var(--accent);color:#fff;transform:scale(1.03)}
+.footer{padding:24px 48px;display:flex;justify-content:space-between;align-items:center;max-width:1000px;margin:0 auto;border-top:1px solid var(--wire)}
+.footer span{font:400 9px/1 var(--mono);color:var(--muted2)}
+.footer-links{display:flex;gap:16px}
+.footer-links a{font:400 9px/1 var(--mono);color:var(--muted);transition:color .3s}
+.footer-links a:hover{color:var(--accent)}
+
+/* ── REVEAL ── */
+[data-r]{opacity:0;transform:translateY(40px) scale(.96);transition:opacity .9s var(--heavy),transform 1s var(--heavy);will-change:transform,opacity}
+[data-r].vis{opacity:1;transform:none}
+[data-r="d1"]{transition-delay:.1s}
+
+@media(max-width:900px){
+  .stack-folder{grid-template-columns:1fr;width:92vw}
+  .sf-spec{border-left:none;border-top:1px solid var(--wire)}
+  .bf-grid{grid-template-columns:1fr;gap:40px}
+  .notepad{transform:rotate(0)}
+  .below-fold,.contact{padding-left:20px;padding-right:20px}
+  .footer{padding:20px;flex-direction:column;gap:8px}
+  .label-nav{top:8px;right:8px;font-size:8px}
+  .folders-header{top:20px;left:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- Label-maker nav -->
+<div class="label-nav" id="labelNav">
+  <div class="ln-dot"></div>
+  <span id="lnText">Paul Taylor</span>
+  <span class="ln-sep" id="lnSep" style="display:none">//</span>
+  <span id="lnExtra" style="display:none">LOC: BKLYN // STATUS: ACTIVE</span>
+  <span class="ln-sep" id="lnSep2" style="display:none">//</span>
+  <div class="ln-links" id="lnLinks" style="display:none">
+    <a href="#work">Work</a>
+    <a href="#below">Story</a>
+    <a href="#contact">Contact</a>
+  </div>
+</div>
+
+<!-- Projector overlay -->
+<div class="projector" id="projector" onclick="this.classList.remove('on')">
+  <img id="projImg" src="" alt="">
+  <div class="projector-grain"></div>
+  <div class="projector-close">&times;</div>
+</div>
+
+<!-- ================================================================
+     EMBOSSED HERO
+     ================================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-sticky">
+    <div class="embossed-name">PAUL TAYLOR</div>
+
+    <div class="folder">
+      <div class="folder-tab">Case File</div>
+      <div class="folder-cover" id="folderCover">
+        <div style="font:400 13px/1.6 var(--mono);color:var(--muted);text-align:center;padding:40px 0">
+          <div style="font:400 32px/1 var(--serif);color:var(--text);margin-bottom:12px">Paul Taylor</div>
+          <div>Product Designer & Builder</div>
+          <div style="font:400 10px/1 var(--mono);color:var(--muted2);margin-top:8px">Brooklyn, NY — 2026</div>
+        </div>
+      </div>
+      <div class="folder-contents" id="folderContents">
+        <div class="fc-pre">Dossier</div>
+        <h1 class="fc-hl">I design apps.<br>Then I <em>build</em> them.</h1>
+        <p class="fc-sub">Lead designer at MealMatch AI. Three apps live on the App Store. I ship in code and shoot on film.</p>
+        <div class="fc-chips">
+          <span class="fc-chip"><span class="cd" style="background:#34d399"></span>MealMatch AI</span>
+          <span class="fc-chip"><span class="cd" style="background:var(--accent)"></span>3 Apps Shipped</span>
+          <span class="fc-chip"><span class="cd" style="background:#60a5fa"></span>Brooklyn, NY</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SPATIAL FOLDERS STACK
+     ================================================================ -->
+<section class="folders" id="work">
+  <div class="folders-runway" id="foldersRunway">
+    <div class="folders-sticky">
+      <div class="folders-header">
+        <div class="fh-label">Selected Work</div>
+        <div class="fh-title">Case files.</div>
+      </div>
+
+      <!-- MealMatch -->
+      <div class="stack-folder" data-p="mealmatch" id="sf0">
+        <div class="sf-tab">Case 01</div>
+        <div class="sf-main">
+          <div class="sf-visual">
+            <div class="sf-mockup"><div class="sfm" style="background:linear-gradient(180deg,#2D5A3D,#1a3d28)"><div class="sfm-top"><span>9:41</span><span>MealMatch</span></div><div class="sfm-h">Your Plan</div><div class="sfm-s">3 meals curated</div><div class="sfm-bl"><div class="sfm-b"></div><div class="sfm-b"></div><div class="sfm-b"></div></div><div class="sfm-rl"><div class="sfm-r"></div><div class="sfm-r"></div><div class="sfm-r"></div></div></div></div>
+            <div class="sf-labels"><span class="sf-lbl">AI UX & Research</span><span class="sf-lbl">40+ Participants</span></div>
+          </div>
+          <h3 class="sf-title">MealMatch AI</h3>
+          <p class="sf-desc">AI meal planning. Scaled a design system from zero. 40+ participant research studies.</p>
+          <div class="sf-tags"><span class="sf-tag">AI UX</span><span class="sf-tag">Systems</span><span class="sf-tag">Research</span></div>
+          <div class="sf-super">40+ studies, full design system</div>
+        </div>
+        <div class="sf-spec">
+          <div class="spec-title">Spec Sheet</div>
+          <div class="spec-row"><span>Status</span><span class="spec-val hi">Active</span></div>
+          <div class="spec-row"><span>Role</span><span class="spec-val">Lead Designer</span></div>
+          <div class="spec-row"><span>Research</span><span class="spec-val">40+ Participants</span></div>
+          <div class="spec-row"><span>System</span><span class="spec-val">128 Tokens</span></div>
+          <div class="spec-row"><span>Focus</span><span class="spec-val">AI UX</span></div>
+        </div>
+      </div>
+
+      <!-- Ballrs -->
+      <div class="stack-folder" data-p="ballrs" id="sf1">
+        <div class="sf-tab">Case 02</div>
+        <div class="sf-main">
+          <div class="sf-visual">
+            <div class="sf-mockup"><div class="sfm" style="background:linear-gradient(180deg,#1A1A2E,#111528)"><div class="sfm-top"><span>9:41</span><span>Ballrs</span></div><div class="sfm-h">Daily Pick</div><div class="sfm-s">Who scored more?</div><div class="sfm-bl"><div class="sfm-b" style="height:44px"></div><div class="sfm-b" style="height:44px"></div></div><div class="sfm-rl"><div class="sfm-r"></div><div class="sfm-r"></div></div></div></div>
+            <div class="sf-labels"><span class="sf-lbl">React Native / TS</span><span class="sf-lbl">App Store Live</span></div>
+          </div>
+          <h3 class="sf-title">Ballrs</h3>
+          <p class="sf-desc">End-to-end design and engineering. React Native & TypeScript. Shipped to the App Store.</p>
+          <div class="sf-tags"><span class="sf-tag">React Native</span><span class="sf-tag">TypeScript</span><span class="sf-tag">Shipped</span></div>
+          <div class="sf-super">Designed + built, App Store live</div>
+        </div>
+        <div class="sf-spec">
+          <div class="spec-title">Spec Sheet</div>
+          <div class="spec-row"><span>Status</span><span class="spec-val hi">Live</span></div>
+          <div class="spec-row"><span>Role</span><span class="spec-val">Designer+Eng</span></div>
+          <div class="spec-row"><span>Stack</span><span class="spec-val">RN / TS</span></div>
+          <div class="spec-row"><span>Platform</span><span class="spec-val">iOS</span></div>
+          <div class="spec-row"><span>Type</span><span class="spec-val">Full-Stack</span></div>
+        </div>
+      </div>
+
+      <!-- Loupe -->
+      <div class="stack-folder" data-p="loupe" id="sf2">
+        <div class="sf-tab">Case 03</div>
+        <div class="sf-main">
+          <div class="sf-visual">
+            <div class="sf-mockup"><div class="sfm" style="background:linear-gradient(180deg,#5B4FA0,#3D3578)"><div class="sfm-top"><span>Loupe</span><span>v1.2</span></div><div class="sfm-h">Library</div><div class="sfm-s">2,481 tagged</div><div class="sfm-bl"><div class="sfm-b"></div><div class="sfm-b"></div><div class="sfm-b"></div></div><div class="sfm-rl"><div class="sfm-r"></div><div class="sfm-r"></div><div class="sfm-r"></div><div class="sfm-r"></div></div></div></div>
+            <div class="sf-labels"><span class="sf-lbl">SwiftUI / Vision</span><span class="sf-lbl">On-Device AI</span></div>
+          </div>
+          <h3 class="sf-title">Loupe</h3>
+          <p class="sf-desc">Native Mac app. Local AI tags your photo library. No cloud, no subscriptions.</p>
+          <div class="sf-tags"><span class="sf-tag">macOS</span><span class="sf-tag">Vision AI</span><span class="sf-tag">SwiftUI</span></div>
+          <div class="sf-super">On-device AI, zero cloud</div>
+        </div>
+        <div class="sf-spec">
+          <div class="spec-title">Spec Sheet</div>
+          <div class="spec-row"><span>Status</span><span class="spec-val hi">Shipped</span></div>
+          <div class="spec-row"><span>Stack</span><span class="spec-val">Swift / Vision</span></div>
+          <div class="spec-row"><span>Platform</span><span class="spec-val">macOS</span></div>
+          <div class="spec-row"><span>AI</span><span class="spec-val">On-Device</span></div>
+          <div class="spec-row"><span>Cloud</span><span class="spec-val">None</span></div>
+        </div>
+      </div>
+
+      <!-- JetSweat -->
+      <div class="stack-folder" data-p="jetsweat" id="sf3">
+        <div class="sf-tab">Case 04</div>
+        <div class="sf-main">
+          <div class="sf-visual">
+            <div class="sf-mockup"><div class="sfm" style="background:linear-gradient(180deg,#D4582A,#a84420)"><div class="sfm-top"><span>9:41</span><span>JetSweat</span></div><div class="sfm-h">Dashboard</div><div class="sfm-s">Analytics</div><div class="sfm-ch"><div class="sfm-cv" style="height:25%"></div><div class="sfm-cv" style="height:45%"></div><div class="sfm-cv hi" style="height:75%"></div><div class="sfm-cv" style="height:38%"></div><div class="sfm-cv hi" style="height:92%"></div><div class="sfm-cv" style="height:55%"></div><div class="sfm-cv hi" style="height:68%"></div></div></div></div>
+            <div class="sf-labels"><span class="sf-lbl">+25% Sign-ups</span><span class="sf-lbl">-75% Manual</span></div>
+          </div>
+          <h3 class="sf-title">JetSweat</h3>
+          <p class="sf-desc">Product-led growth for B2B fitness SaaS. 25% more sign-ups, 75% less manual setup.</p>
+          <div class="sf-tags"><span class="sf-tag">Growth</span><span class="sf-tag">SaaS</span><span class="sf-tag">CMS</span></div>
+          <div class="sf-super">25% lift, 75% less manual work</div>
+        </div>
+        <div class="sf-spec">
+          <div class="spec-title">Spec Sheet</div>
+          <div class="spec-row"><span>Status</span><span class="spec-val">Complete</span></div>
+          <div class="spec-row"><span>Sign-ups</span><span class="spec-val hi">+25%</span></div>
+          <div class="spec-row"><span>CMS Setup</span><span class="spec-val hi">-75%</span></div>
+          <div class="spec-row"><span>Focus</span><span class="spec-val">PLG</span></div>
+          <div class="spec-row"><span>Impact</span><span class="spec-val">Revenue</span></div>
+        </div>
+      </div>
+
+      <div class="stack-pips" id="stackPips"><div class="stack-pip active"></div><div class="stack-pip"></div><div class="stack-pip"></div><div class="stack-pip"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE BOX + NOTEPAD
+     ================================================================ -->
+<section class="below-fold" id="below">
+  <div class="bf-grid">
+    <div>
+      <div class="slide-box" data-r>
+        <div class="sb-label">The Slide Box</div>
+        <h2 class="sb-title">How I got here.</h2>
+        <div class="slides-row">
+          <div class="slide-thumb" onclick="projectSlide(this)"><img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="slide-thumb-label">NYC 01</span></div>
+          <div class="slide-thumb" onclick="projectSlide(this)"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="slide-thumb-label">BTS 02</span></div>
+          <div class="slide-thumb" onclick="projectSlide(this)"><img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="slide-thumb-label">EDT 03</span></div>
+          <div class="slide-thumb" onclick="projectSlide(this)"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="slide-thumb-label">LND 04</span></div>
+          <div class="slide-thumb" onclick="projectSlide(this)"><img src="https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="slide-thumb-label">STR 05</span></div>
+          <div class="slide-thumb" onclick="projectSlide(this)"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="slide-thumb-label">PRT 06</span></div>
+          <div class="slide-thumb" onclick="projectSlide(this)"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="slide-thumb-label">PRT 07</span></div>
+          <div class="slide-thumb" onclick="projectSlide(this)"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="slide-thumb-label">HBO 08</span></div>
+        </div>
+        <div class="career-text">
+          <h3>London PM. NYC <em>Photographer</em>. Now I build products.</h3>
+          <p class="ct-p">Started in product management in London. Followed the camera — shot for Netflix, HBO, Nat Geo. Now I design and build apps.</p>
+          <div class="ct-tl">
+            <div class="ct-i"><span class="ct-era">London</span><span class="ct-d"><strong>Product Manager</strong> — products, roadmaps, metrics.</span></div>
+            <div class="ct-i"><span class="ct-era">Freelance</span><span class="ct-d"><strong>Photographer</strong> — Netflix, HBO, Nat Geo.</span></div>
+            <div class="ct-i"><span class="ct-era">Now</span><span class="ct-d"><strong>Designer & Builder</strong> — shipping apps.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legal Pad -->
+    <div data-r="d1">
+      <div class="notepad">
+        <div class="notepad-binding"></div>
+        <div class="notepad-content">
+          <div class="np-title">Notes — Social Proof</div>
+
+          <div class="np-quote">"He consistently transformed complex challenges into elegant, user-centered solutions that elevated the entire product experience."</div>
+          <div class="np-attr">Alex Leite</div>
+          <div class="np-role">Sr. Director, Microsoft 365</div>
+
+          <div class="np-quote">"He is strong in all areas of UX from research to design, with an aptitude for prototyping."</div>
+          <div class="np-attr">Kim Hartford</div>
+          <div class="np-role">Founding Product Designer</div>
+
+          <div class="np-quote">"Paul is a talented UX designer with a unique ability to distill complex features into clean designs and seamless user flows."</div>
+          <div class="np-attr">Alexandra Dantzig</div>
+          <div class="np-role">CEO, JetSweat</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <h2 data-r>Got a project?<br>Let's talk.</h2>
+  <p data-r="d1">Open to full-time roles, contract work, and collaborations.</p>
+  <a href="mailto:hello@paultaylormade.com" class="cta" data-r>hello@paultaylormade.com</a>
+</section>
+<footer class="footer">
+  <span>&copy; 2026 Paul Taylor. The Bureau.</span>
+  <div class="footer-links">
+    <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+    <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── ELEMENTS ── */
+  const folderCover=document.getElementById('folderCover');
+  const labelNav=document.getElementById('labelNav');
+  const lnSep=document.getElementById('lnSep');
+  const lnExtra=document.getElementById('lnExtra');
+  const lnSep2=document.getElementById('lnSep2');
+  const lnLinks=document.getElementById('lnLinks');
+  const heroSection=document.getElementById('hero');
+  const heroH=heroSection.offsetHeight;
+  const foldersRunway=document.getElementById('foldersRunway');
+  const stackFolders=[document.getElementById('sf0'),document.getElementById('sf1'),document.getElementById('sf2'),document.getElementById('sf3')];
+  const pips=document.querySelectorAll('.stack-pip');
+  const FCOUNT=stackFolders.length;
+  const FVHEA=1.3;
+  const vh=()=>window.innerHeight;
+
+  foldersRunway.style.height=(FCOUNT*FVHEA*vh())+'px';
+  window.addEventListener('resize',()=>{foldersRunway.style.height=(FCOUNT*FVHEA*vh())+'px'});
+
+  /* ── IO REVEAL ── */
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')})},{threshold:.15,rootMargin:'0px 0px -10% 0px'});
+  document.querySelectorAll('[data-r]').forEach(el=>obs.observe(el));
+
+  /* ── SLIDE PROJECTOR ── */
+  const projector=document.getElementById('projector');
+  const projImg=document.getElementById('projImg');
+  window.projectSlide=function(el){
+    const img=el.querySelector('img');
+    if(!img)return;
+    projImg.src=img.src.replace('w=300&h=400','w=1200&h=900');
+    projector.classList.add('on');
+  };
+
+  /* ── LABEL NAV EXPANSION ── */
+  let labelExpanded=false;
+
+  /* ── MAIN SCROLL ── */
+  function onScroll(){
+    const sy=window.scrollY;
+
+    /* Folder cover opens on scroll */
+    const heroProgress=Math.min(1,sy/(heroH*.4));
+    const coverRotate=heroProgress*-60;
+    const coverScale=1-heroProgress*.1;
+    const coverOpacity=1-heroProgress;
+    folderCover.style.transform=`perspective(800px) rotateX(${coverRotate}deg) scale(${coverScale})`;
+    folderCover.style.opacity=coverOpacity;
+
+    /* Label nav expansion */
+    const heroBottom=heroSection.getBoundingClientRect().bottom;
+    if(heroBottom<vh()*.4&&!labelExpanded){
+      labelExpanded=true;
+      labelNav.classList.add('expanded');
+      lnSep.style.display='';lnExtra.style.display='';
+      lnSep2.style.display='';lnLinks.style.display='';
+    }else if(heroBottom>=vh()*.4&&labelExpanded){
+      labelExpanded=false;
+      labelNav.classList.remove('expanded');
+      lnSep.style.display='none';lnExtra.style.display='none';
+      lnSep2.style.display='none';lnLinks.style.display='none';
+    }
+
+    /* 3D Folder stack */
+    const fRunwayTop=foldersRunway.getBoundingClientRect().top;
+    if(fRunwayTop<=0){
+      const fScroll=Math.abs(fRunwayTop);
+      const slideH=(FCOUNT*FVHEA*vh())/FCOUNT;
+      const currentIdx=Math.min(FCOUNT-1,Math.floor(fScroll/slideH));
+      const slideProgress=(fScroll%slideH)/slideH;
+
+      stackFolders.forEach((f,i)=>{
+        if(i<currentIdx){
+          // Past: lifted off to top-left
+          f.style.transform='translateY(-120vh) translateZ(200px) rotateX(10deg)';
+          f.style.opacity='0';
+          f.style.zIndex=i;
+        }else if(i===currentIdx){
+          // Active: lifting
+          const liftY=slideProgress*-120;
+          const liftZ=slideProgress*200;
+          const rotX=slideProgress*10;
+          const opacity=1-slideProgress*.6;
+          f.style.transform=`translateY(${liftY}vh) translateZ(${liftZ}px) rotateX(${rotX}deg)`;
+          f.style.opacity=opacity;
+          f.style.zIndex=FCOUNT+1;
+        }else if(i===currentIdx+1){
+          // Next: visible behind, slightly down
+          const behindScale=.95+slideProgress*.05;
+          const behindY=(1-slideProgress)*20;
+          f.style.transform=`translateY(${behindY}px) scale(${behindScale})`;
+          f.style.opacity=.7+slideProgress*.3;
+          f.style.zIndex=FCOUNT;
+        }else{
+          // Future: stacked behind
+          const depth=i-currentIdx;
+          f.style.transform=`translateY(${depth*16}px) scale(${1-depth*.03})`;
+          f.style.opacity=Math.max(.3,1-depth*.25);
+          f.style.zIndex=FCOUNT-depth;
+        }
+      });
+
+      pips.forEach((p,i)=>p.classList.toggle('active',i===currentIdx));
+    }
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ── SMOOTH NAV ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+
+})();
+</script>
+</body>
+</html>

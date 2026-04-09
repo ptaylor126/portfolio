@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MealMatch Research Findings</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    background: #f5f5f3;
+    font-family: 'DM Sans', sans-serif;
+    color: #1a1a1a;
+    padding: 60px 40px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .section-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 60px;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 80px;
+  }
+
+  .stat-card {
+    border-top: 3px solid #2E7D32;
+    padding-top: 24px;
+  }
+
+  .stat-number {
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .stat-number span {
+    font-size: 40px;
+  }
+
+  .stat-label {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .divider {
+    height: 1px;
+    background: #ddd;
+    margin-bottom: 60px;
+  }
+
+  .quotes-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 32px;
+  }
+
+  .quotes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 80px;
+  }
+
+  .quote-card {
+    position: relative;
+    padding-left: 20px;
+    border-left: 2px solid #2E7D32;
+  }
+
+  .quote-text {
+    font-size: 16px;
+    line-height: 1.6;
+    font-style: italic;
+    color: #333;
+    margin-bottom: 16px;
+  }
+
+  .quote-source {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .divider-2 {
+    height: 1px;
+    background: #ddd;
+    margin-bottom: 60px;
+  }
+
+  .features-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+
+  .features-left .features-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 32px;
+  }
+
+  .feature-bar-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .feature-bar-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .feature-bar-label {
+    font-size: 14px;
+    width: 200px;
+    flex-shrink: 0;
+    color: #333;
+  }
+
+  .feature-bar-track {
+    flex: 1;
+    height: 32px;
+    background: #eee;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-bar-fill {
+    height: 100%;
+    background: #2E7D32;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
+
+  .feature-bar-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .feature-bar-pct-outside {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #999;
+    font-weight: 500;
+    margin-left: 8px;
+  }
+
+  .breakdown-right .breakdown-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 32px;
+  }
+
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .breakdown-item {
+    padding: 20px;
+    background: #eee;
+    border-radius: 4px;
+  }
+
+  .breakdown-number {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: -1px;
+  }
+
+  .breakdown-desc {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  .method-bar {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    gap: 60px;
+  }
+
+  .method-item {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .method-number {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+
+  .method-text {
+    font-size: 14px;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+
+  <div class="section-label">02 / Research</div>
+  <div class="section-title">What we found</div>
+  <div class="section-subtitle">We surveyed 46 people about how they plan meals and buy groceries.</div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number">47<span>%</span></div>
+      <div class="stat-label">wanted AI meal suggestions. The most requested feature by far.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">35<span>%</span></div>
+      <div class="stat-label">don't plan meals at all. They decide at the store or when they're already hungry.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">#1</div>
+      <div class="stat-label">pain point was decision fatigue. Not knowing what to cook, not having the energy to think about it.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="quotes-label">From the survey</div>
+  <div class="quotes-grid">
+    <div class="quote-card">
+      <div class="quote-text">"Even when I get an idea of what I want, by the time I need to eat, I'm out of energy to think and cook."</div>
+      <div class="quote-source">Participant — Age 25-34, cooks for 2</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">"3 different people with 3 different likes/dislikes. Trying to find enough vegetarian protein options."</div>
+      <div class="quote-source">Participant — Age 35-44, cooks for 3-4</div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-text">"All the ingredients + a plan on when to do the cooking would make this absolutely perfect. Bonus if it can schedule it in your calendar."</div>
+      <div class="quote-source">Participant — Age 25-34, cooks for 2</div>
+    </div>
+  </div>
+
+  <div class="divider-2"></div>
+
+  <div class="features-section">
+    <div class="features-left">
+      <div class="features-title">Most requested features</div>
+      <div class="feature-bar-group">
+        <div class="feature-bar-item">
+          <div class="feature-bar-label">AI meal suggestions</div>
+          <div class="feature-bar-track">
+            <div class="feature-bar-fill" style="width: 47%"></div>
+          </div>
+          <span class="feature-bar-pct-outside">47%</span>
+        </div>
+        <div class="feature-bar-item">
+          <div class="feature-bar-label">Price comparison</div>
+          <div class="feature-bar-track">
+            <div class="feature-bar-fill" style="width: 24%"></div>
+          </div>
+          <span class="feature-bar-pct-outside">24%</span>
+        </div>
+        <div class="feature-bar-item">
+          <div class="feature-bar-label">Recipe suggestions</div>
+          <div class="feature-bar-track">
+            <div class="feature-bar-fill" style="width: 15%"></div>
+          </div>
+          <span class="feature-bar-pct-outside">15%</span>
+        </div>
+        <div class="feature-bar-item">
+          <div class="feature-bar-label">Sales notifications</div>
+          <div class="feature-bar-track">
+            <div class="feature-bar-fill" style="width: 15%"></div>
+          </div>
+          <span class="feature-bar-pct-outside">15%</span>
+        </div>
+        <div class="feature-bar-item">
+          <div class="feature-bar-label">Pantry tracker</div>
+          <div class="feature-bar-track">
+            <div class="feature-bar-fill" style="width: 12%"></div>
+          </div>
+          <span class="feature-bar-pct-outside">12%</span>
+        </div>
+        <div class="feature-bar-item">
+          <div class="feature-bar-label">Budget tracking</div>
+          <div class="feature-bar-track">
+            <div class="feature-bar-fill" style="width: 12%"></div>
+          </div>
+          <span class="feature-bar-pct-outside">12%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="breakdown-right">
+      <div class="breakdown-title">Planning habits</div>
+      <div class="breakdown-grid">
+        <div class="breakdown-item">
+          <div class="breakdown-number">44%</div>
+          <div class="breakdown-desc">Plan some meals before shopping</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-number">35%</div>
+          <div class="breakdown-desc">Don't plan in advance at all</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-number">21%</div>
+          <div class="breakdown-desc">Plan all meals for the week</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="method-bar">
+    <div class="method-item">
+      <div class="method-number">9</div>
+      <div class="method-text">survey<br>questions</div>
+    </div>
+    <div class="method-item">
+      <div class="method-number">46</div>
+      <div class="method-text">survey<br>responses</div>
+    </div>
+    <div class="method-item">
+      <div class="method-number">5</div>
+      <div class="method-text">contextual<br>inquiries</div>
+    </div>
+  </div>
+
+</body>
+</html>

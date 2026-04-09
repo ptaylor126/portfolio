@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — Structural Serif</title>
+<meta name="description" content="Product Designer in Brooklyn. I design apps. Then I build them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,300;1,9..144,400;1,9..144,500&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F2F0ED;--text:#1A1A1A;--sage:#5C6B5E;--muted:#9A948C;
+  --muted2:#C4BEB6;--wire:rgba(26,26,26,.06);--wire2:rgba(26,26,26,.03);
+  --fraunces:'Fraunces',Georgia,serif;
+  --geist:'Geist',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --heavy:cubic-bezier(.22,1,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:auto}
+body{font-family:var(--geist);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.6}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--sage);color:#fff}
+
+/* ================================================================
+   HERO — TYPE SPLIT
+   ================================================================ */
+.hero{position:relative;height:350vh}
+.hero-sticky{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* Blueprint grid overlay on hero */
+.hero-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(var(--wire2) 1px,transparent 1px),
+    linear-gradient(90deg,var(--wire2) 1px,transparent 1px);
+  background-size:80px 80px;
+  transition:opacity .6s;
+}
+.hero-grid.faded{opacity:.2}
+
+/* Sliding name halves */
+.hero-names{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  z-index:3;pointer-events:none;
+}
+.hero-half{
+  font-family:var(--fraunces);font-weight:800;
+  font-size:clamp(72px,16vw,220px);line-height:.85;
+  letter-spacing:-.04em;color:var(--text);
+  will-change:transform;white-space:nowrap;
+}
+.hero-half.left{margin-right:clamp(8px,1.5vw,20px)}
+.hero-half.right{margin-left:clamp(8px,1.5vw,20px)}
+
+/* Center content revealed between the split */
+.hero-center{
+  position:relative;z-index:2;text-align:center;
+  opacity:0;transform:scale(.95);
+  transition:opacity .6s .1s var(--heavy),transform .6s .1s var(--heavy);
+  padding:0 20px;
+}
+.hero-center.on{opacity:1;transform:scale(1)}
+
+/* Video/mockup in center */
+.hero-vid{
+  width:min(280px,60vw);height:auto;aspect-ratio:9/16;
+  border-radius:24px;overflow:hidden;margin:0 auto 24px;
+  box-shadow:0 24px 60px rgba(0,0,0,.1);
+  position:relative;
+}
+.hero-vid-inner{
+  position:absolute;inset:0;border-radius:24px;
+  display:flex;flex-direction:column;padding:16px 14px;overflow:hidden;
+}
+.hv-top{display:flex;justify-content:space-between;font:400 8px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:12px}
+.hv-h{font:700 18px/1.2 var(--fraunces);color:#fff;margin-bottom:3px}
+.hv-s{font:400 8px/1 var(--mono);color:rgba(255,255,255,.2)}
+.hv-bl{display:flex;gap:5px;margin-top:14px}
+.hv-b{flex:1;height:36px;border-radius:7px;background:rgba(255,255,255,.06)}
+.hv-rl{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.hv-r{height:20px;border-radius:5px;background:rgba(255,255,255,.04)}
+
+.hero-hl{
+  font:500 clamp(14px,1.5vw,18px)/1.5 var(--geist);color:var(--text);
+  margin-bottom:8px;
+}
+.hero-sub{font:400 12px/1.6 var(--mono);color:var(--muted);max-width:380px;margin:0 auto}
+
+/* ================================================================
+   GRID-TRACKER NAV
+   ================================================================ */
+.grid-nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  height:44px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;
+  background:transparent;
+  transition:background .4s,box-shadow .4s;
+  pointer-events:none;
+}
+.grid-nav.solid{
+  background:var(--bg);box-shadow:0 1px 0 var(--wire);pointer-events:auto;
+}
+.gn-left{display:flex;align-items:center;gap:12px;opacity:0;transition:opacity .4s}
+.grid-nav.solid .gn-left{opacity:1}
+.gn-name{font:700 12px/1 var(--fraunces);color:var(--text);letter-spacing:.01em}
+.gn-sep{font:300 12px/1 var(--geist);color:var(--muted2)}
+.gn-section{font:400 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.gn-right{display:flex;align-items:center;gap:16px;opacity:0;transition:opacity .4s}
+.grid-nav.solid .gn-right{opacity:1}
+.gn-right a{font:400 11px/1 var(--geist);color:var(--muted);transition:color .2s;cursor:pointer}
+.gn-right a:hover{color:var(--text)}
+.gn-dot{width:5px;height:5px;border-radius:50%;background:#34d399;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ================================================================
+   EDITORIAL CASE STUDIES
+   ================================================================ */
+.studies{max-width:100%;margin:0 auto}
+
+/* Full-bleed photo base layer */
+.study{
+  position:relative;min-height:100vh;overflow:hidden;
+  display:flex;align-items:center;
+  padding:100px 0;
+}
+.study-bg{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  filter:grayscale(70%) contrast(1.1);opacity:.06;
+}
+.study:nth-child(odd) .study-bg{background-image:url('https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=1920&q=60')}
+.study:nth-child(even) .study-bg{background-image:url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920&q=60')}
+
+.study-inner{
+  max-width:1100px;margin:0 auto;padding:0 48px;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;
+  align-items:center;position:relative;z-index:2;
+  opacity:0;transform:translateY(48px);
+  transition:opacity .9s var(--heavy),transform 1s var(--heavy);
+}
+.study-inner.vis{opacity:1;transform:none}
+.study.reverse .study-inner{direction:rtl}
+.study.reverse .study-inner>*{direction:ltr}
+
+.st-visual{position:relative}
+.st-mockup{
+  width:min(260px,100%);aspect-ratio:9/16;border-radius:26px;
+  overflow:hidden;margin:0 auto;
+  box-shadow:0 24px 60px rgba(0,0,0,.1);position:relative;
+  transition:transform .6s var(--heavy);
+}
+.study:hover .st-mockup{transform:translateY(-6px) rotate(-1deg) scale(1.02)}
+.stm{position:absolute;inset:8px;border-radius:19px;display:flex;flex-direction:column;padding:14px 12px;overflow:hidden}
+.stm-top{display:flex;justify-content:space-between;font:400 8px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:12px}
+.stm-h{font:700 16px/1.2 var(--fraunces);color:#fff;margin-bottom:3px}
+.stm-s{font:400 8px/1 var(--mono);color:rgba(255,255,255,.2)}
+.stm-bl{display:flex;gap:4px;margin-top:12px}
+.stm-b{flex:1;height:32px;border-radius:6px;background:rgba(255,255,255,.05)}
+.stm-rl{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.stm-r{height:18px;border-radius:5px;background:rgba(255,255,255,.04)}
+.stm-ch{display:flex;align-items:flex-end;gap:2px;height:55px;margin-top:auto;padding-top:8px}
+.stm-cv{flex:1;border-radius:2px 2px 0 0;background:rgba(255,255,255,.06)}
+.stm-cv.hi{background:rgba(255,255,255,.22)}
+
+/* Labels on visual */
+.st-labels{
+  display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:16px;
+}
+.st-lbl{
+  font:500 8px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--sage);border:1px solid rgba(92,107,94,.2);
+  padding:5px 10px;border-radius:100px;
+}
+
+.st-content{display:flex;flex-direction:column;justify-content:center}
+.st-num{font:400 10px/1 var(--mono);letter-spacing:.12em;color:var(--muted);margin-bottom:24px}
+.st-title{font:800 clamp(28px,3.5vw,44px)/1.08 var(--fraunces);margin-bottom:12px;letter-spacing:-.02em}
+.st-desc{font:400 14px/1.7 var(--geist);color:var(--muted);margin-bottom:18px;max-width:420px}
+.st-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px}
+.st-tag{font:400 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--wire);border-radius:100px;color:var(--muted)}
+.st-super{font:500 11px/1 var(--mono);color:var(--sage);display:flex;align-items:center;gap:6px}
+.st-super::before{content:'';width:5px;height:5px;background:var(--sage);border-radius:50%}
+
+/* Mockup themes */
+.study[data-p="mealmatch"] .st-mockup{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.study[data-p="ballrs"] .st-mockup{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.study[data-p="loupe"] .st-mockup{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.study[data-p="jetsweat"] .st-mockup{background:linear-gradient(150deg,#D4582A,#A84420)}
+
+/* ================================================================
+   TYPOGRAPHIC TESTIMONIAL BREAKS
+   ================================================================ */
+.testi-break{
+  padding:80px 48px;max-width:800px;margin:0 auto;text-align:center;
+  opacity:0;transform:translateY(32px);
+  transition:opacity .8s var(--heavy),transform .9s var(--heavy);
+}
+.testi-break.vis{opacity:1;transform:none}
+.tb-line{width:48px;height:1px;background:var(--sage);margin:0 auto 28px}
+.tb-quote{
+  font:300 clamp(20px,3vw,34px)/1.4 var(--fraunces);font-style:italic;
+  color:var(--text);margin-bottom:20px;
+}
+.tb-quote::before{content:'\201C';color:var(--sage);font-size:1.2em}
+.tb-quote::after{content:'\201D';color:var(--sage);font-size:1.2em}
+.tb-attr{font:600 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--sage)}
+.tb-role{font:400 10px/1 var(--mono);color:var(--muted);margin-top:4px}
+
+/* ================================================================
+   FOOTNOTE STATUS BAR
+   ================================================================ */
+.footnote{
+  position:fixed;bottom:0;left:0;right:0;z-index:400;
+  height:32px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;
+  background:rgba(242,240,237,.85);backdrop-filter:blur(12px);
+  border-top:1px solid var(--wire);
+  font:400 9px/1 var(--mono);color:var(--muted);letter-spacing:.06em;
+  opacity:0;transition:opacity .4s;
+}
+.footnote.on{opacity:1}
+.fn-phase{display:flex;align-items:center;gap:8px}
+.fn-phase-dot{width:4px;height:4px;border-radius:50%;background:var(--sage)}
+.fn-links{display:flex;gap:16px}
+.fn-links a{color:var(--muted);transition:color .2s;font:400 9px/1 var(--mono)}
+.fn-links a:hover{color:var(--text)}
+
+/* ================================================================
+   ABOUT SECTION
+   ================================================================ */
+.about{padding:120px 48px;max-width:900px;margin:0 auto}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.ab-ed h2{font:800 clamp(24px,3vw,38px)/1.15 var(--fraunces);letter-spacing:-.02em;margin-bottom:20px}
+.ab-ed h2 em{font-style:italic;color:var(--sage)}
+.ab-p{font:400 14px/1.8 var(--geist);color:var(--muted);margin-bottom:14px}
+.ab-tl{display:flex;flex-direction:column}
+.at-i{display:flex;gap:16px;padding:14px 0;border-top:1px solid var(--wire)}
+.at-era{font:400 9px/1 var(--mono);letter-spacing:.08em;color:var(--sage);flex-shrink:0;width:60px;padding-top:2px}
+.at-d{font:400 12px/1.6 var(--geist);color:var(--muted)}.at-d strong{color:var(--text);font-weight:500}
+
+/* Film strip */
+.film-row{
+  display:flex;gap:8px;overflow-x:auto;padding:40px 0 16px;
+  scroll-snap-type:x mandatory;scrollbar-width:none;
+}
+.film-row::-webkit-scrollbar{display:none}
+.film-fr{
+  flex-shrink:0;width:160px;height:220px;border-radius:4px;overflow:hidden;
+  background:#e8e4de;border:4px solid rgba(242,240,237,.95);
+  box-shadow:0 2px 8px rgba(0,0,0,.04);scroll-snap-align:start;
+}
+.film-fr img{width:100%;height:100%;object-fit:cover;filter:grayscale(40%) contrast(1.1);transition:filter .4s}
+.film-fr:hover img{filter:grayscale(0%)}
+
+/* ================================================================
+   CONTACT
+   ================================================================ */
+.contact{padding:120px 48px 100px;max-width:700px;margin:0 auto;text-align:center}
+.contact h2{font:800 clamp(28px,4vw,52px)/1.08 var(--fraunces);letter-spacing:-.02em;margin-bottom:14px}
+.contact p{font:400 14px/1.7 var(--geist);color:var(--muted);max-width:400px;margin:0 auto 36px}
+.cta{
+  display:inline-flex;align-items:center;gap:8px;
+  font:500 12px/1 var(--mono);color:var(--sage);
+  border:1.5px solid var(--sage);padding:14px 30px;border-radius:100px;
+  transition:background .3s,color .3s,transform .3s var(--spring);
+}
+.cta:hover{background:var(--sage);color:#fff;transform:scale(1.03)}
+.cta svg{transition:transform .3s var(--spring)}.cta:hover svg{transform:translateX(4px)}
+.footer{
+  padding:28px 48px 64px;display:flex;justify-content:space-between;align-items:center;
+  max-width:900px;margin:0 auto;border-top:1px solid var(--wire);
+}
+.footer span{font:400 10px/1 var(--mono);color:var(--muted2)}
+.footer-links{display:flex;gap:16px}
+.footer-links a{font:400 10px/1 var(--mono);color:var(--muted);transition:color .3s}
+.footer-links a:hover{color:var(--sage)}
+
+@media(max-width:900px){
+  .study-inner{grid-template-columns:1fr;gap:32px;padding:0 24px}
+  .study.reverse .study-inner{direction:ltr}
+  .about-grid{grid-template-columns:1fr;gap:32px}
+  .about,.contact{padding-left:20px;padding-right:20px}
+  .testi-break{padding:60px 20px}
+  .footer{padding:20px 20px 56px;flex-direction:column;gap:8px}
+  .gn-right a:nth-child(-n+2){display:none}
+  .footnote{padding:0 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- Grid-Tracker Nav -->
+<div class="grid-nav" id="gridNav">
+  <div class="gn-left">
+    <span class="gn-name">Paul Taylor</span>
+    <span class="gn-sep">/</span>
+    <span class="gn-section" id="gnSection">Hero</span>
+  </div>
+  <div class="gn-right">
+    <a href="#work">Work</a>
+    <a href="#about">Story</a>
+    <a href="#contact">Contact</a>
+    <div class="gn-dot"></div>
+  </div>
+</div>
+
+<!-- Footnote Status Bar -->
+<div class="footnote" id="footnote">
+  <div class="fn-phase">
+    <div class="fn-phase-dot"></div>
+    <span id="fnPhase">Product Designer & Builder — Brooklyn, NY</span>
+  </div>
+  <div class="fn-links">
+    <a href="mailto:hello@paultaylormade.com">Email</a>
+    <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </div>
+</div>
+
+<!-- ================================================================
+     HERO — TYPE SPLIT
+     ================================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-sticky">
+    <div class="hero-grid" id="heroGrid"></div>
+
+    <div class="hero-names">
+      <span class="hero-half left" id="heroL">PAUL</span>
+      <span class="hero-half right" id="heroR">TAYLOR</span>
+    </div>
+
+    <div class="hero-center" id="heroCenter">
+      <div class="hero-vid" style="background:linear-gradient(150deg,#2D5A3D,#1B3E2A)">
+        <div class="hero-vid-inner">
+          <div class="hv-top"><span>9:41</span><span>MealMatch</span></div>
+          <div class="hv-h">Your Plan</div>
+          <div class="hv-s">3 meals curated by AI</div>
+          <div class="hv-bl"><div class="hv-b"></div><div class="hv-b"></div><div class="hv-b"></div></div>
+          <div class="hv-rl"><div class="hv-r"></div><div class="hv-r"></div><div class="hv-r"></div><div class="hv-r"></div></div>
+        </div>
+      </div>
+      <div class="hero-hl">I design apps. Then I build them.</div>
+      <div class="hero-sub">Lead designer at MealMatch AI. Three apps on the App Store. Brooklyn, NY.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     EDITORIAL CASE STUDIES
+     ================================================================ -->
+<section class="studies" id="work">
+
+  <div class="study" data-p="mealmatch">
+    <div class="study-bg"></div>
+    <div class="study-inner">
+      <div class="st-visual">
+        <div class="st-mockup"><div class="stm"><div class="stm-top"><span>9:41</span><span>MealMatch</span></div><div class="stm-h">Your Plan</div><div class="stm-s">3 meals curated</div><div class="stm-bl"><div class="stm-b"></div><div class="stm-b"></div><div class="stm-b"></div></div><div class="stm-rl"><div class="stm-r"></div><div class="stm-r"></div><div class="stm-r"></div></div></div></div>
+        <div class="st-labels"><span class="st-lbl">AI UX</span><span class="st-lbl">40+ Participants</span><span class="st-lbl">Design System</span></div>
+      </div>
+      <div class="st-content">
+        <div class="st-num">01 — Case Study</div>
+        <h3 class="st-title">MealMatch AI</h3>
+        <p class="st-desc">AI-powered meal planning. Scaled a design system from zero and ran 40+ participant research studies to validate core flows.</p>
+        <div class="st-tags"><span class="st-tag">AI UX</span><span class="st-tag">Design Systems</span><span class="st-tag">Research</span></div>
+        <div class="st-super">40+ participant studies, full design system</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonial break -->
+  <div class="testi-break">
+    <div class="tb-line"></div>
+    <div class="tb-quote">He consistently transformed complex challenges into elegant, user-centered solutions that elevated the entire product experience.</div>
+    <div class="tb-attr">Alex Leite</div>
+    <div class="tb-role">Senior Director, Microsoft 365</div>
+  </div>
+
+  <div class="study reverse" data-p="ballrs">
+    <div class="study-bg"></div>
+    <div class="study-inner">
+      <div class="st-content">
+        <div class="st-num">02 — Case Study</div>
+        <h3 class="st-title">Ballrs</h3>
+        <p class="st-desc">End-to-end design and engineering. Built with React Native & TypeScript. Designed, coded, and shipped to the App Store.</p>
+        <div class="st-tags"><span class="st-tag">React Native</span><span class="st-tag">TypeScript</span><span class="st-tag">Full-Stack</span></div>
+        <div class="st-super">Designed + engineered, live on App Store</div>
+      </div>
+      <div class="st-visual">
+        <div class="st-mockup"><div class="stm"><div class="stm-top"><span>9:41</span><span>Ballrs</span></div><div class="stm-h">Daily Pick</div><div class="stm-s">Who scored more?</div><div class="stm-bl"><div class="stm-b" style="height:55px"></div><div class="stm-b" style="height:55px"></div></div><div class="stm-rl"><div class="stm-r"></div><div class="stm-r"></div></div></div></div>
+        <div class="st-labels"><span class="st-lbl">React Native</span><span class="st-lbl">TypeScript</span><span class="st-lbl">App Store</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="testi-break">
+    <div class="tb-line"></div>
+    <div class="tb-quote">He is strong in all areas of UX from research to design, with an aptitude for prototyping. Paul would make a great addition to any team.</div>
+    <div class="tb-attr">Kim Hartford</div>
+    <div class="tb-role">Founding Product Designer</div>
+  </div>
+
+  <div class="study" data-p="loupe">
+    <div class="study-bg"></div>
+    <div class="study-inner">
+      <div class="st-visual">
+        <div class="st-mockup"><div class="stm"><div class="stm-top"><span>Loupe</span><span>v1.2</span></div><div class="stm-h">Library</div><div class="stm-s">2,481 tagged</div><div class="stm-bl"><div class="stm-b"></div><div class="stm-b"></div><div class="stm-b"></div></div><div class="stm-rl"><div class="stm-r"></div><div class="stm-r"></div><div class="stm-r"></div><div class="stm-r"></div></div></div></div>
+        <div class="st-labels"><span class="st-lbl">SwiftUI</span><span class="st-lbl">Vision AI</span><span class="st-lbl">macOS</span></div>
+      </div>
+      <div class="st-content">
+        <div class="st-num">03 — Shipped App</div>
+        <h3 class="st-title">Loupe</h3>
+        <p class="st-desc">Native Mac app for photographers. Uses local AI to tag and organize your library. No cloud, no subscriptions.</p>
+        <div class="st-tags"><span class="st-tag">macOS Native</span><span class="st-tag">Vision AI</span><span class="st-tag">SwiftUI</span></div>
+        <div class="st-super">On-device AI, zero cloud dependency</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="testi-break">
+    <div class="tb-line"></div>
+    <div class="tb-quote">Paul is a talented UX designer with a unique ability to distill complex features into clean designs and seamless user flows. His process and insights really made an impact for us.</div>
+    <div class="tb-attr">Alexandra Dantzig</div>
+    <div class="tb-role">Co-Founder & CEO, JetSweat</div>
+  </div>
+
+  <div class="study reverse" data-p="jetsweat">
+    <div class="study-bg"></div>
+    <div class="study-inner">
+      <div class="st-content">
+        <div class="st-num">04 — Case Study</div>
+        <h3 class="st-title">JetSweat</h3>
+        <p class="st-desc">Product-led growth for B2B fitness SaaS. 25% more sign-ups, 75% less manual CMS setup. Numbers that move a business.</p>
+        <div class="st-tags"><span class="st-tag">Growth</span><span class="st-tag">SaaS</span><span class="st-tag">CMS Design</span></div>
+        <div class="st-super">25% sign-up lift, 75% less manual work</div>
+      </div>
+      <div class="st-visual">
+        <div class="st-mockup"><div class="stm"><div class="stm-top"><span>9:41</span><span>JetSweat</span></div><div class="stm-h">Dashboard</div><div class="stm-s">Analytics</div><div class="stm-ch"><div class="stm-cv" style="height:25%"></div><div class="stm-cv" style="height:45%"></div><div class="stm-cv hi" style="height:75%"></div><div class="stm-cv" style="height:38%"></div><div class="stm-cv hi" style="height:92%"></div><div class="stm-cv" style="height:55%"></div><div class="stm-cv hi" style="height:68%"></div></div></div></div>
+        <div class="st-labels"><span class="st-lbl">+25% Sign-ups</span><span class="st-lbl">-75% Manual</span><span class="st-lbl">PLG</span></div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ================================================================
+     ABOUT
+     ================================================================ -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div>
+      <div class="ab-ed">
+        <h2>London PM.<br>Freelance <em>photographer</em>.<br>Now I build products.</h2>
+        <p class="ab-p">Started in product management in London. Followed the camera — shot for Netflix, HBO, National Geographic. Kept asking: why does this app work the way it does?</p>
+        <p class="ab-p">So I learned to answer it myself. Now I design and build apps, with the eye of a photographer and the instincts of someone who's shipped real products.</p>
+      </div>
+    </div>
+    <div>
+      <div class="ab-tl">
+        <div class="at-i"><span class="at-era">London</span><span class="at-d"><strong>Product Manager</strong> — products, roadmaps, metrics.</span></div>
+        <div class="at-i"><span class="at-era">Freelance</span><span class="at-d"><strong>Photographer</strong> — Netflix, HBO, Nat Geo.</span></div>
+        <div class="at-i"><span class="at-era">Now</span><span class="at-d"><strong>Designer & Builder</strong> — shipping apps.</span></div>
+      </div>
+      <div class="film-row">
+        <div class="film-fr"><img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=320&h=440&fit=crop" alt="" loading="lazy"></div>
+        <div class="film-fr"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=320&h=440&fit=crop" alt="" loading="lazy"></div>
+        <div class="film-fr"><img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=320&h=440&fit=crop" alt="" loading="lazy"></div>
+        <div class="film-fr"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=320&h=440&fit=crop" alt="" loading="lazy"></div>
+        <div class="film-fr"><img src="https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=320&h=440&fit=crop" alt="" loading="lazy"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <h2>Got a project?<br>Let's talk.</h2>
+  <p>Open to full-time roles, contract work, and collaborations. Building something that matters? I want to hear about it.</p>
+  <a href="mailto:hello@paultaylormade.com" class="cta">
+    hello@paultaylormade.com
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</section>
+<footer class="footer">
+  <span>&copy; 2026 Paul Taylor. Structural Serif.</span>
+  <div class="footer-links">
+    <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+    <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  const heroL=document.getElementById('heroL');
+  const heroR=document.getElementById('heroR');
+  const heroCenter=document.getElementById('heroCenter');
+  const heroGrid=document.getElementById('heroGrid');
+  const gridNav=document.getElementById('gridNav');
+  const gnSection=document.getElementById('gnSection');
+  const footnote=document.getElementById('footnote');
+  const fnPhase=document.getElementById('fnPhase');
+  const heroSection=document.getElementById('hero');
+  const heroH=heroSection.offsetHeight;
+  const vh=()=>window.innerHeight;
+  const sections=document.querySelectorAll('section[id],.study[data-p]');
+
+  // Timeline phases mapped to scroll regions
+  const phases=[
+    {id:'hero',text:'Product Designer & Builder — Brooklyn, NY'},
+    {id:'work',text:'Lead Designer @ MealMatch AI — AI UX & Research'},
+    {id:'about',text:'London PM → NYC Photographer → Designer who builds'},
+    {id:'contact',text:'Available for full-time roles — Brooklyn, NY'}
+  ];
+
+  /* ── IO ── */
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')});
+  },{threshold:.15,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.study-inner,.testi-break').forEach(el=>obs.observe(el));
+
+  /* ── SCROLL ── */
+  let navSolid=false;
+  function onScroll(){
+    const sy=window.scrollY;
+
+    // Hero type split
+    const splitProgress=Math.min(1,sy/(heroH*.35));
+    const maxShift=window.innerWidth*.4;
+    heroL.style.transform=`translateX(${-splitProgress*maxShift}px)`;
+    heroR.style.transform=`translateX(${splitProgress*maxShift}px)`;
+    // Fade name as it splits
+    heroL.style.opacity=1-splitProgress*.6;
+    heroR.style.opacity=1-splitProgress*.6;
+
+    // Reveal center content
+    if(splitProgress>.5)heroCenter.classList.add('on');
+    else heroCenter.classList.remove('on');
+
+    // Grid fades
+    if(splitProgress>.3)heroGrid.classList.add('faded');
+    else heroGrid.classList.remove('faded');
+
+    // Nav solid
+    const heroBottom=heroSection.getBoundingClientRect().bottom;
+    if(heroBottom<vh()*.4&&!navSolid){navSolid=true;gridNav.classList.add('solid');footnote.classList.add('on')}
+    else if(heroBottom>=vh()*.4&&navSolid){navSolid=false;gridNav.classList.remove('solid');footnote.classList.remove('on')}
+
+    // Active section for nav
+    let activeSec='Hero';let activePhase=phases[0];
+    document.querySelectorAll('section[id]').forEach(s=>{
+      if(s.getBoundingClientRect().top<vh()*.45){
+        const id=s.id;
+        if(id==='work')activeSec='Work';
+        else if(id==='about')activeSec='Story';
+        else if(id==='contact')activeSec='Contact';
+      }
+    });
+    // Specific project
+    document.querySelectorAll('.study[data-p]').forEach(s=>{
+      if(s.getBoundingClientRect().top<vh()*.5&&s.getBoundingClientRect().bottom>0){
+        activeSec=s.getAttribute('data-p').charAt(0).toUpperCase()+s.getAttribute('data-p').slice(1);
+      }
+    });
+    gnSection.textContent=activeSec;
+
+    // Footnote phase
+    const idx=activeSec==='Hero'?0:activeSec==='Contact'?3:activeSec==='Story'?2:1;
+    fnPhase.textContent=phases[Math.min(idx,phases.length-1)].text;
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ── SMOOTH NAV ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+
+})();
+</script>
+</body>
+</html>

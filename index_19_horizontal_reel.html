@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — Horizontal Cinematic</title>
+<meta name="description" content="Product Designer in Brooklyn. I design apps. Then I build them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0A0A0A;--text:#EDEDED;--accent:#D4582A;--muted:#5A5A5A;
+  --muted2:#3A3A3A;--wire:rgba(237,237,237,.06);
+  --serif:'DM Serif Display',Georgia,serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --heavy:cubic-bezier(.22,1,.36,1);
+  --apple:cubic-bezier(.25,.1,.25,1);
+}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:var(--mono);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.6;cursor:default}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--accent);color:#fff}
+
+/* Grain */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:9000;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");opacity:.04;mix-blend-mode:overlay}
+
+/* ================================================================
+   HORIZONTAL REEL — ENTIRE PAGE
+   ================================================================ */
+.h-reel{position:relative}
+.h-runway{position:relative}
+.h-sticky{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+  display:flex;align-items:stretch;
+}
+.h-track{display:flex;height:100%;will-change:transform}
+
+/* ================================================================
+   HERO PANEL
+   ================================================================ */
+.panel{
+  flex-shrink:0;height:100%;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.panel-hero{width:100vw}
+.hero-bg{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1920&q=80') center/cover;
+  filter:grayscale(85%) contrast(1.2);
+}
+.hero-grain{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E");mix-blend-mode:overlay;opacity:.2;pointer-events:none}
+.hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(10,10,10,.6))}
+.hero-content{position:relative;z-index:2;text-align:center;padding:0 40px;max-width:700px}
+.hero-name{font-family:var(--serif);font-size:clamp(48px,10vw,120px);line-height:.9;letter-spacing:-.03em;margin-bottom:20px;color:#EDEDED}
+.hero-hl{font:400 clamp(14px,1.5vw,18px)/1.6 var(--mono);color:rgba(237,237,237,.5);margin-bottom:24px}
+.hero-hl em{color:var(--accent);font-style:normal;font-weight:500}
+.hero-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.hc{font:400 10px/1 var(--mono);letter-spacing:.05em;padding:6px 14px;border:1px solid rgba(237,237,237,.1);border-radius:100px;color:rgba(237,237,237,.4);display:flex;align-items:center;gap:6px}
+.hc .hd{width:4px;height:4px;border-radius:50%}
+
+/* Scroll hint */
+.hero-hint{
+  position:absolute;right:48px;top:50%;transform:translateY(-50%);
+  display:flex;align-items:center;gap:10px;z-index:2;
+}
+.hint-line{width:48px;height:1px;background:rgba(237,237,237,.15);position:relative;overflow:hidden}
+.hint-line::after{content:'';position:absolute;left:-100%;top:0;width:100%;height:100%;background:var(--accent);animation:hintSlide 2.5s ease-in-out infinite}
+@keyframes hintSlide{0%{left:-100%}50%{left:100%}100%{left:100%}}
+.hint-text{font:300 8px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:rgba(237,237,237,.2)}
+
+/* ================================================================
+   PROJECT PANELS
+   ================================================================ */
+.panel-project{width:100vw}
+.pp-bg{position:absolute;inset:0}
+.pp-inner{
+  position:relative;z-index:2;height:100%;
+  display:grid;grid-template-columns:1fr 1fr;align-items:center;
+  padding:0 80px;gap:60px;
+}
+.pp-visual{display:flex;align-items:center;justify-content:center;position:relative;height:100%}
+.pp-mockup{
+  width:240px;height:340px;border-radius:28px;overflow:hidden;position:relative;z-index:2;
+  box-shadow:0 30px 70px rgba(0,0,0,.4);transition:transform .6s var(--heavy);
+}
+.panel-project:hover .pp-mockup{transform:translateY(-6px) rotate(-1deg) scale(1.02)}
+.ppm{position:absolute;inset:9px;border-radius:20px;display:flex;flex-direction:column;padding:16px 13px;overflow:hidden}
+.ppm-top{display:flex;justify-content:space-between;font:400 8px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:12px}
+.ppm-h{font-family:var(--serif);font-size:18px;color:#fff;margin-bottom:3px}
+.ppm-s{font:400 8px/1 var(--mono);color:rgba(255,255,255,.2)}
+.ppm-bl{display:flex;gap:5px;margin-top:12px}
+.ppm-b{flex:1;height:34px;border-radius:7px;background:rgba(255,255,255,.05)}
+.ppm-rl{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.ppm-r{height:20px;border-radius:5px;background:rgba(255,255,255,.04)}
+.ppm-ch{display:flex;align-items:flex-end;gap:2px;height:56px;margin-top:auto;padding-top:8px}
+.ppm-cv{flex:1;border-radius:2px 2px 0 0;background:rgba(255,255,255,.07)}
+.ppm-cv.hi{background:rgba(255,255,255,.25)}
+
+/* Floating labels */
+.pp-labels{position:absolute;z-index:3;display:flex;flex-direction:column;gap:6px}
+.pp-labels.lt{top:20%;left:60px}.pp-labels.rb{bottom:20%;right:60px}
+.pp-lbl{
+  font:500 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);background:rgba(10,10,10,.5);backdrop-filter:blur(8px);
+  padding:6px 12px;border-radius:4px;border:1px solid rgba(212,88,42,.15);width:fit-content;
+}
+
+.pp-content{display:flex;flex-direction:column;justify-content:center}
+.pp-num{font:400 10px/1 var(--mono);letter-spacing:.12em;color:var(--muted);margin-bottom:24px}
+.pp-title{font-family:var(--serif);font-size:clamp(32px,4vw,52px);line-height:1.05;margin-bottom:12px}
+.pp-desc{font:400 13px/1.8 var(--mono);color:var(--muted);max-width:400px;margin-bottom:20px}
+.pp-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px}
+.pp-tag{font:400 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--wire);border-radius:100px;color:var(--muted)}
+.pp-super{font:500 11px/1 var(--mono);color:var(--accent);display:flex;align-items:center;gap:6px}
+.pp-super::before{content:'';width:5px;height:5px;background:var(--accent);border-radius:50%}
+
+/* Panel BGs */
+.panel-project[data-p="mealmatch"] .pp-bg{background:radial-gradient(ellipse at 30% 50%,rgba(45,90,61,.1),transparent 60%)}
+.panel-project[data-p="mealmatch"] .pp-mockup{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.panel-project[data-p="ballrs"] .pp-bg{background:radial-gradient(ellipse at 30% 50%,rgba(26,26,46,.12),transparent 60%)}
+.panel-project[data-p="ballrs"] .pp-mockup{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.panel-project[data-p="loupe"] .pp-bg{background:radial-gradient(ellipse at 30% 50%,rgba(91,79,160,.08),transparent 60%)}
+.panel-project[data-p="loupe"] .pp-mockup{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.panel-project[data-p="jetsweat"] .pp-bg{background:radial-gradient(ellipse at 30% 50%,rgba(212,88,42,.06),transparent 60%)}
+.panel-project[data-p="jetsweat"] .pp-mockup{background:linear-gradient(150deg,#D4582A,#A84420)}
+
+/* ================================================================
+   TESTIMONIAL PANELS
+   ================================================================ */
+.panel-quote{width:65vw;display:flex;align-items:center;justify-content:center;padding:0 60px}
+.pq-inner{text-align:center;max-width:520px}
+.pq-line{width:40px;height:1px;background:var(--accent);margin:0 auto 24px}
+.pq-text{font:300 clamp(18px,2.5vw,30px)/1.45 var(--serif);font-style:italic;color:rgba(237,237,237,.6);margin-bottom:16px}
+.pq-text::before{content:'\201C';color:var(--accent);font-size:1.2em}
+.pq-text::after{content:'\201D';color:var(--accent);font-size:1.2em}
+.pq-attr{font:500 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.pq-role{font:400 9px/1 var(--mono);color:var(--muted);margin-top:4px}
+
+/* ================================================================
+   FILM STRIP PANEL
+   ================================================================ */
+.panel-film{width:120vw;display:flex;flex-direction:column;justify-content:center;padding:0 80px;position:relative}
+.pf-label{font:500 9px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pf-label::before{content:'';width:16px;height:1px;background:var(--accent)}
+.pf-title{font-family:var(--serif);font-size:clamp(24px,3vw,36px);margin-bottom:32px}
+
+.pf-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+
+.pf-ed h3{font-family:var(--serif);font-size:22px;margin-bottom:12px}
+.pf-ed h3 em{font-style:italic;color:var(--accent)}
+.pf-p{font:400 12px/1.8 var(--mono);color:var(--muted);margin-bottom:10px}
+.pf-tl{margin-top:20px}
+.ft-i{display:flex;gap:14px;padding:12px 0;border-top:1px solid var(--wire)}
+.ft-era{font:400 9px/1 var(--mono);letter-spacing:.08em;color:var(--accent);flex-shrink:0;width:56px;padding-top:2px}
+.ft-d{font:400 11px/1.5 var(--mono);color:var(--muted)}.ft-d strong{color:var(--text);font-weight:500}
+
+/* Film frames */
+.pf-strip{display:flex;gap:10px;will-change:transform}
+.pf-frame{
+  flex-shrink:0;width:200px;height:270px;border-radius:4px;overflow:hidden;
+  position:relative;background:#111;
+}
+.pf-frame::before,.pf-frame::after{
+  content:'';position:absolute;left:50%;transform:translateX(-50%);
+  width:12px;height:7px;border-radius:2px;background:var(--bg);z-index:2;
+}
+.pf-frame::before{top:4px}.pf-frame::after{bottom:4px}
+.pf-frame img{
+  position:absolute;inset:14px 6px;width:calc(100% - 12px);height:calc(100% - 28px);
+  object-fit:cover;border-radius:2px;
+  filter:grayscale(60%) contrast(1.15);transition:filter .5s;
+}
+.pf-frame:hover img{filter:grayscale(0%) contrast(1.05)}
+.pf-frame-lbl{
+  position:absolute;bottom:14px;right:10px;z-index:3;
+  font:400 6px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(237,237,237,.35);
+}
+
+/* ================================================================
+   CONTACT PANEL
+   ================================================================ */
+.panel-contact{width:80vw;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 60px}
+.pc-inner{max-width:500px}
+.pc-inner h2{font-family:var(--serif);font-size:clamp(28px,4vw,52px);line-height:1.08;margin-bottom:14px}
+.pc-inner p{font:400 13px/1.8 var(--mono);color:var(--muted);max-width:400px;margin:0 auto 36px}
+.cta{
+  display:inline-flex;align-items:center;gap:10px;
+  font:500 13px/1 var(--mono);color:var(--accent);
+  border:1.5px solid var(--accent);padding:14px 32px;border-radius:100px;
+  transition:background .3s,color .3s,transform .3s var(--heavy);
+}
+.cta:hover{background:var(--accent);color:#fff;transform:scale(1.03)}
+.cta svg{transition:transform .3s}.cta:hover svg{transform:translateX(4px)}
+
+.pc-footer{
+  margin-top:48px;display:flex;justify-content:center;gap:20px;
+}
+.pc-footer a{font:400 10px/1 var(--mono);color:var(--muted);transition:color .2s}
+.pc-footer a:hover{color:var(--accent)}
+
+/* ================================================================
+   PROGRESS SLIDER NAV
+   ================================================================ */
+.slider-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:500;height:40px;
+  display:flex;align-items:center;padding:0 24px;
+  background:rgba(10,10,10,.85);backdrop-filter:blur(12px);
+  border-top:1px solid rgba(237,237,237,.04);
+}
+.sn-track{flex:1;height:2px;background:rgba(237,237,237,.06);border-radius:1px;position:relative;margin:0 16px}
+.sn-fill{position:absolute;left:0;top:0;bottom:0;border-radius:1px;background:var(--accent);width:0;transition:width .05s}
+.sn-handle{
+  position:absolute;top:50%;transform:translate(-50%,-50%);
+  width:12px;height:12px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 8px rgba(212,88,42,.3);left:0;transition:left .05s;
+  cursor:grab;
+}
+.sn-handle:active{cursor:grabbing;transform:translate(-50%,-50%) scale(1.3)}
+.sn-left{font:400 8px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.sn-right{font:300 8px/1 var(--mono);letter-spacing:.08em;color:rgba(237,237,237,.2);white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:6px}
+.sn-dot{width:4px;height:4px;border-radius:50%;background:#34d399;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Subtitle bar */
+.subtitle{
+  position:fixed;bottom:48px;left:0;right:0;z-index:100;
+  text-align:center;pointer-events:none;padding:0 40px;
+  opacity:0;transform:translateY(6px);
+  transition:opacity .5s var(--heavy),transform .5s var(--heavy);
+}
+.subtitle.on{opacity:1;transform:none}
+.sub-q{font:300 13px/1.6 var(--serif);font-style:italic;color:rgba(237,237,237,.4);max-width:500px;margin:0 auto 4px}
+.sub-a{font:500 8px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+
+@media(max-width:900px){
+  .pp-inner{grid-template-columns:1fr;padding:0 24px;gap:24px}
+  .pp-labels{display:none}
+  .panel-project{width:90vw}
+  .panel-quote{width:85vw;padding:0 24px}
+  .panel-film{width:95vw;padding:0 24px}
+  .pf-grid{grid-template-columns:1fr;gap:24px}
+  .panel-contact{width:90vw;padding:0 24px}
+  .hero-hint{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- Progress Slider Nav -->
+<div class="slider-nav">
+  <span class="sn-left" id="snStage">STAGE: HERO</span>
+  <div class="sn-track">
+    <div class="sn-fill" id="snFill"></div>
+    <div class="sn-handle" id="snHandle"></div>
+  </div>
+  <span class="sn-right"><span class="sn-dot"></span>BUILD: STABLE</span>
+</div>
+
+<!-- Subtitle -->
+<div class="subtitle" id="subtitle">
+  <div class="sub-q" id="subQ"></div>
+  <div class="sub-a" id="subA"></div>
+</div>
+
+<!-- ================================================================
+     HORIZONTAL REEL
+     ================================================================ -->
+<section class="h-reel">
+  <div class="h-runway" id="hRunway">
+    <div class="h-sticky">
+      <div class="h-track" id="hTrack">
+
+        <!-- HERO -->
+        <div class="panel panel-hero">
+          <div class="hero-bg"></div>
+          <div class="hero-grain"></div>
+          <div class="hero-vignette"></div>
+          <div class="hero-content">
+            <h1 class="hero-name">PAUL<br>TAYLOR</h1>
+            <p class="hero-hl">I design apps. Then I <em>build</em> them.</p>
+            <div class="hero-chips">
+              <span class="hc"><span class="hd" style="background:#34d399"></span>MealMatch AI</span>
+              <span class="hc"><span class="hd" style="background:var(--accent)"></span>3 Apps Shipped</span>
+              <span class="hc"><span class="hd" style="background:#60a5fa"></span>Brooklyn, NY</span>
+            </div>
+          </div>
+          <div class="hero-hint">
+            <div class="hint-line"></div>
+            <span class="hint-text">Scroll</span>
+          </div>
+        </div>
+
+        <!-- MEALMATCH AI -->
+        <div class="panel panel-project" data-p="mealmatch"
+             data-quote="He consistently transformed complex challenges into elegant, user-centered solutions."
+             data-attr="Alex Leite — Sr. Director, Microsoft 365">
+          <div class="pp-bg"></div>
+          <div class="pp-inner">
+            <div class="pp-visual">
+              <div class="pp-mockup"><div class="ppm" style="background:linear-gradient(180deg,#2D5A3D,#1a3d28)"><div class="ppm-top"><span>9:41</span><span>MealMatch</span></div><div class="ppm-h">Your Plan</div><div class="ppm-s">3 meals curated</div><div class="ppm-bl"><div class="ppm-b"></div><div class="ppm-b"></div><div class="ppm-b"></div></div><div class="ppm-rl"><div class="ppm-r"></div><div class="ppm-r"></div><div class="ppm-r"></div></div></div></div>
+              <div class="pp-labels lt"><span class="pp-lbl">AI UX & RESEARCH</span><span class="pp-lbl">40+ RESEARCH PARTICIPANTS</span><span class="pp-lbl">DESIGN SYSTEM LEAD</span></div>
+            </div>
+            <div class="pp-content">
+              <div class="pp-num">01 — CASE STUDY</div>
+              <h3 class="pp-title">MealMatch AI</h3>
+              <p class="pp-desc">AI-powered meal planning. Scaled a design system from zero. Ran 40+ participant research studies to validate every core flow.</p>
+              <div class="pp-tags"><span class="pp-tag">AI UX</span><span class="pp-tag">Design Systems</span><span class="pp-tag">Research</span></div>
+              <div class="pp-super">40+ participant studies, full design system</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUOTE 1 -->
+        <div class="panel panel-quote">
+          <div class="pq-inner">
+            <div class="pq-line"></div>
+            <div class="pq-text">He consistently transformed complex challenges into elegant, user-centered solutions that elevated the entire product experience.</div>
+            <div class="pq-attr">Alex Leite</div>
+            <div class="pq-role">Senior Director, Microsoft 365</div>
+          </div>
+        </div>
+
+        <!-- BALLRS -->
+        <div class="panel panel-project" data-p="ballrs"
+             data-quote="He is strong in all areas of UX from research to design, with an aptitude for prototyping."
+             data-attr="Kim Hartford — Founding Product Designer">
+          <div class="pp-bg"></div>
+          <div class="pp-inner">
+            <div class="pp-visual">
+              <div class="pp-mockup"><div class="ppm" style="background:linear-gradient(180deg,#1A1A2E,#111528)"><div class="ppm-top"><span>9:41</span><span>Ballrs</span></div><div class="ppm-h">Daily Pick</div><div class="ppm-s">Who scored more?</div><div class="ppm-bl"><div class="ppm-b" style="height:60px"></div><div class="ppm-b" style="height:60px"></div></div><div class="ppm-rl"><div class="ppm-r"></div><div class="ppm-r"></div></div></div></div>
+              <div class="pp-labels rb"><span class="pp-lbl">REACT NATIVE / TS</span><span class="pp-lbl">APP STORE LIVE</span><span class="pp-lbl">SOLO ENGINEER</span></div>
+            </div>
+            <div class="pp-content">
+              <div class="pp-num">02 — CASE STUDY</div>
+              <h3 class="pp-title">Ballrs</h3>
+              <p class="pp-desc">End-to-end design and engineering. React Native & TypeScript. Designed, coded, shipped to the App Store.</p>
+              <div class="pp-tags"><span class="pp-tag">React Native</span><span class="pp-tag">TypeScript</span><span class="pp-tag">Full-Stack</span></div>
+              <div class="pp-super">Designed + engineered, live on App Store</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOUPE -->
+        <div class="panel panel-project" data-p="loupe">
+          <div class="pp-bg"></div>
+          <div class="pp-inner">
+            <div class="pp-visual">
+              <div class="pp-mockup"><div class="ppm" style="background:linear-gradient(180deg,#5B4FA0,#3D3578)"><div class="ppm-top"><span>Loupe</span><span>v1.2</span></div><div class="ppm-h">Library</div><div class="ppm-s">2,481 tagged</div><div class="ppm-bl"><div class="ppm-b"></div><div class="ppm-b"></div><div class="ppm-b"></div></div><div class="ppm-rl"><div class="ppm-r"></div><div class="ppm-r"></div><div class="ppm-r"></div><div class="ppm-r"></div></div></div></div>
+              <div class="pp-labels lt"><span class="pp-lbl">SWIFTUI / VISION</span><span class="pp-lbl">ON-DEVICE AI</span><span class="pp-lbl">NATIVE MAC APP</span></div>
+            </div>
+            <div class="pp-content">
+              <div class="pp-num">03 — SHIPPED APP</div>
+              <h3 class="pp-title">Loupe</h3>
+              <p class="pp-desc">Native Mac app for photographers. Local AI tags and organizes your library. No cloud, no subscriptions.</p>
+              <div class="pp-tags"><span class="pp-tag">macOS Native</span><span class="pp-tag">Vision AI</span><span class="pp-tag">SwiftUI</span></div>
+              <div class="pp-super">On-device AI, zero cloud dependency</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUOTE 2 -->
+        <div class="panel panel-quote">
+          <div class="pq-inner">
+            <div class="pq-line"></div>
+            <div class="pq-text">Paul is a talented UX designer with a unique ability to distill complex features into clean designs and seamless user flows.</div>
+            <div class="pq-attr">Alexandra Dantzig</div>
+            <div class="pq-role">Co-Founder & CEO, JetSweat</div>
+          </div>
+        </div>
+
+        <!-- JETSWEAT -->
+        <div class="panel panel-project" data-p="jetsweat"
+             data-quote="A unique ability to distill complex features into clean designs and seamless user flows."
+             data-attr="Alexandra Dantzig — CEO, JetSweat">
+          <div class="pp-bg"></div>
+          <div class="pp-inner">
+            <div class="pp-visual">
+              <div class="pp-mockup"><div class="ppm" style="background:linear-gradient(180deg,#D4582A,#a84420)"><div class="ppm-top"><span>9:41</span><span>JetSweat</span></div><div class="ppm-h">Dashboard</div><div class="ppm-s">Analytics</div><div class="ppm-ch"><div class="ppm-cv" style="height:25%"></div><div class="ppm-cv" style="height:45%"></div><div class="ppm-cv hi" style="height:75%"></div><div class="ppm-cv" style="height:38%"></div><div class="ppm-cv hi" style="height:92%"></div><div class="ppm-cv" style="height:55%"></div><div class="ppm-cv hi" style="height:68%"></div></div></div></div>
+              <div class="pp-labels rb"><span class="pp-lbl">PRODUCT-LED GROWTH</span><span class="pp-lbl">+25% SIGN-UPS</span><span class="pp-lbl">-75% MANUAL SETUP</span></div>
+            </div>
+            <div class="pp-content">
+              <div class="pp-num">04 — CASE STUDY</div>
+              <h3 class="pp-title">JetSweat</h3>
+              <p class="pp-desc">Product-led growth for B2B fitness SaaS. 25% more sign-ups, 75% less manual CMS setup.</p>
+              <div class="pp-tags"><span class="pp-tag">Growth</span><span class="pp-tag">SaaS</span><span class="pp-tag">CMS</span></div>
+              <div class="pp-super">25% sign-up lift, 75% less manual work</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILM STRIP -->
+        <div class="panel panel-film">
+          <div class="pf-label">The Backstory</div>
+          <div class="pf-title">How I got here.</div>
+          <div class="pf-grid">
+            <div>
+              <div class="pf-ed">
+                <h3>London PM. Freelance <em>photographer</em>. Now I build products.</h3>
+                <p class="pf-p">Started in product management in London. Followed the camera — shot for Netflix, HBO, Nat Geo. Now I design and build apps.</p>
+              </div>
+              <div class="pf-tl">
+                <div class="ft-i"><span class="ft-era">London</span><span class="ft-d"><strong>Product Manager</strong> — products, roadmaps, metrics.</span></div>
+                <div class="ft-i"><span class="ft-era">Freelance</span><span class="ft-d"><strong>Photographer</strong> — Netflix, HBO, Nat Geo.</span></div>
+                <div class="ft-i"><span class="ft-era">Now</span><span class="ft-d"><strong>Designer & Builder</strong> — shipping apps.</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="pf-strip" id="pfStrip">
+                <div class="pf-frame"><img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&h=540&fit=crop" alt="" loading="lazy"><span class="pf-frame-lbl">NYC 01</span></div>
+                <div class="pf-frame"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&h=540&fit=crop" alt="" loading="lazy"><span class="pf-frame-lbl">BTS 02</span></div>
+                <div class="pf-frame"><img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=400&h=540&fit=crop" alt="" loading="lazy"><span class="pf-frame-lbl">EDT 03</span></div>
+                <div class="pf-frame"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=540&fit=crop" alt="" loading="lazy"><span class="pf-frame-lbl">LND 04</span></div>
+                <div class="pf-frame"><img src="https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=400&h=540&fit=crop" alt="" loading="lazy"><span class="pf-frame-lbl">STR 05</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTACT -->
+        <div class="panel panel-contact">
+          <div class="pc-inner">
+            <h2>Got a project?<br>Let's talk.</h2>
+            <p>Open to full-time roles, contract work, and collaborations. Building something that matters? I want to hear about it.</p>
+            <a href="mailto:hello@paultaylormade.com" class="cta">
+              hello@paultaylormade.com
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <div class="pc-footer">
+              <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /track -->
+    </div><!-- /sticky -->
+  </div><!-- /runway -->
+</section>
+
+<!-- Lenis -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  /* ── LENIS ── */
+  const lenis=new Lenis({duration:1.4,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),smoothWheel:true});
+  function raf(time){lenis.raf(time);requestAnimationFrame(raf)}
+  requestAnimationFrame(raf);
+
+  /* ── ELEMENTS ── */
+  const hRunway=document.getElementById('hRunway');
+  const hTrack=document.getElementById('hTrack');
+  const snFill=document.getElementById('snFill');
+  const snHandle=document.getElementById('snHandle');
+  const snStage=document.getElementById('snStage');
+  const subtitle=document.getElementById('subtitle');
+  const subQ=document.getElementById('subQ');
+  const subA=document.getElementById('subA');
+  const pfStrip=document.getElementById('pfStrip');
+  const panels=hTrack.querySelectorAll('.panel');
+  const vh=()=>window.innerHeight;
+
+  // Calculate total track width
+  let totalW=0;
+  panels.forEach(p=>totalW+=p.offsetWidth);
+  const hDist=totalW-window.innerWidth;
+  hRunway.style.height=(vh()+Math.max(0,hDist))+'px';
+  window.addEventListener('resize',()=>{
+    totalW=0;panels.forEach(p=>totalW+=p.offsetWidth);
+    hRunway.style.height=(vh()+Math.max(0,totalW-window.innerWidth))+'px';
+  });
+
+  // Stage names for each panel
+  const stages=['HERO','MEALMATCH_AI','EDITORIAL','BALLRS','LOUPE','EDITORIAL','JETSWEAT','FILM_REEL','CONTACT'];
+
+  let activeQuotePanel=null;
+
+  lenis.on('scroll',({scroll})=>{
+    const sy=scroll;
+    const runwayTop=hRunway.getBoundingClientRect().top;
+
+    if(runwayTop<=0){
+      const scrolled=Math.abs(runwayTop);
+      const max=hRunway.offsetHeight-vh();
+      const progress=Math.min(1,scrolled/max);
+      const translateX=-progress*hDist;
+      hTrack.style.transform=`translateX(${translateX}px)`;
+
+      // Progress slider
+      snFill.style.width=(progress*100)+'%';
+      snHandle.style.left=(progress*100)+'%';
+
+      // Determine which panel is in center
+      const centerX=window.innerWidth/2;
+      let cumW=0;let stageIdx=0;
+      for(let i=0;i<panels.length;i++){
+        cumW+=panels[i].offsetWidth;
+        if((cumW+translateX)>centerX){stageIdx=i;break}
+      }
+      snStage.textContent='STAGE: '+(stages[stageIdx]||'HERO');
+
+      // Subtitles from project panels
+      const projPanel=panels[stageIdx];
+      if(projPanel&&projPanel.classList.contains('panel-project')){
+        const q=projPanel.getAttribute('data-quote');
+        const a=projPanel.getAttribute('data-attr');
+        if(q&&projPanel!==activeQuotePanel){
+          activeQuotePanel=projPanel;
+          subQ.textContent='"'+q+'"';
+          subA.textContent='— '+a;
+          subtitle.classList.add('on');
+        }
+      }else{
+        if(activeQuotePanel){activeQuotePanel=null;subtitle.classList.remove('on')}
+      }
+
+      // Film strip vertical parallax
+      if(pfStrip){
+        const filmPanel=document.querySelector('.panel-film');
+        if(filmPanel){
+          const filmRect=filmPanel.getBoundingClientRect();
+          const filmProgress=1-(filmRect.left/window.innerWidth);
+          pfStrip.style.transform=`translateY(${Math.max(0,filmProgress*-60)}px)`;
+        }
+      }
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

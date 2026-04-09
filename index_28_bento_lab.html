@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — Design Engineer</title>
+<meta name="description" content="Design Engineer specializing in high-performance interfaces and AI-driven workflows. Brooklyn, NY.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#fcfcfc;--text:#1a1a1a;--muted:#888;--muted2:#bbb;
+  --blue:#2563eb;--blue-bg:#eff6ff;--blue-text:#2563eb;
+  --card:#fff;--card-border:#e5e5e5;--card-hover:0 8px 30px rgba(0,0,0,.06);
+  --surface:#f4f4f4;--dark:#171717;
+  --green:#16a34a;--orange:#ea580c;--yellow:#ca8a04;--purple:#7c3aed;
+  --sage:#4a5d4e;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --radius:24px;
+}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:var(--sans);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.5;padding:clamp(16px,3vw,48px)}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--blue-bg)}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+.hero{
+  max-width:1200px;margin:0 auto clamp(48px,6vw,80px);
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:32px;flex-wrap:wrap;
+}
+.hero-left{max-width:680px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:6px;
+  background:var(--blue-bg);color:var(--blue-text);
+  font:600 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:16px;
+}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-name{font:800 clamp(36px,5.5vw,72px)/1.05 var(--sans);letter-spacing:-.04em;margin-bottom:16px}
+.hero-name span{color:var(--muted2)}
+.hero-desc{font:400 clamp(16px,1.4vw,20px)/1.6 var(--sans);color:var(--muted);max-width:540px}
+.hero-desc strong{color:var(--text);font-weight:500}
+.hero-right{font:400 11px/1.5 var(--mono);color:var(--muted2);text-align:right}
+
+/* ================================================================
+   BENTO GRID
+   ================================================================ */
+.bento{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  margin-bottom:clamp(48px,6vw,80px);
+}
+/* Card base */
+.b-card{
+  border-radius:var(--radius);overflow:hidden;
+  transition:box-shadow .5s,transform .3s;
+  position:relative;
+}
+.b-card:hover{box-shadow:var(--card-hover)}
+.b-card.white{background:var(--card);border:1px solid var(--card-border);padding:28px}
+.b-card.surface{background:var(--surface);padding:28px}
+.b-card.dark{background:var(--dark);color:#fff;padding:28px}
+.b-card.blue{background:var(--blue);color:#fff;padding:28px}
+.b-card.sage-bg{background:var(--sage);color:#fff;padding:28px}
+
+/* Spans */
+.col2{grid-column:span 2}.col3{grid-column:span 3}.col4{grid-column:span 4}
+.row2{grid-row:span 2}
+
+/* ================================================================
+   CARD COMPONENTS
+   ================================================================ */
+/* Project title card */
+.bc-title{font:700 clamp(22px,2.5vw,32px)/1.1 var(--sans);letter-spacing:-.02em;margin-bottom:6px}
+.bc-sub{font:400 14px/1.5 var(--sans);color:var(--muted)}
+.bc-link{
+  display:flex;align-items:center;gap:6px;margin-top:auto;padding-top:24px;
+  font:600 13px/1 var(--sans);color:var(--blue);cursor:pointer;
+}
+.bc-link svg{width:16px;height:16px;transition:transform .2s}
+.bc-link:hover svg{transform:translateX(3px)}
+
+/* Metric card */
+.bc-metric{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100%;min-height:160px}
+.bc-metric-val{font:900 clamp(36px,4vw,52px)/1 var(--sans);letter-spacing:-.03em;margin-bottom:6px}
+.bc-metric-label{font:500 9px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+
+/* Feature card with mockup area */
+.bc-feature-top{position:relative;z-index:2;margin-bottom:16px}
+.bc-feature-title{font:700 18px/1.2 var(--sans);margin-bottom:10px}
+.bc-pills{display:flex;flex-wrap:wrap;gap:6px}
+.bc-pill{font:600 10px/1 var(--sans);padding:5px 12px;background:var(--card);border:1px solid var(--card-border);border-radius:100px}
+.bc-mockup-area{
+  background:var(--card-border);border-radius:16px;
+  height:200px;display:flex;align-items:center;justify-content:center;
+  font:400 11px/1 var(--mono);color:var(--muted);font-style:italic;
+  transition:transform .6s cubic-bezier(.22,1,.36,1);overflow:hidden;
+  position:relative;
+}
+.b-card:hover .bc-mockup-area{transform:translateY(4px)}
+/* Phone mockup */
+.bc-phone{
+  width:140px;height:196px;border-radius:18px;overflow:hidden;
+  box-shadow:0 12px 32px rgba(0,0,0,.1);position:absolute;
+  bottom:-20px;right:24px;z-index:3;
+}
+.bcp{position:absolute;inset:5px;border-radius:14px;display:flex;flex-direction:column;padding:10px 8px;overflow:hidden}
+.bcp-top{display:flex;justify-content:space-between;font:400 6px/1 var(--mono);color:rgba(255,255,255,.25);margin-bottom:8px}
+.bcp-h{font:600 11px/1 var(--sans);color:#fff;margin-bottom:1px}
+.bcp-s{font:400 6px/1 var(--mono);color:rgba(255,255,255,.18)}
+.bcp-bl{display:flex;gap:3px;margin-top:8px}
+.bcp-b{flex:1;height:22px;border-radius:4px;background:rgba(255,255,255,.04)}
+.bcp-rl{display:flex;flex-direction:column;gap:2px;margin-top:5px}
+.bcp-r{height:12px;border-radius:3px;background:rgba(255,255,255,.03)}
+
+/* Tech stack card */
+.bc-stack-title{font:500 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.bc-stack-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bc-stack-item{display:flex;align-items:center;gap:10px;font:600 13px/1 var(--sans)}
+.bc-stack-item svg{width:18px;height:18px;flex-shrink:0}
+
+/* Stats row */
+.bc-stats{display:flex;flex-direction:column;gap:0}
+.bc-stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,0,0,.04);font:400 12px/1.3 var(--sans)}
+.bc-stat:last-child{border-bottom:none}
+.bc-stat-key{color:var(--muted)}
+.bc-stat-val{font-weight:600}
+.bc-stat-val.blue{color:var(--blue)}
+.bc-stat-val.green{color:var(--green)}
+
+/* Testimonial card */
+.bc-quote{font:500 clamp(15px,1.4vw,18px)/1.5 var(--sans);margin-bottom:12px}
+.bc-attr{font:600 10px/1 var(--mono);letter-spacing:.04em;color:var(--blue)}
+.bc-role{font:400 10px/1 var(--sans);color:var(--muted);margin-top:3px}
+
+/* Icon block */
+.bc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.bc-icon svg{width:20px;height:20px}
+
+/* Section header */
+.section-header{
+  max-width:1200px;margin:0 auto clamp(24px,3vw,40px);
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.sh-title{font:800 clamp(28px,4vw,48px)/1.05 var(--sans);letter-spacing:-.03em}
+.sh-sub{font:400 13px/1 var(--mono);color:var(--muted)}
+
+/* ================================================================
+   BACKSTORY
+   ================================================================ */
+.backstory{max-width:1200px;margin:0 auto clamp(48px,6vw,80px)}
+.bs-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,48px);align-items:start}
+.bs-title{font:700 clamp(24px,3vw,36px)/1.1 var(--sans);letter-spacing:-.02em;margin-bottom:14px}
+.bs-title em{font-style:italic;color:var(--sage)}
+.bs-p{font:400 14px/1.7 var(--sans);color:var(--muted);margin-bottom:10px}
+.bs-tl{margin-top:20px}
+.bt-row{display:flex;gap:12px;padding:10px 0;border-top:1px solid rgba(0,0,0,.04)}
+.bt-era{font:600 10px/1 var(--mono);color:var(--blue);flex-shrink:0;width:72px;padding-top:2px}
+.bt-d{font:400 12px/1.5 var(--sans);color:var(--muted)}.bt-d strong{color:var(--text);font-weight:500}
+
+.bs-strip{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.bs-strip::-webkit-scrollbar{display:none}
+.bs-frame{flex-shrink:0;width:200px;height:270px;border-radius:16px;overflow:hidden}
+.bs-frame img{width:100%;height:100%;object-fit:cover;filter:grayscale(30%);transition:filter .4s,transform .5s cubic-bezier(.22,1,.36,1)}
+.bs-frame:hover img{filter:grayscale(0%);transform:scale(1.04)}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+.footer{
+  max-width:1200px;margin:0 auto;
+  padding:clamp(32px,4vw,48px) 0;
+  border-top:1px solid rgba(0,0,0,.06);
+  display:grid;grid-template-columns:1fr auto;gap:32px;align-items:start;
+}
+.ft-hl{font:700 clamp(22px,3vw,32px)/1.15 var(--sans);letter-spacing:-.02em;margin-bottom:6px}
+.ft-sub{font:400 13px/1.6 var(--sans);color:var(--muted);margin-bottom:16px;max-width:400px}
+.ft-links{display:flex;gap:8px;flex-wrap:wrap}
+.ft-lk{
+  font:600 12px/1 var(--sans);color:#fff;background:var(--text);
+  padding:10px 20px;border-radius:12px;display:flex;align-items:center;gap:4px;
+  transition:background .2s;
+}
+.ft-lk:hover{background:#333}
+.ft-lk.outline{background:transparent;color:var(--text);border:1px solid var(--card-border)}
+.ft-lk.outline:hover{background:rgba(0,0,0,.03)}
+.ft-lk svg{width:14px;height:14px}
+.ft-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.ft-copy{font:400 10px/1 var(--sans);color:var(--muted2)}
+.ft-soc{display:flex;gap:12px}
+.ft-soc a{font:500 11px/1 var(--sans);color:var(--muted);transition:color .2s}
+.ft-soc a:hover{color:var(--text)}
+
+@media(max-width:900px){
+  .bento{grid-template-columns:1fr 1fr}.col2{grid-column:span 2}.col3,.col4{grid-column:span 2}
+  .hero{flex-direction:column;align-items:flex-start}
+  .hero-right{text-align:left}
+  .bs-grid{grid-template-columns:1fr}
+  .footer{grid-template-columns:1fr}
+  .ft-right{align-items:flex-start}
+}
+@media(max-width:600px){
+  .bento{grid-template-columns:1fr}.col2,.col3,.col4{grid-column:span 1}
+}
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     HERO
+     ================================================================ -->
+<header class="hero">
+  <div class="hero-left">
+    <div class="hero-badge"><div class="hero-badge-dot"></div>Status: Shipping Live Products</div>
+    <h1 class="hero-name">Paul Taylor <span>—</span><br>Design Engineer</h1>
+    <p class="hero-desc">Specializing in <strong>high-performance interfaces</strong> and <strong>AI-driven workflows</strong>. I build the tools I design using React Native, SwiftUI, and TypeScript.</p>
+  </div>
+  <div class="hero-right">
+    <p>STACK: NEXT.JS / RN / SWIFTUI</p>
+    <p>LOC: BROOKLYN, NY</p>
+  </div>
+</header>
+
+<!-- ================================================================
+     BENTO 1: BALLRS
+     ================================================================ -->
+<div class="section-header">
+  <h2 class="sh-title">Ballrs</h2>
+  <span class="sh-sub">01 — Designed & Built</span>
+</div>
+
+<div class="bento">
+  <!-- Title -->
+  <div class="b-card white col2" style="display:flex;flex-direction:column">
+    <div><div class="bc-title">Multi-Sport Trivia</div><div class="bc-sub">Daily player guessing game. Designed every screen, wrote every component, shipped to the App Store.</div></div>
+    <div class="bc-link">Explore Case Study <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+  </div>
+  <!-- Metric: Conversion -->
+  <div class="b-card blue"><div class="bc-metric"><span class="bc-metric-val">13.8%</span><span class="bc-metric-label">Conversion Rate</span></div></div>
+  <!-- Metric: Sessions -->
+  <div class="b-card dark"><div class="bc-metric"><span class="bc-metric-val">3.94</span><span class="bc-metric-label">Sessions / Device</span></div></div>
+  <!-- Feature + Mockup -->
+  <div class="b-card surface col2 row2" style="padding:0;display:flex;flex-direction:column">
+    <div style="padding:28px 28px 0">
+      <div class="bc-feature-title">Core Mechanics</div>
+      <div class="bc-pills"><span class="bc-pill">NBA</span><span class="bc-pill">Premier League</span><span class="bc-pill">NFL</span><span class="bc-pill">MLB</span></div>
+    </div>
+    <div class="bc-mockup-area" style="flex:1;margin:16px;border-radius:16px">
+      <div class="bc-phone" style="background:linear-gradient(150deg,#1A1A2E,#111528)"><div class="bcp"><div class="bcp-top"><span>9:41</span><span>Ballrs</span></div><div class="bcp-h">Daily Pick</div><div class="bcp-s">Who scored more?</div><div class="bcp-bl"><div class="bcp-b" style="height:40px"></div><div class="bcp-b" style="height:40px"></div></div><div class="bcp-rl"><div class="bcp-r"></div><div class="bcp-r"></div></div></div></div>
+    </div>
+  </div>
+  <!-- Tech stack -->
+  <div class="b-card white col2">
+    <div class="bc-stack-title">Built with</div>
+    <div class="bc-stack-grid">
+      <div class="bc-stack-item"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>React Native</div>
+      <div class="bc-stack-item"><svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Supabase</div>
+      <div class="bc-stack-item"><svg viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Real-time MP</div>
+      <div class="bc-stack-item"><svg viewBox="0 0 24 24" fill="none" stroke="#ca8a04" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 010-5C7 4 7 7 7 7"/><path d="M18 9h1.5a2.5 2.5 0 000-5C17 4 17 7 17 7"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg>Leaderboards</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     BENTO 2: MEALMATCH AI
+     ================================================================ -->
+<div class="section-header">
+  <h2 class="sh-title">MealMatch AI</h2>
+  <span class="sh-sub">02 — Lead Design, Founding Team</span>
+</div>
+
+<div class="bento">
+  <!-- Metric: Research -->
+  <div class="b-card sage-bg"><div class="bc-metric"><span class="bc-metric-val">40+</span><span class="bc-metric-label">Participant Studies</span></div></div>
+  <!-- Title -->
+  <div class="b-card white col2" style="display:flex;flex-direction:column">
+    <div><div class="bc-title">AI Meal Planning</div><div class="bc-sub">Led design from day one. Built the design system, ran research studies, designed the AI assistant character.</div></div>
+    <div class="bc-link">View Project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+  </div>
+  <!-- Metric: Tokens -->
+  <div class="b-card dark"><div class="bc-metric"><span class="bc-metric-val">128</span><span class="bc-metric-label">Design Tokens</span></div></div>
+  <!-- Testimonial -->
+  <div class="b-card white col2">
+    <div class="bc-quote">"A true visionary in product design. His Figma expertise is unmatched and his testing is meticulous."</div>
+    <div class="bc-attr">MealMatch AI — Founding Team</div>
+    <div class="bc-role">Internal Review</div>
+  </div>
+  <!-- Feature + Mockup -->
+  <div class="b-card surface col2" style="padding:0;display:flex;flex-direction:column;min-height:280px">
+    <div style="padding:28px 28px 0">
+      <div class="bc-feature-title">AI Assistant + Onboarding</div>
+      <div class="bc-pills"><span class="bc-pill">AI UX</span><span class="bc-pill">Design Systems</span><span class="bc-pill">User Research</span></div>
+    </div>
+    <div class="bc-mockup-area" style="flex:1;margin:16px;border-radius:16px">
+      <div class="bc-phone" style="background:linear-gradient(150deg,#2D5A3D,#1B3E2A)"><div class="bcp"><div class="bcp-top"><span>9:41</span><span>MealMatch</span></div><div class="bcp-h">Your Plan</div><div class="bcp-s">3 meals curated</div><div class="bcp-bl"><div class="bcp-b"></div><div class="bcp-b"></div><div class="bcp-b"></div></div><div class="bcp-rl"><div class="bcp-r"></div><div class="bcp-r"></div><div class="bcp-r"></div></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     BENTO 3: SHIPPED APPS
+     ================================================================ -->
+<div class="section-header">
+  <h2 class="sh-title">Shipped</h2>
+  <span class="sh-sub">03 — Live on the App Store</span>
+</div>
+
+<div class="bento">
+  <!-- Loupe -->
+  <div class="b-card white col2" style="display:flex;flex-direction:column">
+    <div class="bc-icon" style="background:linear-gradient(135deg,#667eea,#764ba2)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+    <div class="bc-title">Loupe</div>
+    <div class="bc-sub">Native Mac app. Local AI tags your entire photo library. SwiftUI + Vision framework. No cloud.</div>
+    <div style="display:flex;gap:6px;margin-top:12px">
+      <span class="bc-pill" style="background:var(--text);color:#fff;border-color:var(--text)">LIVE</span>
+      <span class="bc-pill">macOS</span>
+      <span class="bc-pill">Vision AI</span>
+    </div>
+  </div>
+  <!-- Beat Block -->
+  <div class="b-card white" style="display:flex;flex-direction:column">
+    <div class="bc-icon" style="background:linear-gradient(135deg,#D4582A,#E8734A)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="6" width="4" height="12" rx="1"/><rect x="10" y="3" width="4" height="18" rx="1"/><rect x="18" y="8" width="4" height="8" rx="1"/></svg></div>
+    <div class="bc-title">Beat Block</div>
+    <div class="bc-sub">Music sequencing playground. Tap beats, layer sounds, create.</div>
+    <div style="display:flex;gap:6px;margin-top:12px">
+      <span class="bc-pill" style="background:var(--text);color:#fff;border-color:var(--text)">LIVE</span>
+      <span class="bc-pill">iOS</span>
+    </div>
+  </div>
+  <!-- Metric: Total Apps -->
+  <div class="b-card blue"><div class="bc-metric"><span class="bc-metric-val">3</span><span class="bc-metric-label">Apps on the Store</span></div></div>
+</div>
+
+<!-- ================================================================
+     BENTO 4: IMPACT
+     ================================================================ -->
+<div class="section-header">
+  <h2 class="sh-title">Impact</h2>
+  <span class="sh-sub">04 — Research & Growth</span>
+</div>
+
+<div class="bento">
+  <!-- JetSweat metrics -->
+  <div class="b-card blue"><div class="bc-metric"><span class="bc-metric-val">+25%</span><span class="bc-metric-label">Signup Lift</span></div></div>
+  <div class="b-card dark"><div class="bc-metric"><span class="bc-metric-val">-75%</span><span class="bc-metric-label">Manual Setup</span></div></div>
+  <!-- JetSweat card -->
+  <div class="b-card white col2" style="display:flex;flex-direction:column">
+    <div><div class="bc-title">JetSweat</div><div class="bc-sub">B2B fitness SaaS. Redesigned onboarding, rebuilt the CMS, introduced self-serve tools.</div></div>
+    <div class="bc-link">View Case Study <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+  </div>
+  <!-- AllergyTracker -->
+  <div class="b-card white col2" style="display:flex;flex-direction:column">
+    <div><div class="bc-title">AllergyTracker</div><div class="bc-sub">Accessibility-first UX for cognitive impairment. Voice UI integration tested with users under real-time cognitive load.</div></div>
+    <div style="display:flex;gap:6px;margin-top:12px">
+      <span class="bc-pill">Accessibility</span><span class="bc-pill">Voice UI</span><span class="bc-pill">Health Tech</span>
+    </div>
+  </div>
+  <div class="b-card surface"><div class="bc-metric"><span class="bc-metric-val">-20%</span><span class="bc-metric-label">Task Time</span></div></div>
+  <!-- Testimonial -->
+  <div class="b-card white col2">
+    <div class="bc-quote">"He consistently transformed complex challenges into elegant, user-centered solutions."</div>
+    <div class="bc-attr">Alex Leite — Microsoft 365</div>
+    <div class="bc-role">Senior Director</div>
+  </div>
+  <div class="b-card white col2">
+    <div class="bc-quote">"A unique ability to distill complex features into clean designs and seamless user flows."</div>
+    <div class="bc-attr">Alexandra Dantzig — JetSweat</div>
+    <div class="bc-role">Co-Founder & CEO</div>
+  </div>
+</div>
+
+<!-- ================================================================
+     BACKSTORY
+     ================================================================ -->
+<div class="section-header">
+  <h2 class="sh-title">Backstory</h2>
+  <span class="sh-sub">05 — The Archive</span>
+</div>
+
+<div class="backstory">
+  <div class="bs-grid">
+    <div>
+      <h3 class="bs-title">London PM. Freelance <em>photographer.</em> Now I build products.</h3>
+      <p class="bs-p">Started in product management in London. Followed the camera — shot for Netflix, HBO, National Geographic. Now I design and build apps.</p>
+      <div class="bs-tl">
+        <div class="bt-row"><span class="bt-era">2014–2016</span><span class="bt-d"><strong>Product Manager</strong> — London.</span></div>
+        <div class="bt-row"><span class="bt-era">2016–2020</span><span class="bt-d"><strong>Photographer</strong> — Netflix, HBO, Nat Geo.</span></div>
+        <div class="bt-row"><span class="bt-era">2020–2024</span><span class="bt-d"><strong>GA & Freelance</strong> — UX immersion.</span></div>
+        <div class="bt-row"><span class="bt-era">2024–Now</span><span class="bt-d"><strong>Lead Designer</strong> — MealMatch AI.</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="bs-strip">
+        <div class="bs-frame"><img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&h=540&fit=crop" alt="" loading="lazy"></div>
+        <div class="bs-frame"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&h=540&fit=crop" alt="" loading="lazy"></div>
+        <div class="bs-frame"><img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=400&h=540&fit=crop" alt="" loading="lazy"></div>
+        <div class="bs-frame"><img src="https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=400&h=540&fit=crop" alt="" loading="lazy"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     FOOTER
+     ================================================================ -->
+<footer class="footer">
+  <div>
+    <div class="ft-hl">Open for opportunities.</div>
+    <p class="ft-sub">Product design, contract work, or collaborations in New York City.</p>
+    <div class="ft-links">
+      <a href="mailto:hello@paultaylormade.com" class="ft-lk">Get in Touch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer" class="ft-lk outline">LinkedIn</a>
+      <a href="https://drive.google.com/file/d/1XDFRARRMCelp--CW1QSG9yTvu3VQGOKT/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="ft-lk outline">Resume</a>
+    </div>
+  </div>
+  <div class="ft-right">
+    <div class="ft-copy">&copy; 2026 Paul Taylor</div>
+    <div class="ft-soc">
+      <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

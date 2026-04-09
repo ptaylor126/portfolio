@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — Designer & Builder</title>
+<meta name="description" content="Product Designer in Brooklyn. I design apps. Then I build them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F6F1EB;--cobalt:#0047AB;--burnt:#D4582A;--text:#1A1A1A;
+  --muted:#918A82;--muted2:#C8C0B8;--surface:#EDEAE5;--wire:rgba(26,26,26,.06);
+  --tight:'Inter Tight',system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --heavy:cubic-bezier(.22,1,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:auto}
+body{font-family:var(--mono);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.6;cursor:none}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--cobalt);color:#fff}
+
+/* ── CURSOR ── */
+.cur{position:fixed;width:14px;height:14px;border:1.5px solid var(--text);border-radius:50%;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);transition:width .3s var(--spring),height .3s var(--spring),background .2s,border-color .2s,border-radius .3s var(--spring);will-change:transform;mix-blend-mode:exclusion}
+.cur-d{position:fixed;width:4px;height:4px;background:var(--burnt);border-radius:50%;pointer-events:none;z-index:10001;transform:translate(-50%,-50%);will-change:transform;transition:opacity .15s}
+.cur.is-v{width:76px;height:36px;border-radius:18px;background:var(--cobalt);border-color:var(--cobalt);mix-blend-mode:normal}
+.cur.is-v::after{content:'VIEW';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:600 8px/1 var(--mono);color:#fff;letter-spacing:.16em}
+.cur.is-l{width:36px;height:36px;border-color:var(--cobalt);background:rgba(0,71,171,.06);mix-blend-mode:normal}
+@media(max-width:900px){.cur,.cur-d{display:none}body{cursor:auto}a,button{cursor:pointer}}
+
+/* ================================================================
+   SPLIT-SCREEN HERO
+   ================================================================ */
+.hero{position:relative;height:100vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
+.hero-photo{
+  position:relative;overflow:hidden;
+}
+.hero-photo-img{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=960&q=80') center/cover;
+  filter:grayscale(85%) contrast(1.2);
+}
+.hero-photo-grain{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;opacity:.15;
+}
+.hero-name-side{
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);position:relative;overflow:hidden;
+}
+.hero-name{
+  font:900 clamp(48px,9vw,120px)/1 var(--tight);
+  letter-spacing:-.04em;color:var(--text);
+  will-change:transform;
+  transition:none; /* JS controls */
+}
+.hero-name .name-accent{color:var(--cobalt)}
+
+/* Blueprint grid bg on name side */
+.hero-name-side::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(rgba(0,71,171,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,71,171,.03) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+
+/* Ticker at the bottom */
+.hero-ticker{
+  position:absolute;bottom:0;left:0;right:0;z-index:10;
+  height:40px;background:var(--cobalt);overflow:hidden;
+  display:flex;align-items:center;
+}
+.ticker-track{
+  display:flex;gap:0;animation:tickerScroll 20s linear infinite;
+  white-space:nowrap;
+}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{
+  font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(255,255,255,.7);padding:0 40px;flex-shrink:0;
+}
+.ticker-sep{color:rgba(255,255,255,.2);padding:0 8px}
+
+/* ================================================================
+   LOGIC-GATE NAV (morphing bar → pill)
+   ================================================================ */
+.lg-nav{
+  position:fixed;z-index:600;
+  /* Start as full-width bar at bottom of hero */
+  bottom:0;left:0;right:0;
+  height:40px;
+  background:rgba(26,26,26,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  padding:0 24px;
+  font:400 10px/1 var(--mono);color:rgba(237,237,237,.5);
+  letter-spacing:.06em;
+  /* Morph properties */
+  border-radius:0;
+  transition:left .6s var(--heavy),right .6s var(--heavy),bottom .6s var(--heavy),
+             border-radius .6s var(--heavy),height .4s var(--heavy);
+  will-change:left,right,bottom,border-radius;
+}
+.lg-nav.morphed{
+  left:50%;right:auto;
+  width:640px;margin-left:-320px;
+  bottom:auto;top:16px;
+  height:42px;
+  border-radius:100px;
+  border:1px solid rgba(237,237,237,.08);
+}
+.lg-nav .nav-name{
+  font:700 11px/1 var(--tight);letter-spacing:.02em;color:#fff;
+  opacity:0;transform:translateX(-10px);
+  transition:opacity .4s .2s,transform .4s .2s var(--heavy);
+}
+.lg-nav.morphed .nav-name{opacity:1;transform:translateX(0)}
+.lg-sep{width:1px;height:14px;background:rgba(237,237,237,.1)}
+.lg-nav a{color:rgba(237,237,237,.4);transition:color .2s;cursor:none;text-transform:uppercase;letter-spacing:.1em;font-size:9px}
+.lg-nav a:hover{color:#fff}
+/* Heartbeat SVG */
+.heartbeat{height:20px;width:60px;overflow:hidden}
+.heartbeat polyline{fill:none;stroke:var(--burnt);stroke-width:1.5;stroke-linecap:round}
+.lg-data{font:300 8px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(237,237,237,.3)}
+
+/* ================================================================
+   BLUEPRINT CARDS (WORK)
+   ================================================================ */
+.work{padding:140px 48px;max-width:1100px;margin:0 auto}
+.sec-label{font:500 9px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--cobalt);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.sec-label::before{content:'';width:20px;height:1px;background:var(--cobalt)}
+.sec-title{font:800 clamp(28px,4vw,48px)/1.1 var(--tight);letter-spacing:-.02em;margin-bottom:72px}
+
+.bp-grid{display:flex;flex-direction:column;gap:32px;position:relative}
+
+/* Code-comment testimonials in gutter */
+.code-comment{
+  padding:8px 0 8px 20px;
+  font:300 11px/1.7 var(--mono);font-style:italic;
+  color:rgba(26,26,26,.08);
+  border-left:2px solid rgba(0,71,171,.06);
+  max-width:500px;
+  transition:color .4s,border-color .4s;
+  cursor:default;
+}
+.code-comment:hover{color:rgba(26,26,26,.6);border-color:rgba(0,71,171,.3)}
+.code-comment::before{content:'/* ';font-style:normal;color:rgba(0,71,171,.15)}
+.code-comment::after{content:' */';font-style:normal;color:rgba(0,71,171,.15)}
+.cc-attr{font:500 8px/1 var(--mono);font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:rgba(212,88,42,.15);margin-top:6px;transition:color .4s}
+.code-comment:hover .cc-attr{color:rgba(212,88,42,.7)}
+
+/* Blueprint card */
+.bp-card{
+  display:grid;grid-template-columns:1fr 1fr;
+  border-radius:16px;overflow:hidden;
+  background:var(--surface);border:1px solid rgba(26,26,26,.04);
+  min-height:400px;position:relative;
+  opacity:0;transform:translateY(50px) scale(.96);
+  transition:opacity .9s var(--heavy),transform 1s var(--heavy);
+  will-change:transform;
+}
+.bp-card.vis{opacity:1;transform:none}
+.bp-card.even{direction:rtl}
+.bp-card.even>*{direction:ltr}
+
+/* Visual side */
+.bp-visual{
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+/* Wireframe bloom layer */
+.bp-wireframe{
+  position:absolute;inset:0;z-index:3;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+  opacity:0;transition:opacity .5s var(--heavy);
+}
+.bp-card:hover .bp-wireframe{opacity:1}
+.wire-box{
+  border:1px solid rgba(0,71,171,.2);border-radius:4px;
+  position:absolute;
+  font:400 7px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(0,71,171,.3);padding:3px 6px;
+  transform:scale(.8);opacity:0;
+  transition:transform .5s var(--heavy),opacity .4s;
+}
+.bp-card:hover .wire-box{transform:scale(1);opacity:1}
+/* Stagger the bloom */
+.wire-box:nth-child(1){transition-delay:.05s}
+.wire-box:nth-child(2){transition-delay:.1s}
+.wire-box:nth-child(3){transition-delay:.15s}
+.wire-box:nth-child(4){transition-delay:.2s}
+.wire-box:nth-child(5){transition-delay:.25s}
+
+.bp-mockup{
+  width:180px;height:250px;border-radius:22px;overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.12);position:relative;z-index:2;
+  transition:transform .6s var(--heavy);
+}
+.bp-card:hover .bp-mockup{transform:scale(1.03) rotate(-1deg)}
+.bm{position:absolute;inset:7px;border-radius:16px;display:flex;flex-direction:column;padding:12px 10px;overflow:hidden}
+.bm-top{display:flex;justify-content:space-between;font:400 7px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:10px}
+.bm-h{font:700 14px/1.2 var(--tight);color:#fff;margin-bottom:2px}
+.bm-s{font:400 7px/1 var(--mono);color:rgba(255,255,255,.2)}
+.bm-bl{display:flex;gap:4px;margin-top:10px}
+.bm-b{flex:1;height:30px;border-radius:5px;background:rgba(255,255,255,.05)}
+.bm-rl{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.bm-r{height:16px;border-radius:4px;background:rgba(255,255,255,.04)}
+.bm-ch{display:flex;align-items:flex-end;gap:2px;height:50px;margin-top:auto;padding-top:6px}
+.bm-cv{flex:1;border-radius:2px 2px 0 0;background:rgba(255,255,255,.06)}
+.bm-cv.hi{background:rgba(255,255,255,.22)}
+
+/* Stack/Impact labels on visual */
+.bp-labels{
+  position:absolute;bottom:16px;left:16px;z-index:4;
+  display:flex;flex-direction:column;gap:4px;
+}
+.bp-lbl{
+  font:500 7px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.55);background:rgba(0,0,0,.3);
+  backdrop-filter:blur(6px);padding:4px 8px;border-radius:3px;width:fit-content;
+}
+
+/* Content side */
+.bp-content{padding:36px 32px;display:flex;flex-direction:column;justify-content:center}
+.bp-num{font:500 9px/1 var(--mono);letter-spacing:.12em;color:var(--cobalt);margin-bottom:20px}
+.bp-title{font:800 clamp(24px,3vw,36px)/1.1 var(--tight);letter-spacing:-.02em;margin-bottom:10px}
+.bp-desc{font:400 12px/1.7 var(--mono);color:var(--muted);margin-bottom:16px}
+.bp-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.bp-tag{font:400 8px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--wire);border-radius:100px;color:var(--muted)}
+.bp-super{font:600 10px/1 var(--mono);color:var(--burnt);display:flex;align-items:center;gap:6px}
+.bp-super::before{content:'';width:4px;height:4px;background:var(--burnt);border-radius:50%}
+
+/* Card themes */
+.bp-card[data-p="mealmatch"] .bp-visual{background:linear-gradient(135deg,#dce8e0,#c8d8ce)}
+.bp-card[data-p="mealmatch"] .bp-mockup{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.bp-card[data-p="ballrs"] .bp-visual{background:linear-gradient(135deg,#d8dbe4,#c4c8d6)}
+.bp-card[data-p="ballrs"] .bp-mockup{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.bp-card[data-p="loupe"] .bp-visual{background:linear-gradient(135deg,#dcd8ea,#cac6dc)}
+.bp-card[data-p="loupe"] .bp-mockup{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.bp-card[data-p="jetsweat"] .bp-visual{background:linear-gradient(135deg,#e8ddd6,#daced0)}
+.bp-card[data-p="jetsweat"] .bp-mockup{background:linear-gradient(150deg,#D4582A,#A84420)}
+
+/* ================================================================
+   DEPENDENCY GRAPH (BACKSTORY)
+   ================================================================ */
+.dep-graph{padding:160px 48px;max-width:1100px;margin:0 auto}
+.dg-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:80px;margin-top:60px;align-items:start}
+.dg-text h2{font:800 clamp(24px,3vw,38px)/1.15 var(--tight);letter-spacing:-.02em;margin-bottom:24px}
+.dg-text h2 em{font-style:italic;color:var(--cobalt)}
+.dg-p{font:400 12px/1.8 var(--mono);color:var(--muted);margin-bottom:16px}
+
+/* The graph */
+.dep-nodes{position:relative;padding:40px 0}
+.dep-node{
+  display:flex;align-items:flex-start;gap:20px;
+  margin-bottom:0;position:relative;
+}
+.dn-connector{
+  display:flex;flex-direction:column;align-items:center;
+  flex-shrink:0;width:40px;
+}
+.dn-dot{
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid var(--cobalt);background:var(--bg);
+  position:relative;z-index:2;flex-shrink:0;
+}
+.dn-dot.active{background:var(--cobalt)}
+.dn-line{width:2px;height:48px;background:linear-gradient(to bottom,var(--cobalt),rgba(0,71,171,.15))}
+.dn-arrow{
+  font:400 9px/1 var(--mono);color:var(--cobalt);letter-spacing:.08em;
+  text-transform:uppercase;padding:8px 0;
+}
+.dn-body{
+  padding:16px 20px;background:var(--surface);border-radius:10px;
+  border:1px solid rgba(0,71,171,.08);flex:1;
+  transition:border-color .3s,box-shadow .3s;
+}
+.dn-body:hover{border-color:rgba(0,71,171,.2);box-shadow:0 4px 16px rgba(0,71,171,.04)}
+.dn-label{font:500 8px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--cobalt);margin-bottom:6px}
+.dn-title{font:700 18px/1.2 var(--tight);margin-bottom:4px}
+.dn-desc{font:400 11px/1.6 var(--mono);color:var(--muted)}
+
+/* ================================================================
+   CONTACT
+   ================================================================ */
+.contact{padding:160px 48px 80px;max-width:800px;margin:0 auto;text-align:center}
+.contact h2{font:800 clamp(28px,4vw,52px)/1.1 var(--tight);letter-spacing:-.02em;margin-bottom:16px}
+.contact p{font:400 12px/1.8 var(--mono);color:var(--muted);max-width:400px;margin:0 auto 40px}
+.cta{
+  display:inline-flex;align-items:center;gap:10px;
+  font:600 12px/1 var(--mono);color:var(--cobalt);
+  border:2px solid var(--cobalt);padding:14px 32px;border-radius:100px;
+  transition:background .3s,color .3s,transform .3s var(--spring);cursor:none;
+}
+.cta:hover{background:var(--cobalt);color:#fff;transform:scale(1.04)}
+.cta svg{transition:transform .3s var(--spring)}.cta:hover svg{transform:translateX(4px)}
+.footer{
+  padding:28px 48px;display:flex;justify-content:space-between;align-items:center;
+  max-width:1100px;margin:0 auto;border-top:1px solid var(--wire);
+}
+.footer span{font:400 10px/1 var(--mono);color:var(--muted2)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font:400 10px/1 var(--mono);color:var(--muted);transition:color .3s;cursor:none}
+.footer-links a:hover{color:var(--cobalt)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;height:auto}
+  .hero-photo{height:50vh}
+  .hero-name-side{padding:48px 24px}
+  .bp-card{grid-template-columns:1fr;min-height:auto}
+  .bp-card.even{direction:ltr}
+  .bp-visual{height:260px}
+  .bp-content{padding:24px 20px}
+  .work,.dep-graph{padding:80px 20px}
+  .dg-layout{grid-template-columns:1fr;gap:40px}
+  .contact{padding:80px 20px 60px}
+  .footer{padding:20px;flex-direction:column;gap:10px}
+  .lg-nav.morphed{width:calc(100% - 24px);left:12px;right:12px;margin-left:0}
+  .bp-wireframe{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-d" id="curD"></div>
+
+<!-- ================================================================
+     SPLIT-SCREEN HERO
+     ================================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-photo">
+    <div class="hero-photo-img"></div>
+    <div class="hero-photo-grain"></div>
+  </div>
+  <div class="hero-name-side">
+    <div class="hero-name" id="heroName">PAUL<br><span class="name-accent">TAYLOR</span></div>
+  </div>
+
+  <div class="hero-ticker">
+    <div class="ticker-track">
+      <span class="ticker-item">I design apps. Then I build them.</span>
+      <span class="ticker-sep">//</span>
+      <span class="ticker-item">Lead Designer @ MealMatch AI</span>
+      <span class="ticker-sep">//</span>
+      <span class="ticker-item">3 apps on the App Store</span>
+      <span class="ticker-sep">//</span>
+      <span class="ticker-item">Brooklyn, NY</span>
+      <span class="ticker-sep">//</span>
+      <span class="ticker-item">Ships real code</span>
+      <span class="ticker-sep">//</span>
+      <span class="ticker-item">I design apps. Then I build them.</span>
+      <span class="ticker-sep">//</span>
+      <span class="ticker-item">Lead Designer @ MealMatch AI</span>
+      <span class="ticker-sep">//</span>
+      <span class="ticker-item">3 apps on the App Store</span>
+      <span class="ticker-sep">//</span>
+      <span class="ticker-item">Brooklyn, NY</span>
+      <span class="ticker-sep">//</span>
+      <span class="ticker-item">Ships real code</span>
+      <span class="ticker-sep">//</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     LOGIC-GATE NAV
+     ================================================================ -->
+<div class="lg-nav" id="lgNav">
+  <span class="nav-name">PAUL TAYLOR</span>
+  <div class="lg-sep"></div>
+  <a href="#work" data-cursor="link">Work</a>
+  <a href="#dep-graph" data-cursor="link">Story</a>
+  <a href="#contact" data-cursor="link">Contact</a>
+  <div class="lg-sep"></div>
+  <div class="heartbeat">
+    <svg viewBox="0 0 60 20" preserveAspectRatio="none" width="60" height="20">
+      <polyline id="hbLine" points="0,10 8,10 12,10 15,2 18,18 21,10 28,10 32,10 35,4 38,16 41,10 48,10 52,10 55,3 58,17 60,10" style="fill:none;stroke:#D4582A;stroke-width:1.5;stroke-linecap:round"/>
+    </svg>
+  </div>
+  <div class="lg-sep"></div>
+  <span class="lg-data" id="lgData">LOC: BROOKLYN // BUILD: STABLE</span>
+</div>
+
+<!-- ================================================================
+     WORK — BLUEPRINT CARDS
+     ================================================================ -->
+<section class="work" id="work">
+  <div class="sec-label">Selected Work</div>
+  <h2 class="sec-title">Projects I've designed,<br>built, and shipped.</h2>
+
+  <div class="bp-grid">
+
+    <!-- MealMatch AI -->
+    <div class="bp-card" data-p="mealmatch" data-cursor="view">
+      <div class="bp-visual">
+        <div class="bp-wireframe">
+          <div class="wire-box" style="top:10%;left:8%;width:84%;height:12%">Header</div>
+          <div class="wire-box" style="top:28%;left:8%;width:40%;height:30%">AI Engine</div>
+          <div class="wire-box" style="top:28%;right:8%;width:40%;height:30%">Meal Card</div>
+          <div class="wire-box" style="top:64%;left:8%;width:84%;height:14%">Navigation</div>
+          <div class="wire-box" style="top:82%;left:8%;width:50%;height:10%">Research Panel</div>
+        </div>
+        <div class="bp-mockup"><div class="bm" style="background:linear-gradient(180deg,#2D5A3D,#1a3d28)">
+          <div class="bm-top"><span>9:41</span><span>MealMatch</span></div>
+          <div class="bm-h">Your Plan</div><div class="bm-s">3 meals curated</div>
+          <div class="bm-bl"><div class="bm-b"></div><div class="bm-b"></div><div class="bm-b"></div></div>
+          <div class="bm-rl"><div class="bm-r"></div><div class="bm-r"></div><div class="bm-r"></div></div>
+        </div></div>
+        <div class="bp-labels"><span class="bp-lbl">STACK: FIGMA / REACT</span><span class="bp-lbl">IMPACT: 40+ STUDIES</span></div>
+      </div>
+      <div class="bp-content">
+        <div class="bp-num">01 — CASE STUDY</div>
+        <h3 class="bp-title">MealMatch AI</h3>
+        <p class="bp-desc">AI-powered meal planning. Scaled a design system from zero. Ran 40+ participant research studies.</p>
+        <div class="bp-tags"><span class="bp-tag">AI UX</span><span class="bp-tag">Design Systems</span><span class="bp-tag">Research</span></div>
+        <div class="bp-super">40+ participant studies, full design system</div>
+      </div>
+    </div>
+
+    <!-- Code comment -->
+    <div class="code-comment">
+      He consistently transformed complex challenges into elegant, user-centered solutions that elevated the entire product experience.
+      <div class="cc-attr">— Alex Leite, Sr. Director, Microsoft 365</div>
+    </div>
+
+    <!-- Ballrs -->
+    <div class="bp-card even" data-p="ballrs" data-cursor="view">
+      <div class="bp-visual">
+        <div class="bp-wireframe">
+          <div class="wire-box" style="top:8%;left:10%;width:80%;height:10%">StatusBar</div>
+          <div class="wire-box" style="top:24%;left:10%;width:38%;height:40%">PlayerCard</div>
+          <div class="wire-box" style="top:24%;right:10%;width:38%;height:40%">PlayerCard</div>
+          <div class="wire-box" style="top:70%;left:10%;width:80%;height:12%">ScoreView</div>
+          <div class="wire-box" style="top:86%;left:10%;width:80%;height:8%">TabBar</div>
+        </div>
+        <div class="bp-mockup"><div class="bm" style="background:linear-gradient(180deg,#1A1A2E,#111528)">
+          <div class="bm-top"><span>9:41</span><span>Ballrs</span></div>
+          <div class="bm-h">Daily Pick</div><div class="bm-s">Who scored more?</div>
+          <div class="bm-bl"><div class="bm-b" style="height:50px"></div><div class="bm-b" style="height:50px"></div></div>
+          <div class="bm-rl"><div class="bm-r"></div><div class="bm-r"></div></div>
+        </div></div>
+        <div class="bp-labels"><span class="bp-lbl">STACK: TS / REACT_NATIVE</span><span class="bp-lbl">PLATFORM: APP_STORE</span></div>
+      </div>
+      <div class="bp-content">
+        <div class="bp-num">02 — CASE STUDY</div>
+        <h3 class="bp-title">Ballrs</h3>
+        <p class="bp-desc">End-to-end design and engineering. React Native & TypeScript. Designed, coded, shipped.</p>
+        <div class="bp-tags"><span class="bp-tag">React Native</span><span class="bp-tag">TypeScript</span><span class="bp-tag">Full-Stack</span></div>
+        <div class="bp-super">Designed + engineered, live on App Store</div>
+      </div>
+    </div>
+
+    <!-- Code comment -->
+    <div class="code-comment">
+      He is strong in all areas of UX from research to design, with an aptitude for prototyping. Paul would make a great addition to any team.
+      <div class="cc-attr">— Kim Hartford, Founding Product Designer</div>
+    </div>
+
+    <!-- Loupe -->
+    <div class="bp-card" data-p="loupe" data-cursor="view">
+      <div class="bp-visual">
+        <div class="bp-wireframe">
+          <div class="wire-box" style="top:6%;left:8%;width:84%;height:8%">Toolbar</div>
+          <div class="wire-box" style="top:18%;left:8%;width:55%;height:50%">PhotoGrid</div>
+          <div class="wire-box" style="top:18%;right:8%;width:25%;height:50%">TagPanel</div>
+          <div class="wire-box" style="top:72%;left:8%;width:84%;height:20%">AIInference</div>
+        </div>
+        <div class="bp-mockup"><div class="bm" style="background:linear-gradient(180deg,#5B4FA0,#3D3578)">
+          <div class="bm-top"><span>Loupe</span><span>v1.2</span></div>
+          <div class="bm-h">Library</div><div class="bm-s">2,481 tagged</div>
+          <div class="bm-bl"><div class="bm-b"></div><div class="bm-b"></div><div class="bm-b"></div></div>
+          <div class="bm-rl"><div class="bm-r"></div><div class="bm-r"></div><div class="bm-r"></div><div class="bm-r"></div></div>
+        </div></div>
+        <div class="bp-labels"><span class="bp-lbl">STACK: SWIFT / VISION</span><span class="bp-lbl">AI: ON_DEVICE</span></div>
+      </div>
+      <div class="bp-content">
+        <div class="bp-num">03 — SHIPPED APP</div>
+        <h3 class="bp-title">Loupe</h3>
+        <p class="bp-desc">Native Mac app for photographers. Local AI tags your library. No cloud, no subscriptions.</p>
+        <div class="bp-tags"><span class="bp-tag">macOS</span><span class="bp-tag">Vision AI</span><span class="bp-tag">SwiftUI</span></div>
+        <div class="bp-super">On-device AI, zero cloud dependency</div>
+      </div>
+    </div>
+
+    <!-- Code comment -->
+    <div class="code-comment">
+      Paul is a talented UX designer with a unique ability to distill complex features into clean designs and seamless user flows. His process and insights really made an impact for us.
+      <div class="cc-attr">— Alexandra Dantzig, CEO, JetSweat</div>
+    </div>
+
+    <!-- JetSweat -->
+    <div class="bp-card even" data-p="jetsweat" data-cursor="view">
+      <div class="bp-visual">
+        <div class="bp-wireframe">
+          <div class="wire-box" style="top:6%;left:8%;width:84%;height:10%">DashHeader</div>
+          <div class="wire-box" style="top:20%;left:8%;width:50%;height:35%">AnalyticsChart</div>
+          <div class="wire-box" style="top:20%;right:8%;width:30%;height:35%">SignupFunnel</div>
+          <div class="wire-box" style="top:60%;left:8%;width:84%;height:16%">CMSEditor</div>
+          <div class="wire-box" style="top:80%;left:8%;width:40%;height:12%">OnboardFlow</div>
+        </div>
+        <div class="bp-mockup"><div class="bm" style="background:linear-gradient(180deg,#D4582A,#a84420)">
+          <div class="bm-top"><span>9:41</span><span>JetSweat</span></div>
+          <div class="bm-h">Dashboard</div><div class="bm-s">Analytics</div>
+          <div class="bm-ch"><div class="bm-cv" style="height:25%"></div><div class="bm-cv" style="height:45%"></div><div class="bm-cv hi" style="height:75%"></div><div class="bm-cv" style="height:38%"></div><div class="bm-cv hi" style="height:92%"></div><div class="bm-cv" style="height:55%"></div><div class="bm-cv hi" style="height:68%"></div></div>
+        </div></div>
+        <div class="bp-labels"><span class="bp-lbl">IMPACT: +25% SIGNUPS</span><span class="bp-lbl">CMS: -75% MANUAL</span></div>
+      </div>
+      <div class="bp-content">
+        <div class="bp-num">04 — CASE STUDY</div>
+        <h3 class="bp-title">JetSweat</h3>
+        <p class="bp-desc">Product-led growth for B2B fitness SaaS. 25% more sign-ups, 75% less manual CMS setup.</p>
+        <div class="bp-tags"><span class="bp-tag">Growth</span><span class="bp-tag">SaaS</span><span class="bp-tag">CMS</span></div>
+        <div class="bp-super">25% sign-up lift, 75% less manual work</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================================================================
+     DEPENDENCY GRAPH
+     ================================================================ -->
+<section class="dep-graph" id="dep-graph">
+  <div class="sec-label">System Architecture</div>
+  <h2 class="sec-title">How I got here.</h2>
+
+  <div class="dg-layout">
+    <div>
+      <div class="dg-text">
+        <h2>London PM.<br>NYC <em>Photographer</em>.<br>Now I build products.</h2>
+        <p class="dg-p">Started in product management in London. Followed the camera — shot for Netflix, HBO, National Geographic. Kept asking: why does this app work the way it does?</p>
+        <p class="dg-p">So I learned to answer it myself. Now I design and build apps, with the eye of a photographer and the instincts of someone who's shipped real products.</p>
+      </div>
+    </div>
+
+    <div class="dep-nodes">
+      <div class="dep-node">
+        <div class="dn-connector"><div class="dn-dot"></div><div class="dn-line"></div></div>
+        <div class="dn-body">
+          <div class="dn-label">INPUT_NODE_01</div>
+          <div class="dn-title">Product Manager</div>
+          <div class="dn-desc">London. Learned how products ship, what breaks, why metrics matter.</div>
+        </div>
+      </div>
+      <div style="padding-left:18px"><div class="dn-arrow">transform()</div></div>
+      <div class="dep-node">
+        <div class="dn-connector"><div class="dn-dot"></div><div class="dn-line"></div></div>
+        <div class="dn-body">
+          <div class="dn-label">INPUT_NODE_02</div>
+          <div class="dn-title">Photographer</div>
+          <div class="dn-desc">Netflix, HBO, Nat Geo. Trained my eye for composition, narrative, and impact.</div>
+        </div>
+      </div>
+      <div style="padding-left:18px"><div class="dn-arrow">merge(inputs)</div></div>
+      <div class="dep-node">
+        <div class="dn-connector"><div class="dn-dot active"></div></div>
+        <div class="dn-body" style="border-color:rgba(0,71,171,.25)">
+          <div class="dn-label" style="color:var(--burnt)">OUTPUT_NODE</div>
+          <div class="dn-title">Designer & Builder</div>
+          <div class="dn-desc">Designing intelligent experiences. Shipping my own apps to the App Store.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     CONTACT
+     ================================================================ -->
+<section class="contact" id="contact">
+  <div class="sec-label" style="justify-content:center">Get In Touch</div>
+  <h2>Got a project?<br>Let's talk.</h2>
+  <p>Open to full-time roles, contract work, and collaborations. Building something that matters? I want to hear about it.</p>
+  <a href="mailto:hello@paultaylormade.com" class="cta" data-cursor="link">
+    hello@paultaylormade.com
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</section>
+<footer class="footer">
+  <span>&copy; 2026 Paul Taylor. Hand-built, no templates.</span>
+  <div class="footer-links">
+    <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer" data-cursor="link">LinkedIn</a>
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" data-cursor="link">Instagram</a>
+    <a href="https://github.com" target="_blank" rel="noopener noreferrer" data-cursor="link">GitHub</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── CURSOR ── */
+  const cur=document.getElementById('cur'),curD=document.getElementById('curD');
+  let cx=0,cy=0,dxx=0,dyy=0,mx=0,my=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+  (function cT(){cx+=(mx-cx)*.08;cy+=(my-cy)*.08;dxx+=(mx-dxx)*.22;dyy+=(my-dyy)*.22;cur.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;curD.style.transform=`translate(${dxx}px,${dyy}px) translate(-50%,-50%)`;requestAnimationFrame(cT)})();
+  document.querySelectorAll('[data-cursor]').forEach(el=>{const t=el.getAttribute('data-cursor');el.addEventListener('mouseenter',()=>{cur.className='cur is-'+t[0];curD.style.opacity='0'});el.addEventListener('mouseleave',()=>{cur.className='cur';curD.style.opacity='1'})});
+
+  /* ── ELEMENTS ── */
+  const heroName=document.getElementById('heroName');
+  const lgNav=document.getElementById('lgNav');
+  const heroSection=document.getElementById('hero');
+
+  /* ── IO FOR CARDS ── */
+  const cardObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')});
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.bp-card').forEach(c=>cardObs.observe(c));
+
+  /* ── HEARTBEAT ANIMATION ── */
+  const hbLine=document.getElementById('hbLine');
+  let hbPhase=0;
+  function animateHB(){
+    hbPhase+=.06;
+    const pts=[];
+    for(let x=0;x<=60;x+=3){
+      let y=10;
+      const mod=x+hbPhase*30;
+      if(mod%30<6)y=10+Math.sin((mod%30)/6*Math.PI)*8*((mod%60<30)?1:-1);
+      pts.push(x+','+y.toFixed(1));
+    }
+    hbLine.setAttribute('points',pts.join(' '));
+    requestAnimationFrame(animateHB);
+  }
+  animateHB();
+
+  /* ── NAV MORPH + HERO NAME SLIDE ── */
+  let morphed=false;
+  function onScroll(){
+    const sy=window.scrollY;
+    const heroH=heroSection.offsetHeight;
+    const progress=Math.min(1,sy/(heroH*.6));
+
+    // Hero name: slide up and scale down
+    const nameScale=1-progress*.7;
+    const nameY=-progress*80;
+    const nameOpacity=1-progress;
+    heroName.style.transform=`translateY(${nameY}px) scale(${nameScale})`;
+    heroName.style.opacity=nameOpacity;
+
+    // Nav morph: full bar → floating pill
+    if(progress>.5&&!morphed){
+      morphed=true;
+      lgNav.classList.add('morphed');
+    }else if(progress<=.5&&morphed){
+      morphed=false;
+      lgNav.classList.remove('morphed');
+    }
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ── SMOOTH NAV ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+
+})();
+</script>
+</body>
+</html>

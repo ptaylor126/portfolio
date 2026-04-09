@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JetSweat — Case Study</title>
+<meta name="description" content="JetSweat case study. B2B fitness platform redesign.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F9F9F9;--ink:#000;--accent:#E8735A;--grey:#6B6B6B;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --frame:12px;
+  --pad:clamp(24px,5vw,64px);
+}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);overflow-x:hidden;line-height:1.6}
+a{color:inherit}img{display:block;max-width:100%}
+::selection{background:var(--accent);color:#fff}
+
+.frame{position:fixed;inset:0;border:var(--frame) solid var(--ink);pointer-events:none;z-index:900}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+
+/* ================================================================
+   TOP BAR
+   ================================================================ */
+.topbar{
+  position:sticky;top:var(--frame);z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:48px clamp(32px,8vw,96px);
+  background:var(--bg);
+}
+.topbar-name{font:700 16px/1 var(--mono);color:var(--ink);text-decoration:none}
+.topbar-menu{
+  font:600 12px/1 var(--mono);color:var(--ink);letter-spacing:.03em;
+  cursor:pointer;background:none;border:none;border-radius:0;
+  outline:none;-webkit-appearance:none;appearance:none;
+  padding:0;transition:color .12s;
+}
+.topbar-menu:hover{color:var(--accent)}
+
+/* Dropdown */
+.dropdown{
+  position:fixed;top:calc(var(--frame) + 70px);right:clamp(32px,8vw,96px);
+  z-index:200;
+  background:var(--bg);border:2px solid var(--ink);
+  box-shadow:8px 8px 0 var(--ink);
+  padding:24px 28px;min-width:250px;
+  clip-path:inset(0 0 100% 0);
+  pointer-events:none;
+  transition:clip-path .12s linear;
+}
+.dropdown.open{
+  clip-path:inset(0 0 0 0);
+  pointer-events:auto;
+}
+.dd-link{
+  display:block;font:800 20px/1 var(--sans);text-transform:uppercase;
+  letter-spacing:-.02em;text-decoration:none;color:var(--ink);
+  padding:8px 0;transition:color .12s;
+}
+.dd-link:hover{color:var(--accent)}
+.dd-sep{height:1px;background:var(--ink);margin:16px 0}
+.dd-label{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555;margin-bottom:12px}
+.dd-case{
+  display:block;font:600 13px/1 var(--mono);text-decoration:none;color:var(--ink);
+  padding:6px 8px;margin-bottom:4px;transition:background .12s,color .12s;
+}
+.dd-case:hover{color:var(--accent)}
+.dd-case.active{background:var(--accent);color:#fff}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+.case-hero{
+  padding:calc(var(--frame) + 20px) clamp(32px,8vw,96px) 60px;
+}
+.case-hero h1{
+  font:900 clamp(36px,8vw,96px)/0.85 var(--sans);
+  text-transform:uppercase;letter-spacing:-.05em;
+  margin-bottom:16px;
+}
+.case-hero-meta{
+  display:flex;flex-wrap:wrap;gap:12px;
+  font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.03em;
+}
+.case-hero-meta span{
+  padding:6px 14px;border:2px solid var(--ink);
+  transition:background .15s,color .15s;cursor:default;
+}
+.case-hero-meta span:hover{background:var(--accent);color:#fff}
+
+/* ================================================================
+   PROGRESS BAR
+   ================================================================ */
+.progress-track{
+  position:fixed;top:var(--frame);right:var(--frame);bottom:var(--frame);
+  width:3px;z-index:800;background:rgba(0,0,0,.06);
+}
+.progress-fill{
+  width:100%;height:0;background:var(--accent);
+  transition:height .1s linear;
+}
+
+/* ================================================================
+   MINIMAP
+   ================================================================ */
+.minimap{
+  position:fixed;right:calc(var(--frame) + 20px);
+  top:50%;transform:translateY(-50%);
+  z-index:200;
+  display:flex;flex-direction:column;gap:0;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+  background:var(--bg);
+  padding:8px 0;
+}
+.minimap.on{opacity:1;pointer-events:auto}
+.minimap a{
+  display:block;padding:5px 10px;
+  font:600 9px/1 var(--mono);letter-spacing:.04em;
+  color:#555;text-decoration:none;
+  text-transform:uppercase;white-space:nowrap;
+  transition:color .12s,background .12s;
+}
+.minimap a:hover{color:var(--ink)}
+.minimap a.active{
+  background:var(--ink);color:var(--bg);
+}
+
+/* ================================================================
+   FULL-WIDTH CONTENT
+   ================================================================ */
+.case-body{
+  padding:0 clamp(32px,8vw,96px);
+  padding-right:calc(clamp(32px,8vw,96px) + 180px);
+  border-top:2px solid var(--ink);
+}
+.case-section{padding-top:64px}
+.case-label{
+  font:700 12px/1.3 var(--mono);
+  text-transform:uppercase;letter-spacing:.03em;
+  color:var(--ink);margin-bottom:24px;
+  padding:6px 8px;display:inline-block;
+}
+.case-label .lb{color:rgba(0,0,0,.2)}
+.case-label.highlight{background:var(--accent);color:#fff}
+.case-label.highlight .lb{color:rgba(255,255,255,.4)}
+
+.case-content{padding:0 0 80px}
+.case-content h2{
+  font:800 clamp(24px,3vw,36px)/1.1 var(--sans);
+  letter-spacing:-.03em;margin-bottom:20px;
+}
+.case-content p{
+  font:400 15px/1.8 var(--sans);color:#555;
+  max-width:58ch;margin-bottom:16px;
+}
+
+.problem-headline{
+  font:900 clamp(28px,4vw,52px)/1.05 var(--sans);
+  letter-spacing:-.04em;margin-bottom:20px;
+}
+
+/* ================================================================
+   STAT BAR
+   ================================================================ */
+.stat-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:32px;
+  margin:32px 0;
+}
+.stat-bar-item{border-top:2px solid var(--ink);padding-top:20px}
+.stat-bar-num{
+  font:900 clamp(28px,4vw,48px)/1 var(--sans);
+  letter-spacing:-.03em;margin-bottom:8px;
+}
+.stat-bar-label{
+  font:400 10px/1.3 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#555;
+}
+@media(max-width:600px){
+  .stat-bar{grid-template-columns:1fr 1fr}
+}
+
+/* ================================================================
+   PLACEHOLDERS
+   ================================================================ */
+.placeholder{
+  width:100%;aspect-ratio:16/9;
+  background:#ddd;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font:500 10px/1 var(--mono);color:rgba(0,0,0,.25);
+  text-transform:uppercase;letter-spacing:.06em;
+  margin:32px 0;
+}
+.placeholder--tall{aspect-ratio:4/3}
+.ba-row{
+  display:flex;align-items:flex-start;justify-content:flex-start;gap:32px;
+  margin:32px 0;
+}
+.ba-col{display:flex;flex-direction:column;align-items:center;flex:1}
+.ba-label{
+  font:700 10px/1 var(--mono);letter-spacing:.08em;
+  text-transform:uppercase;color:#555;
+  margin-bottom:16px;text-align:center;
+}
+/* ── Dashboard annotations ── */
+.anno-wrap{position:relative;overflow:visible}
+.anno-wrap>img{position:relative;z-index:1}
+.anno{position:absolute;z-index:3;pointer-events:none}
+.anno-title{
+  font:700 10px/1.3 var(--mono);letter-spacing:.02em;
+  color:var(--ink);display:block;
+}
+.anno-sub{
+  font:400 9px/1.4 var(--mono);
+  color:var(--grey);display:block;margin-top:2px;
+}
+.anno-label{
+  background:#F5F0E8;
+  padding:10px 14px;
+  border-radius:6px;
+  white-space:nowrap;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.anno-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#FF4F00;
+  position:absolute;z-index:4;
+  box-shadow:0 0 0 3px rgba(255,79,0,.2);
+}
+.anno-line{
+  position:absolute;z-index:3;
+  border-top:1px dashed rgba(255,79,0,.5);
+}
+
+/* ── "Too many menu items" — points right to left sidebar nav ── */
+.anno--menu{top:5%;left:-12%}
+.anno--menu .anno-dot{top:14px;right:-60px}
+.anno--menu .anno-line{top:18px;left:calc(100% + 4px);width:52px}
+
+/* ── "No scanning hierarchy" — points to bottom metrics row ── */
+.anno--hierarchy{bottom:5%;left:-18%}
+.anno--hierarchy .anno-dot{top:14px;right:-60px}
+.anno--hierarchy .anno-line{top:18px;left:calc(100% + 4px);width:52px}
+
+/* ── "Revenue data fragmented" — points to revenue cards ── */
+.anno--revenue{top:38%;right:-22%}
+.anno--revenue .anno-dot{top:14px;left:-60px}
+.anno--revenue .anno-line{top:18px;right:calc(100% + 4px);width:52px}
+
+@media(max-width:900px){
+  .anno{display:none}
+}
+
+.ba-placeholder{
+  width:100%;aspect-ratio:9/16;
+  background:#ddd;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font:500 9px/1 var(--mono);color:rgba(0,0,0,.25);
+  text-transform:uppercase;letter-spacing:.04em;
+}
+
+/* ================================================================
+   SUB-HEADINGS
+   ================================================================ */
+.sub-heading{
+  font:800 clamp(18px,2vw,24px)/1.2 var(--sans);
+  letter-spacing:-.02em;margin:64px 0 16px;
+}
+
+/* ================================================================
+   CALLOUT BOX
+   ================================================================ */
+.callout-box{
+  border:none;
+  padding:0 0 0 16px;margin:8px 0 0;
+  max-width:fit-content;
+  position:relative;
+}
+.callout-box::before{
+  content:'';position:absolute;left:0;top:0;
+  width:2px;height:0;
+  background:var(--accent);
+  transition:height .6s ease-out;
+}
+.callout-box .callout-tag,
+.callout-box .callout-text{
+  opacity:0;
+  transition:opacity .4s ease-out .3s;
+}
+.callout-box.reveal::before{height:100%}
+.callout-box.reveal .callout-tag,
+.callout-box.reveal .callout-text{opacity:1}
+.callout-tag{
+  font:700 11px/1 var(--mono);letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink);
+  margin-bottom:12px;
+}
+.callout-tag .lb{color:rgba(0,0,0,.2)}
+.callout-text{
+  font:400 15px/1.8 var(--sans);color:#555;
+  max-width:58ch;
+}
+
+/* ================================================================
+   CONTACT FOOTER
+   ================================================================ */
+.contact-footer{
+  padding:48px clamp(32px,8vw,96px);
+  border-top:2px solid var(--ink);
+}
+.contact-label{
+  font:700 10px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#999;
+  margin-bottom:20px;
+}
+.contact-row{
+  display:flex;gap:48px;flex-wrap:wrap;align-items:center;
+}
+.contact-row a,.contact-row span{
+  font:500 14px/1.4 var(--sans);
+  color:var(--ink);text-decoration:none;
+  transition:color .12s;
+}
+.contact-row a:hover{color:var(--accent)}
+.contact-row a:visited{color:var(--ink)}
+.contact-icons{display:flex;gap:16px;align-items:center}
+.contact-icons .icon-link{display:inline-flex;align-items:center}
+.contact-icons .icon-link svg{width:20px;height:20px;fill:var(--ink);transition:fill .12s}
+.contact-icons .icon-link:hover svg{fill:var(--accent)}
+.contact-copy{
+  margin-top:32px;
+  font:400 10px/1 var(--mono);color:rgba(0,0,0,.3);
+}
+
+/* ================================================================
+   CMS ANNOTATIONS
+   ================================================================ */
+.cms-annotated{position:relative}
+.cms-ann{position:absolute;z-index:10}
+.cms-ann-card{
+  background:#F5F2EB;
+  padding:10px 14px;
+  border-radius:6px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  font:400 11px/1.4 var(--sans);
+  max-width:200px;
+}
+.cms-ann-card strong{
+  display:block;
+  font-weight:700;
+  font-size:12px;
+  margin-bottom:2px;
+  color:var(--ink);
+}
+.cms-ann-card span{
+  color:var(--grey);
+}
+.cms-ann-line{
+  position:absolute;
+  background:rgba(0,0,0,.15);
+}
+.cms-ann-line[style*="width"]{height:1px}
+.cms-ann-line[style*="height"]{width:1px}
+.cms-ann-dot{
+  position:absolute;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:rgba(0,0,0,.25);
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media(max-width:800px){
+  .case-hero{padding-left:calc(var(--frame) + 20px);padding-right:calc(var(--frame) + 20px)}
+  .minimap{display:none}
+  .case-body{padding:0 20px;padding-right:20px}
+  .case-section{padding-top:40px}
+  .case-content{padding:0 0 48px}
+  .ba-row{flex-direction:column;gap:24px}
+  .contact-footer{padding:32px 20px}
+  .contact-row{flex-direction:column;gap:16px}
+  .cms-ann{display:none}
+}
+</style>
+</head>
+<body>
+<div class="frame"></div>
+<div class="grain"></div>
+
+<!-- Top bar -->
+<nav class="topbar">
+  <a class="topbar-name" href="index.html">PAUL TAYLOR</a>
+  <button class="topbar-menu" id="menuBtn">[ MENU ]</button>
+</nav>
+
+<!-- Dropdown menu -->
+<div class="dropdown" id="dropdown">
+  <a class="dd-link" href="index.html">Home</a>
+  <a class="dd-link" href="about.html">About</a>
+  <div class="dd-sep"></div>
+  <div class="dd-label">[ Case Studies ]</div>
+  <a class="dd-case" href="mealmatch.html">MealMatch AI</a>
+  <a class="dd-case" href="ballrs.html">Ballrs</a>
+  <a class="dd-case active" href="jetsweat.html">JetSweat</a>
+  <a class="dd-case" href="loupe.html">Loupe</a>
+</div>
+
+<!-- Hero -->
+<section class="case-hero" id="hero">
+  <h1>JetSweat</h1>
+  <div class="case-hero-meta">
+    <span>Product Design</span>
+    <span>UX Research</span>
+    <span>B2B SaaS</span>
+    <span>3-Month Engagement</span>
+  </div>
+</section>
+
+<!-- Progress bar -->
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- Floating minimap -->
+<nav class="minimap" id="minimap" aria-label="Table of Contents">
+  <a href="#s01" data-idx="0">01 Overview</a>
+  <a href="#s02" data-idx="1">02 The Challenge</a>
+  <a href="#s03" data-idx="2">03 Research</a>
+  <a href="#s04" data-idx="3">04 Solutions</a>
+  <a href="#s05" data-idx="4">05 Results</a>
+  <a href="#s06" data-idx="5">06 Reflection</a>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CASE BODY
+     ════════════════════════════════════════════════════════════════ -->
+<div class="case-body">
+
+  <!-- ── 01 OVERVIEW ── -->
+  <div class="case-section" id="s01" style="padding-top:96px">
+    <div class="case-label highlight"><span class="lb">[</span> 01 Overview <span class="lb">]</span></div>
+    <div class="case-content">
+      <h2 class="problem-headline">A B2B fitness platform redesign. Dashboard, onboarding, and CMS in 3 months.</h2>
+
+      <div class="stat-bar">
+        <div class="stat-bar-item">
+          <div class="stat-bar-num" data-final="75%">--</div>
+          <div class="stat-bar-label">Setup Time Reduction</div>
+        </div>
+        <div class="stat-bar-item">
+          <div class="stat-bar-num" data-final="25%">--</div>
+          <div class="stat-bar-label">Sign-Up Increase</div>
+        </div>
+        <div class="stat-bar-item">
+          <div class="stat-bar-num" data-final="9">--</div>
+          <div class="stat-bar-label">Competitors Analysed</div>
+        </div>
+        <div class="stat-bar-item">
+          <div class="stat-bar-num" data-final="3 Mo">--</div>
+          <div class="stat-bar-label">Timeline</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 02 THE CHALLENGE ── -->
+  <div class="case-section" id="s02" style="padding-top:96px">
+    <div class="case-label highlight"><span class="lb">[</span> 02 The Challenge <span class="lb">]</span></div>
+    <div class="case-content">
+      <h2 class="problem-headline">Two problems blocking growth.</h2>
+      <p>JetSweat is a B2B SaaS platform for fitness studios. Studios couldn't try the platform before buying. And every new customer required 3 hours of manual website setup by the ops team. One problem slowed acquisition, the other slowed scaling. I had 3 months to fix both.</p>
+    </div>
+  </div>
+
+  <!-- ── 03 RESEARCH ── -->
+  <div class="case-section" id="s03" style="padding-top:96px">
+    <div class="case-label highlight"><span class="lb">[</span> 03 Research <span class="lb">]</span></div>
+    <div class="case-content">
+      <h2 class="problem-headline">No users to interview. So I studied the competition.</h2>
+      <p>No existing user base to pull from and no research budget. I analysed 9 established fitness platforms to understand how they handle product-led growth, onboarding, and self-serve tools. Then I ran a heuristic evaluation of JetSweat's existing dashboard to identify where it was failing.</p>
+
+      <img src="public/images/jetsweat/competitors.png" alt="Competitor Analysis" style="width:100%;display:block;margin:32px 0">
+
+      <div class="dash-annotated" style="position:relative;margin:48px 0">
+        <img src="public/images/jetsweat/original-dashboard-clean.png" alt="Original Dashboard" style="width:100%;display:block">
+
+        <!-- Annotation: Too many menu items -->
+        <div class="cms-ann dash-ann" style="top:6%;left:14%">
+          <div class="cms-ann-card">
+            <strong>Too many menu items</strong>
+            <span>Unclear organization and no grouping</span>
+          </div>
+          <div class="cms-ann-line" style="width:40px;top:50%;right:100%;transform:translateY(-50%)"></div>
+          <div class="cms-ann-dot" style="top:50%;right:calc(100% + 40px);transform:translate(50%,-50%)"></div>
+        </div>
+
+        <!-- Annotation: No scanning hierarchy -->
+        <div class="cms-ann dash-ann" style="bottom:12%;left:1%">
+          <div class="cms-ann-card">
+            <strong>No scanning hierarchy</strong>
+            <span>Key metrics lack visual prominence</span>
+          </div>
+          <div class="cms-ann-line" style="width:50px;top:50%;left:100%;transform:translateY(-50%)"></div>
+          <div class="cms-ann-dot" style="top:50%;left:calc(100% + 50px);transform:translate(-50%,-50%)"></div>
+        </div>
+
+        <!-- Annotation: Revenue data fragmented -->
+        <div class="cms-ann dash-ann" style="top:35%;right:1%">
+          <div class="cms-ann-card">
+            <strong>Revenue data fragmented</strong>
+            <span>Numbers without context or trends</span>
+          </div>
+          <div class="cms-ann-line" style="width:50px;top:50%;right:100%;transform:translateY(-50%)"></div>
+          <div class="cms-ann-dot" style="top:50%;right:calc(100% + 50px);transform:translate(50%,-50%)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 04 SOLUTIONS ── -->
+  <div class="case-section" id="s04" style="padding-top:96px">
+    <div class="case-label highlight"><span class="lb">[</span> 04 Solutions <span class="lb">]</span></div>
+    <div class="case-content">
+      <h2 class="problem-headline">Three deliverables. One goal.</h2>
+
+      <!-- Dashboard -->
+      <h3 class="sub-heading">Dashboard redesign</h3>
+      <p>The original dashboard had poor visual hierarchy. Key metrics were buried, navigation was cluttered, hard to scan. I redesigned it following natural scanning patterns. Key metrics top-left where people look first. Revenue consolidated with charts. Navigation reorganised by frequency of use.</p>
+
+      <div style="display:flex;flex-direction:column;gap:40px;margin:32px 0">
+        <div>
+          <div class="ba-label" style="text-align:left">Dashboard Before</div>
+          <img src="public/images/jetsweat/original-dashboard-clean.png" alt="Dashboard Before" style="width:100%;display:block">
+        </div>
+        <div>
+          <div class="ba-label" style="text-align:left">Dashboard After</div>
+          <img src="public/images/jetsweat/new-dashboard.png" alt="Dashboard After" style="width:100%;display:block">
+        </div>
+      </div>
+
+      <div class="callout-box" style="margin-top:32px">
+        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <p class="callout-text">"Key metrics top-left." Eye-tracking research shows users scan in an F-pattern. Revenue, active users, and class completion rates move to the top-left quadrant. Everything else follows in order of importance.</p>
+      </div>
+
+      <!-- Onboarding -->
+      <h3 class="sub-heading">Free trial onboarding</h3>
+      <p>Designed a 5-step onboarding flow from scratch. Easy questions first to build confidence, personal and business details later. Studios could evaluate the platform on their own without needing the sales team involved.</p>
+
+      <div style="display:flex;flex-direction:column;gap:24px;margin:32px auto;max-width:600px">
+        <img src="public/images/jetsweat/step-1.png" alt="Onboarding step 1" style="width:100%;display:block">
+        <img src="public/images/jetsweat/step-4.png" alt="Onboarding step 4" style="width:100%;display:block">
+      </div>
+
+      <div class="callout-box" style="margin-top:32px">
+        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <p class="callout-text">"Easy questions first." Name and studio name before business details. Builds momentum before asking for anything sensitive. By step 3, the user is invested.</p>
+      </div>
+
+      <!-- CMS -->
+      <h3 class="sub-heading">Self-serve CMS</h3>
+      <p>Studios needed their own websites. The ops team was building each one manually. I designed a self-serve website builder with form fields and drag-and-drop uploads. A visual preview showed how content would look on the final site.</p>
+
+      <div class="cms-annotated" style="position:relative;margin:32px 0">
+        <img src="public/images/jetsweat/cms.png" alt="CMS Screens" style="width:100%;display:block">
+
+        <!-- Annotation: Simple form fields -->
+        <div class="cms-ann" style="top:8%;left:2%">
+          <div class="cms-ann-card">
+            <strong>Simple form fields</strong>
+            <span>Intuitive content editing without technical complexity</span>
+          </div>
+          <div class="cms-ann-line" style="width:60px;top:50%;left:100%;transform:translateY(-50%)"></div>
+          <div class="cms-ann-dot" style="top:50%;left:calc(100% + 60px);transform:translate(-50%,-50%)"></div>
+        </div>
+
+        <!-- Annotation: Logical sections -->
+        <div class="cms-ann" style="top:2%;left:32%">
+          <div class="cms-ann-card">
+            <strong>Logical sections</strong>
+            <span>Clear information hierarchy guides users through setup</span>
+          </div>
+          <div class="cms-ann-line" style="height:40px;top:100%;left:50%;transform:translateX(-50%)"></div>
+          <div class="cms-ann-dot" style="top:calc(100% + 40px);left:50%;transform:translate(-50%,-50%)"></div>
+        </div>
+
+        <!-- Annotation: Visual reference -->
+        <div class="cms-ann" style="top:2%;right:2%">
+          <div class="cms-ann-card">
+            <strong>Visual reference</strong>
+            <span>Template helps users understand how their content translates to the final site</span>
+          </div>
+          <div class="cms-ann-line" style="height:40px;top:100%;left:50%;transform:translateX(-50%)"></div>
+          <div class="cms-ann-dot" style="top:calc(100% + 40px);left:50%;transform:translate(-50%,-50%)"></div>
+        </div>
+
+        <!-- Annotation: Drag and drop uploads -->
+        <div class="cms-ann" style="bottom:8%;left:2%">
+          <div class="cms-ann-card">
+            <strong>Drag and drop uploads</strong>
+            <span>Familiar interactions reduce learning curve</span>
+          </div>
+          <div class="cms-ann-line" style="width:60px;top:50%;left:100%;transform:translateY(-50%)"></div>
+          <div class="cms-ann-dot" style="top:50%;left:calc(100% + 60px);transform:translate(-50%,-50%)"></div>
+        </div>
+
+        <!-- Annotation: Professional output -->
+        <div class="cms-ann" style="bottom:8%;right:2%">
+          <div class="cms-ann-card">
+            <strong>Professional output</strong>
+            <span>Studio-quality results without design expertise</span>
+          </div>
+          <div class="cms-ann-line" style="height:40px;bottom:100%;left:50%;transform:translateX(-50%)"></div>
+          <div class="cms-ann-dot" style="bottom:calc(100% + 40px);left:50%;transform:translate(-50%,-50%)"></div>
+        </div>
+      </div>
+
+      <div class="callout-box" style="margin-top:64px">
+        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <p class="callout-text">"Live preview, not imagination." Studios see their content rendered in real-time as they build. No guessing what the final site will look like. Reduces revisions and support tickets.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 05 RESULTS ── -->
+  <div class="case-section" id="s05" style="padding-top:96px">
+    <div class="case-label highlight"><span class="lb">[</span> 05 Results <span class="lb">]</span></div>
+    <div class="case-content">
+      <h2 class="problem-headline">What changed.</h2>
+
+      <div class="stat-bar" style="grid-template-columns:1fr 1fr">
+        <div class="stat-bar-item">
+          <div class="stat-bar-num">75%</div>
+          <div class="stat-bar-label">Setup Time Reduction</div>
+        </div>
+        <div class="stat-bar-item">
+          <div class="stat-bar-num">25%</div>
+          <div class="stat-bar-label">Sign-Up Increase</div>
+        </div>
+      </div>
+
+      <div style="margin:40px 0;display:flex;flex-direction:column;gap:32px">
+        <div style="border-left:3px solid var(--accent);padding-left:16px">
+          <p style="font:400 15px/1.8 var(--sans);color:#555;max-width:58ch;margin-bottom:8px">"The new dashboard is so much cleaner and easier to scan. Users can see important metrics at a glance instead of hunting through menus."</p>
+          <div style="font:400 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555">Operations Manager, JetSweat</div>
+        </div>
+        <div style="border-left:3px solid var(--accent);padding-left:16px">
+          <p style="font:400 15px/1.8 var(--sans);color:#555;max-width:58ch;margin-bottom:8px">"The CMS solution was exactly what we needed. Studios can now build professional sites themselves, which frees up our team to focus on growth."</p>
+          <div style="font:400 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555">Founder/CEO, JetSweat</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 06 REFLECTION ── -->
+  <div class="case-section" id="s06" style="padding-top:96px">
+    <div class="case-label highlight"><span class="lb">[</span> 06 Reflection <span class="lb">]</span></div>
+    <div class="case-content">
+      <h2 class="problem-headline">What I'd do differently.</h2>
+      <p>This project taught me that competitive research and heuristic evaluation can get you to solid solutions when you can't do primary user research. But I'd push harder for even a few user interviews. The dashboard and CMS were built on sound UX principles, but without real user validation, there's always a gap between what you think works and what actually works.</p>
+
+      <div class="callout-box" style="margin-top:32px">
+        <div class="callout-tag"><span class="lb">[</span> Takeaway <span class="lb">]</span></div>
+        <p class="callout-text">Competitive analysis is a starting point, not a destination. It tells you what the market does. It doesn't tell you what your users need. The solutions were built on sound principles, but I'd push harder to get in front of real users earlier, even informally.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /case-body -->
+
+<!-- Contact footer -->
+<footer class="contact-footer">
+  <div class="contact-label">Get In Touch</div>
+  <div class="contact-row">
+    <a href="mailto:thisispaultaylor@icloud.com">thisispaultaylor@icloud.com</a>
+    <span>(929) 539-2992</span>
+    <div class="contact-icons">
+      <a class="icon-link" href="https://linkedin.com/in/paultaylormade" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      <a class="icon-link" href="https://instagram.com/thisispaultaylor" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 100 12.324 6.162 6.162 0 100-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 11-2.88 0 1.441 1.441 0 012.88 0z"/></svg></a>
+    </div>
+  </div>
+  <div class="contact-copy">&copy; 2026 Paul Taylor</div>
+</footer>
+
+<script>
+(function(){
+  /* ── MENU TOGGLE ── */
+  var menuBtn=document.getElementById('menuBtn');
+  var dropdown=document.getElementById('dropdown');
+  var menuOpen=false;
+  menuBtn.addEventListener('click',function(){
+    menuOpen=!menuOpen;
+    dropdown.classList.toggle('open',menuOpen);
+    menuBtn.textContent=menuOpen?'[ CLOSE ]':'[ MENU ]';
+  });
+  document.addEventListener('click',function(e){
+    if(menuOpen&&!dropdown.contains(e.target)&&e.target!==menuBtn){
+      menuOpen=false;dropdown.classList.remove('open');
+      menuBtn.textContent='[ MENU ]';
+    }
+  });
+
+  /* ── PROGRESS BAR + MINIMAP ── */
+  var fill=document.getElementById('progressFill');
+  var minimap=document.getElementById('minimap');
+  var mmLinks=minimap.querySelectorAll('a');
+  var sections=document.querySelectorAll('.case-section');
+  var heroEl=document.getElementById('hero');
+  var activeIdx=-1;
+
+  function onScroll(){
+    var sy=window.scrollY;
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    fill.style.height=(h>0?(sy/h)*100:0)+'%';
+
+    var heroBottom=heroEl.getBoundingClientRect().bottom;
+    if(heroBottom<0){minimap.classList.add('on')}else{minimap.classList.remove('on')}
+
+    var newIdx=0;
+    for(var i=0;i<sections.length;i++){
+      if(sections[i].getBoundingClientRect().top<window.innerHeight*.4)newIdx=i;
+    }
+    if(newIdx!==activeIdx){
+      if(activeIdx>=0&&mmLinks[activeIdx]){
+        mmLinks[activeIdx].classList.remove('active');
+        mmLinks[activeIdx].removeAttribute('aria-current');
+      }
+      activeIdx=newIdx;
+      if(mmLinks[activeIdx]){
+        mmLinks[activeIdx].classList.add('active');
+        mmLinks[activeIdx].setAttribute('aria-current','true');
+      }
+    }
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ── TERMINAL SCRAMBLE ── */
+  var scrambleEls=document.querySelectorAll('[data-final]');
+  var pool='0123456789#%X@&!?$';
+  var scrambled=false;
+
+  var scrambleObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting&&!scrambled){
+        scrambled=true;
+        scrambleEls.forEach(function(el,idx){
+          var final=el.getAttribute('data-final');
+          var len=final.length;
+          var start=performance.now();
+          var duration=400+idx*80;
+
+          function tick(now){
+            var elapsed=now-start;
+            if(elapsed>=duration){
+              el.textContent=final;
+              return;
+            }
+            var resolved=Math.floor((elapsed/duration)*len);
+            var out='';
+            for(var i=0;i<len;i++){
+              if(i<resolved){
+                out+=final[i];
+              }else{
+                out+=pool[Math.floor(Math.random()*pool.length)];
+              }
+            }
+            el.textContent=out;
+            requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        });
+      }
+    });
+  },{threshold:0.3});
+
+  var statsBlock=document.querySelector('.stat-bar');
+  if(statsBlock)scrambleObs.observe(statsBlock);
+
+  /* ── CALLOUT REVEAL ── */
+  var callouts=document.querySelectorAll('.callout-box');
+  if(callouts.length){
+    var calloutObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting)e.target.classList.add('reveal');
+      });
+    },{threshold:0.3});
+    callouts.forEach(function(c){calloutObs.observe(c)});
+  }
+})();
+</script>
+</body>
+</html>

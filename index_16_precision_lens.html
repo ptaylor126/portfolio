@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — Precision Lens</title>
+<meta name="description" content="Product Designer in Brooklyn. I design apps. Then I build them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F6F1EB;--accent:#D4582A;--text:#1A1A1A;--muted:#918A82;
+  --muted2:#C8C0B8;--surface:#EDE8E1;--wire:rgba(26,26,26,.06);
+  --serif:'DM Serif Display',Georgia,serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --heavy:cubic-bezier(.22,1,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:auto}
+body{font-family:var(--mono);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.6;cursor:none}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--accent);color:#fff}
+
+/* ================================================================
+   THE LENS CURSOR (Canvas-powered)
+   ================================================================ */
+.lens-canvas{
+  position:fixed;inset:0;z-index:9998;pointer-events:none;
+  mix-blend-mode:normal;
+}
+/* Small accent dot always visible */
+.lens-dot{
+  position:fixed;width:4px;height:4px;background:var(--accent);border-radius:50%;
+  pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+  will-change:transform;box-shadow:0 0 6px rgba(212,88,42,.3);
+}
+/* Crosshair lines */
+.lens-cross-h,.lens-cross-v{
+  position:fixed;pointer-events:none;z-index:9997;
+  background:rgba(26,26,26,.04);
+}
+.lens-cross-h{height:1px;left:0;right:0;will-change:top}
+.lens-cross-v{width:1px;top:0;bottom:0;will-change:left}
+@media(max-width:900px){.lens-canvas,.lens-dot,.lens-cross-h,.lens-cross-v{display:none}body{cursor:auto}}
+
+/* ================================================================
+   RULER → PILL NAV
+   ================================================================ */
+.ruler{
+  position:fixed;top:0;right:28px;z-index:600;
+  width:1px;height:100vh;background:rgba(26,26,26,.06);
+  pointer-events:none;
+  transition:opacity .5s,transform .5s var(--heavy);
+}
+.ruler-ticks{position:absolute;top:0;left:-4px;width:9px;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:8px 0}
+.ruler-tick{width:9px;height:1px;background:rgba(26,26,26,.06)}
+.ruler-tick:nth-child(5n){width:14px;margin-left:-5px;background:rgba(26,26,26,.1)}
+.ruler.hide{opacity:0;transform:scaleY(0)}
+
+.focal-nav{
+  position:fixed;top:16px;left:50%;z-index:601;
+  transform:translateX(-50%) translateY(-60px);opacity:0;
+  background:rgba(246,241,235,.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(26,26,26,.05);border-radius:100px;
+  padding:8px 20px;display:flex;align-items:center;gap:10px;
+  transition:transform .6s var(--heavy),opacity .4s;
+  pointer-events:auto;
+}
+.focal-nav.on{transform:translateX(-50%) translateY(0);opacity:1}
+.fn-name{font:500 10px/1 var(--mono);letter-spacing:.04em;color:var(--text);margin-right:4px}
+.fn-sep{width:1px;height:12px;background:rgba(26,26,26,.08)}
+.fn-nav a{font:400 9px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:5px 10px;border-radius:100px;transition:color .2s,background .2s;cursor:none}
+.fn-nav a:hover{color:var(--text);background:rgba(26,26,26,.04)}
+.fn-data{font:300 8px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);font-variant-numeric:tabular-nums}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+.hero{
+  position:relative;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+}
+/* Hidden B&W photo — revealed ONLY through the lens canvas */
+.hero-photo{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1920&q=80') center/cover;
+  filter:grayscale(85%) contrast(1.2);
+  visibility:hidden;/* Canvas draws this, not CSS */
+}
+.hero-photo-grain{
+  position:absolute;inset:0;visibility:hidden;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;opacity:.2;
+}
+
+.hero-name{
+  font-family:var(--serif);font-size:clamp(64px,14vw,200px);
+  line-height:.88;letter-spacing:-.03em;
+  color:rgba(26,26,26,.06);
+  text-align:center;user-select:none;
+}
+.hero-bottom{
+  position:absolute;bottom:40px;left:48px;right:48px;
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.hero-hl{font:400 11px/1.5 var(--mono);color:var(--muted);letter-spacing:.04em}
+.hero-loc{display:flex;align-items:center;gap:6px;font:300 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.hero-loc-dot{width:5px;height:5px;border-radius:50%;background:#34d399;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ================================================================
+   INSPECTION CARDS (WORK)
+   ================================================================ */
+.work{padding:120px 48px;max-width:1000px;margin:0 auto}
+.sec-label{font:500 9px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.sec-label::before{content:'';width:20px;height:1px;background:var(--accent)}
+.sec-title{font-family:var(--serif);font-size:clamp(28px,4vw,48px);line-height:1.15;margin-bottom:80px}
+
+.inspect-stack{display:flex;flex-direction:column;gap:48px}
+
+/* Card: 1px wireframe by default, lens reveals color */
+.inspect-card{
+  position:relative;
+  border:1px solid rgba(26,26,26,.08);border-radius:16px;
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:380px;overflow:hidden;
+  background:transparent;
+  /* The "revealed" layer sits behind, lens punches through the white cover */
+}
+.inspect-card.even{direction:rtl}
+.inspect-card.even>*{direction:ltr}
+
+/* White cover that lens reveals through */
+.ic-cover{
+  position:absolute;inset:0;z-index:4;border-radius:16px;
+  background:var(--bg);
+  pointer-events:none;
+  /* Canvas will mask this */
+}
+/* Revealed color layer behind the cover */
+.ic-revealed{
+  position:absolute;inset:0;z-index:1;border-radius:16px;
+  display:grid;grid-template-columns:1fr 1fr;overflow:hidden;
+}
+.inspect-card.even .ic-revealed{direction:rtl}
+.inspect-card.even .ic-revealed>*{direction:ltr}
+
+.ic-visual{
+  display:flex;align-items:center;justify-content:center;position:relative;
+  overflow:hidden;
+}
+.ic-mockup{
+  width:180px;height:250px;border-radius:22px;overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.12);position:relative;
+}
+.icm{position:absolute;inset:7px;border-radius:16px;display:flex;flex-direction:column;padding:12px 10px;overflow:hidden}
+.icm-top{display:flex;justify-content:space-between;font:400 7px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:10px}
+.icm-h{font-family:var(--serif);font-size:14px;color:#fff;margin-bottom:2px}
+.icm-s{font:400 7px/1 var(--mono);color:rgba(255,255,255,.2)}
+.icm-bl{display:flex;gap:3px;margin-top:10px}
+.icm-b{flex:1;height:28px;border-radius:5px;background:rgba(255,255,255,.05)}
+.icm-rl{display:flex;flex-direction:column;gap:3px;margin-top:8px}
+.icm-r{height:15px;border-radius:4px;background:rgba(255,255,255,.04)}
+.icm-ch{display:flex;align-items:flex-end;gap:2px;height:46px;margin-top:auto;padding-top:5px}
+.icm-cv{flex:1;border-radius:2px 2px 0 0;background:rgba(255,255,255,.06)}
+.icm-cv.hi{background:rgba(255,255,255,.22)}
+
+/* Superpower labels */
+.ic-labels{position:absolute;bottom:14px;left:14px;z-index:3;display:flex;flex-direction:column;gap:3px}
+.ic-lbl{font:500 7px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);background:rgba(0,0,0,.3);backdrop-filter:blur(5px);padding:3px 7px;border-radius:2px;width:fit-content}
+
+.ic-content{padding:36px 32px;display:flex;flex-direction:column;justify-content:center}
+.ic-num{font:400 9px/1 var(--mono);letter-spacing:.12em;color:var(--muted);margin-bottom:20px}
+.ic-title{font-family:var(--serif);font-size:28px;line-height:1.1;margin-bottom:8px}
+.ic-desc{font:400 12px/1.7 var(--mono);color:var(--muted);margin-bottom:14px}
+.ic-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.ic-tag{font:400 8px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(26,26,26,.08);border-radius:100px;color:var(--muted)}
+.ic-super{font:500 10px/1 var(--mono);color:var(--accent);display:flex;align-items:center;gap:6px}
+.ic-super::before{content:'';width:4px;height:4px;background:var(--accent);border-radius:50%}
+
+/* Wireframe version (visible by default) */
+.ic-wire{position:relative;z-index:3;pointer-events:none}
+.ic-wire .ic-visual{background:transparent}
+.ic-wire .ic-mockup{
+  background:transparent!important;border:1px dashed rgba(26,26,26,.1);
+  box-shadow:none;
+}
+.ic-wire .icm{background:transparent}
+.ic-wire .icm-top,.ic-wire .icm-h,.ic-wire .icm-s{color:rgba(26,26,26,.12)}
+.ic-wire .icm-b,.ic-wire .icm-r,.ic-wire .icm-cv{background:rgba(26,26,26,.03);border:1px dashed rgba(26,26,26,.06)}
+.ic-wire .icm-cv.hi{background:rgba(26,26,26,.06)}
+.ic-wire .ic-labels{display:none}
+.ic-wire .ic-content{color:rgba(26,26,26,.15)}
+.ic-wire .ic-num,.ic-wire .ic-desc,.ic-wire .ic-tag,.ic-wire .ic-super{color:rgba(26,26,26,.1)}
+.ic-wire .ic-title{color:rgba(26,26,26,.12)}
+.ic-wire .ic-super::before{background:rgba(26,26,26,.08)}
+
+/* Card themes for revealed layer */
+.inspect-card[data-p="mealmatch"] .ic-revealed .ic-visual{background:linear-gradient(135deg,#dce8e0,#c8d8ce)}
+.inspect-card[data-p="mealmatch"] .ic-revealed .ic-mockup{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.inspect-card[data-p="ballrs"] .ic-revealed .ic-visual{background:linear-gradient(135deg,#d8dbe4,#c4c8d6)}
+.inspect-card[data-p="ballrs"] .ic-revealed .ic-mockup{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.inspect-card[data-p="loupe"] .ic-revealed .ic-visual{background:linear-gradient(135deg,#dcd8ea,#cac6dc)}
+.inspect-card[data-p="loupe"] .ic-revealed .ic-mockup{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.inspect-card[data-p="jetsweat"] .ic-revealed .ic-visual{background:linear-gradient(135deg,#e8ddd6,#daced0)}
+.inspect-card[data-p="jetsweat"] .ic-revealed .ic-mockup{background:linear-gradient(150deg,#D4582A,#A84420)}
+
+/* Annotations (testimonials) */
+.ic-annotation{
+  position:absolute;z-index:5;
+  font:300 9px/1.5 var(--mono);font-style:italic;
+  color:rgba(26,26,26,.06);max-width:200px;
+  transition:color .4s;pointer-events:none;
+}
+.ic-annotation.near{color:rgba(26,26,26,.5)}
+.ic-ann-attr{font:500 7px/1 var(--mono);font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:rgba(212,88,42,.1);margin-top:4px;transition:color .4s}
+.ic-annotation.near .ic-ann-attr{color:rgba(212,88,42,.6)}
+
+/* ================================================================
+   FILM STRIP (TIMELINE)
+   ================================================================ */
+.film-section{padding:120px 48px 80px;max-width:1000px;margin:0 auto}
+.fs-header{margin-bottom:48px}
+.fs-text{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:48px;align-items:start}
+.fs-ed h3{font-family:var(--serif);font-size:clamp(22px,3vw,32px);line-height:1.2;margin-bottom:16px}
+.fs-ed h3 em{font-style:italic;color:var(--accent)}
+.fs-p{font:400 12px/1.8 var(--mono);color:var(--muted)}
+.fs-tl{display:flex;flex-direction:column}
+.ft-i{display:flex;gap:16px;padding:12px 0;border-top:1px solid var(--wire)}
+.ft-era{font:400 9px/1 var(--mono);letter-spacing:.08em;color:var(--accent);flex-shrink:0;width:56px;padding-top:2px}
+.ft-d{font:400 11px/1.5 var(--mono);color:var(--muted)}.ft-d strong{color:var(--text);font-weight:500}
+
+/* The strip */
+.film-strip{
+  display:flex;gap:6px;overflow-x:auto;padding-bottom:16px;
+  scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;
+}
+.film-strip::-webkit-scrollbar{display:none}
+.film-frame{
+  flex-shrink:0;width:180px;height:240px;
+  position:relative;overflow:hidden;
+  background:#1a1a1a;border-radius:3px;
+  scroll-snap-align:start;cursor:none;
+}
+/* Sprocket holes */
+.film-frame::before,.film-frame::after{
+  content:'';position:absolute;left:50%;transform:translateX(-50%);
+  width:10px;height:6px;border-radius:2px;
+  background:var(--bg);z-index:2;
+}
+.film-frame::before{top:4px}
+.film-frame::after{bottom:4px}
+.film-frame img{
+  position:absolute;inset:14px 6px;width:calc(100% - 12px);height:calc(100% - 28px);
+  object-fit:cover;border-radius:1px;
+  /* Default: B&W negative (inverted, high contrast) */
+  filter:grayscale(100%) contrast(1.4) invert(100%);
+  transition:filter .6s var(--heavy);
+}
+/* "Developed" state — mouse proximity triggers this via JS */
+.film-frame.developed img{
+  filter:grayscale(0%) contrast(1.05) invert(0%);
+}
+.film-frame-label{
+  position:absolute;bottom:14px;right:10px;z-index:3;
+  font:400 6px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(246,241,235,.4);
+}
+.film-strip-label{
+  font:400 8px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted2);margin-top:12px;text-align:center;
+}
+
+/* ================================================================
+   CONTACT
+   ================================================================ */
+.contact{padding:120px 48px 80px;max-width:700px;margin:0 auto;text-align:center}
+.contact h2{font-family:var(--serif);font-size:clamp(28px,4vw,48px);line-height:1.1;margin-bottom:14px}
+.contact p{font:400 12px/1.8 var(--mono);color:var(--muted);max-width:400px;margin:0 auto 36px}
+.cta{display:inline-flex;align-items:center;gap:8px;font:500 11px/1 var(--mono);color:var(--accent);border:1.5px solid var(--accent);padding:12px 28px;border-radius:100px;transition:background .3s,color .3s,transform .3s var(--spring);cursor:none}
+.cta:hover{background:var(--accent);color:#fff;transform:scale(1.03)}
+.footer{padding:24px 48px;display:flex;justify-content:space-between;align-items:center;max-width:1000px;margin:0 auto;border-top:1px solid var(--wire)}
+.footer span{font:400 9px/1 var(--mono);color:var(--muted2)}
+.footer-links{display:flex;gap:16px}
+.footer-links a{font:400 9px/1 var(--mono);color:var(--muted);transition:color .3s;cursor:none}
+.footer-links a:hover{color:var(--accent)}
+
+[data-r]{opacity:0;transform:translateY(40px) scale(.96);transition:opacity .9s var(--heavy),transform 1s var(--heavy);will-change:transform,opacity}
+[data-r].vis{opacity:1;transform:none}
+[data-r="d1"]{transition-delay:.1s}
+
+@media(max-width:900px){
+  .inspect-card,.ic-revealed{grid-template-columns:1fr!important}
+  .inspect-card.even,.inspect-card.even .ic-revealed{direction:ltr!important}
+  .ic-visual{height:240px}
+  .ic-annotation{display:none}
+  .work,.film-section,.contact{padding-left:20px;padding-right:20px}
+  .footer{padding:20px;flex-direction:column;gap:8px}
+  .fs-text{grid-template-columns:1fr;gap:24px}
+  .ruler{display:none}
+  .focal-nav{width:calc(100% - 24px);left:12px;transform:translateX(0) translateY(-60px)}
+  .focal-nav.on{transform:translateX(0) translateY(0)}
+}
+</style>
+</head>
+<body>
+
+<!-- Lens system -->
+<canvas class="lens-canvas" id="lensCanvas"></canvas>
+<div class="lens-dot" id="lensDot"></div>
+<div class="lens-cross-h" id="crossH"></div>
+<div class="lens-cross-v" id="crossV"></div>
+
+<!-- Ruler -->
+<div class="ruler" id="ruler"><div class="ruler-ticks" id="rulerTicks"></div></div>
+
+<!-- Focal nav -->
+<nav class="focal-nav" id="focalNav">
+  <span class="fn-name">Paul Taylor</span>
+  <div class="fn-sep"></div>
+  <div class="fn-nav">
+    <a href="#work" data-cursor="link">Work</a>
+    <a href="#film" data-cursor="link">Story</a>
+    <a href="#contact" data-cursor="link">Contact</a>
+  </div>
+  <div class="fn-sep"></div>
+  <span class="fn-data" id="fnLens">LENS_FOCUS: HERO</span>
+  <div class="fn-sep"></div>
+  <span class="fn-data" id="fnDepth">DEPTH: 0%</span>
+</nav>
+
+<!-- ================================================================
+     HERO
+     ================================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-name">PAUL<br>TAYLOR</div>
+  <div class="hero-bottom">
+    <div class="hero-hl">I design apps. Then I build them.</div>
+    <div class="hero-loc"><div class="hero-loc-dot"></div>Brooklyn, NY</div>
+  </div>
+</section>
+
+<!-- ================================================================
+     WORK — INSPECTION CARDS
+     ================================================================ -->
+<section class="work" id="work">
+  <div class="sec-label">Selected Work</div>
+  <h2 class="sec-title">Move the lens to inspect.</h2>
+
+  <div class="inspect-stack">
+
+    <div class="inspect-card" data-p="mealmatch" data-focus="MEALMATCH_AI">
+      <!-- Revealed color layer -->
+      <div class="ic-revealed">
+        <div class="ic-visual">
+          <div class="ic-mockup"><div class="icm"><div class="icm-top"><span>9:41</span><span>MealMatch</span></div><div class="icm-h">Your Plan</div><div class="icm-s">3 meals curated</div><div class="icm-bl"><div class="icm-b"></div><div class="icm-b"></div><div class="icm-b"></div></div><div class="icm-rl"><div class="icm-r"></div><div class="icm-r"></div><div class="icm-r"></div></div></div></div>
+          <div class="ic-labels"><span class="ic-lbl">AI UX & Research</span><span class="ic-lbl">40+ Participants</span></div>
+        </div>
+        <div class="ic-content">
+          <div class="ic-num">01 — Case Study</div>
+          <h3 class="ic-title">MealMatch AI</h3>
+          <p class="ic-desc">AI-powered meal planning. Scaled a design system from zero. 40+ participant research studies.</p>
+          <div class="ic-tags"><span class="ic-tag">AI UX</span><span class="ic-tag">Systems</span><span class="ic-tag">Research</span></div>
+          <div class="ic-super">40+ studies, full design system</div>
+        </div>
+      </div>
+      <!-- Wireframe overlay -->
+      <div class="ic-wire ic-cover" id="cover0">
+        <div class="ic-visual">
+          <div class="ic-mockup"><div class="icm"><div class="icm-top"><span>9:41</span><span>MealMatch</span></div><div class="icm-h">Your Plan</div><div class="icm-s">3 meals</div><div class="icm-bl"><div class="icm-b"></div><div class="icm-b"></div><div class="icm-b"></div></div><div class="icm-rl"><div class="icm-r"></div><div class="icm-r"></div><div class="icm-r"></div></div></div></div>
+        </div>
+        <div class="ic-content">
+          <div class="ic-num">01</div><h3 class="ic-title">MealMatch AI</h3>
+          <p class="ic-desc">AI meal planning. Design system. Research.</p>
+          <div class="ic-tags"><span class="ic-tag">AI</span><span class="ic-tag">Systems</span></div>
+          <div class="ic-super">Inspect to reveal</div>
+        </div>
+      </div>
+      <div class="ic-annotation" style="top:-28px;right:0" id="ann0">"He consistently transformed complex challenges into elegant, user-centered solutions."<div class="ic-ann-attr">Alex Leite — Microsoft 365</div></div>
+    </div>
+
+    <div class="inspect-card even" data-p="ballrs" data-focus="BALLRS">
+      <div class="ic-revealed">
+        <div class="ic-visual">
+          <div class="ic-mockup"><div class="icm"><div class="icm-top"><span>9:41</span><span>Ballrs</span></div><div class="icm-h">Daily Pick</div><div class="icm-s">Who scored more?</div><div class="icm-bl"><div class="icm-b" style="height:48px"></div><div class="icm-b" style="height:48px"></div></div><div class="icm-rl"><div class="icm-r"></div><div class="icm-r"></div></div></div></div>
+          <div class="ic-labels"><span class="ic-lbl">React Native / TS</span><span class="ic-lbl">App Store Live</span></div>
+        </div>
+        <div class="ic-content">
+          <div class="ic-num">02 — Case Study</div><h3 class="ic-title">Ballrs</h3>
+          <p class="ic-desc">End-to-end design and engineering. React Native & TypeScript. Shipped to the App Store.</p>
+          <div class="ic-tags"><span class="ic-tag">React Native</span><span class="ic-tag">TypeScript</span><span class="ic-tag">Shipped</span></div>
+          <div class="ic-super">Designed + built, App Store live</div>
+        </div>
+      </div>
+      <div class="ic-wire ic-cover" id="cover1">
+        <div class="ic-visual"><div class="ic-mockup"><div class="icm"><div class="icm-top"><span>9:41</span><span>Ballrs</span></div><div class="icm-h">Daily Pick</div><div class="icm-s">Sports</div><div class="icm-bl"><div class="icm-b" style="height:48px"></div><div class="icm-b" style="height:48px"></div></div><div class="icm-rl"><div class="icm-r"></div><div class="icm-r"></div></div></div></div></div>
+        <div class="ic-content"><div class="ic-num">02</div><h3 class="ic-title">Ballrs</h3><p class="ic-desc">React Native. TypeScript. Shipped.</p><div class="ic-tags"><span class="ic-tag">RN</span><span class="ic-tag">TS</span></div><div class="ic-super">Inspect to reveal</div></div>
+      </div>
+      <div class="ic-annotation" style="bottom:-28px;left:0" id="ann1">"He is strong in all areas of UX from research to design, with an aptitude for prototyping."<div class="ic-ann-attr">Kim Hartford — Product Designer</div></div>
+    </div>
+
+    <div class="inspect-card" data-p="loupe" data-focus="LOUPE">
+      <div class="ic-revealed">
+        <div class="ic-visual">
+          <div class="ic-mockup"><div class="icm"><div class="icm-top"><span>Loupe</span><span>v1.2</span></div><div class="icm-h">Library</div><div class="icm-s">2,481 tagged</div><div class="icm-bl"><div class="icm-b"></div><div class="icm-b"></div><div class="icm-b"></div></div><div class="icm-rl"><div class="icm-r"></div><div class="icm-r"></div><div class="icm-r"></div><div class="icm-r"></div></div></div></div>
+          <div class="ic-labels"><span class="ic-lbl">SwiftUI / Vision</span><span class="ic-lbl">On-Device AI</span></div>
+        </div>
+        <div class="ic-content">
+          <div class="ic-num">03 — Shipped App</div><h3 class="ic-title">Loupe</h3>
+          <p class="ic-desc">Native Mac app. Local AI tags your photo library. No cloud, no subscriptions.</p>
+          <div class="ic-tags"><span class="ic-tag">macOS</span><span class="ic-tag">Vision AI</span><span class="ic-tag">SwiftUI</span></div>
+          <div class="ic-super">On-device AI, zero cloud</div>
+        </div>
+      </div>
+      <div class="ic-wire ic-cover" id="cover2">
+        <div class="ic-visual"><div class="ic-mockup"><div class="icm"><div class="icm-top"><span>Loupe</span><span>v1.2</span></div><div class="icm-h">Library</div><div class="icm-s">Photos</div><div class="icm-bl"><div class="icm-b"></div><div class="icm-b"></div><div class="icm-b"></div></div><div class="icm-rl"><div class="icm-r"></div><div class="icm-r"></div><div class="icm-r"></div><div class="icm-r"></div></div></div></div></div>
+        <div class="ic-content"><div class="ic-num">03</div><h3 class="ic-title">Loupe</h3><p class="ic-desc">Mac app. AI tags. Private.</p><div class="ic-tags"><span class="ic-tag">macOS</span><span class="ic-tag">AI</span></div><div class="ic-super">Inspect to reveal</div></div>
+      </div>
+    </div>
+
+    <div class="inspect-card even" data-p="jetsweat" data-focus="JETSWEAT">
+      <div class="ic-revealed">
+        <div class="ic-visual">
+          <div class="ic-mockup"><div class="icm"><div class="icm-top"><span>9:41</span><span>JetSweat</span></div><div class="icm-h">Dashboard</div><div class="icm-s">Analytics</div><div class="icm-ch"><div class="icm-cv" style="height:25%"></div><div class="icm-cv" style="height:45%"></div><div class="icm-cv hi" style="height:75%"></div><div class="icm-cv" style="height:38%"></div><div class="icm-cv hi" style="height:92%"></div><div class="icm-cv" style="height:55%"></div><div class="icm-cv hi" style="height:68%"></div></div></div></div>
+          <div class="ic-labels"><span class="ic-lbl">+25% Sign-ups</span><span class="ic-lbl">-75% Manual</span></div>
+        </div>
+        <div class="ic-content">
+          <div class="ic-num">04 — Case Study</div><h3 class="ic-title">JetSweat</h3>
+          <p class="ic-desc">Product-led growth for B2B fitness SaaS. 25% more sign-ups, 75% less manual setup.</p>
+          <div class="ic-tags"><span class="ic-tag">Growth</span><span class="ic-tag">SaaS</span><span class="ic-tag">CMS</span></div>
+          <div class="ic-super">25% lift, 75% less manual work</div>
+        </div>
+      </div>
+      <div class="ic-wire ic-cover" id="cover3">
+        <div class="ic-visual"><div class="ic-mockup"><div class="icm"><div class="icm-top"><span>9:41</span><span>JetSweat</span></div><div class="icm-h">Dashboard</div><div class="icm-s">Data</div><div class="icm-ch"><div class="icm-cv" style="height:25%"></div><div class="icm-cv" style="height:45%"></div><div class="icm-cv hi" style="height:75%"></div><div class="icm-cv" style="height:38%"></div><div class="icm-cv hi" style="height:92%"></div><div class="icm-cv" style="height:55%"></div><div class="icm-cv hi" style="height:68%"></div></div></div></div></div>
+        <div class="ic-content"><div class="ic-num">04</div><h3 class="ic-title">JetSweat</h3><p class="ic-desc">Growth. SaaS. Metrics.</p><div class="ic-tags"><span class="ic-tag">PLG</span><span class="ic-tag">CMS</span></div><div class="ic-super">Inspect to reveal</div></div>
+      </div>
+      <div class="ic-annotation" style="top:-28px;right:0" id="ann3">"A unique ability to distill complex features into clean designs and seamless user flows."<div class="ic-ann-attr">Alexandra Dantzig — CEO, JetSweat</div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================================================================
+     FILM STRIP
+     ================================================================ -->
+<section class="film-section" id="film">
+  <div class="fs-header">
+    <div class="sec-label">The Backstory</div>
+    <h2 class="sec-title" data-r>How I got here.</h2>
+  </div>
+  <div class="fs-text" data-r="d1">
+    <div class="fs-ed">
+      <h3>London PM.<br>Freelance <em>photographer</em>.<br>Now I build products.</h3>
+      <p class="fs-p">Started in product management in London. Followed the camera — shot for Netflix, HBO, National Geographic. Now I design and build apps.</p>
+    </div>
+    <div class="fs-tl">
+      <div class="ft-i"><span class="ft-era">London</span><span class="ft-d"><strong>Product Manager</strong> — products, roadmaps, metrics.</span></div>
+      <div class="ft-i"><span class="ft-era">Freelance</span><span class="ft-d"><strong>Photographer</strong> — Netflix, HBO, Nat Geo.</span></div>
+      <div class="ft-i"><span class="ft-era">Now</span><span class="ft-d"><strong>Designer & Builder</strong> — shipping apps.</span></div>
+    </div>
+  </div>
+  <div class="film-strip" id="filmStrip">
+    <div class="film-frame"><img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=360&h=480&fit=crop" alt="" loading="lazy"><span class="film-frame-label">NYC 01</span></div>
+    <div class="film-frame"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=360&h=480&fit=crop" alt="" loading="lazy"><span class="film-frame-label">BTS 02</span></div>
+    <div class="film-frame"><img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=360&h=480&fit=crop" alt="" loading="lazy"><span class="film-frame-label">EDT 03</span></div>
+    <div class="film-frame"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=360&h=480&fit=crop" alt="" loading="lazy"><span class="film-frame-label">LND 04</span></div>
+    <div class="film-frame"><img src="https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=360&h=480&fit=crop" alt="" loading="lazy"><span class="film-frame-label">STR 05</span></div>
+    <div class="film-frame"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=360&h=480&fit=crop" alt="" loading="lazy"><span class="film-frame-label">PRT 06</span></div>
+    <div class="film-frame"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=360&h=480&fit=crop" alt="" loading="lazy"><span class="film-frame-label">PRT 07</span></div>
+    <div class="film-frame"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=360&h=480&fit=crop" alt="" loading="lazy"><span class="film-frame-label">HBO 08</span></div>
+  </div>
+  <div class="film-strip-label">Hover to develop // 35mm negative → positive</div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <div class="sec-label" style="justify-content:center">Get In Touch</div>
+  <h2 data-r>Got a project?<br>Let's talk.</h2>
+  <p data-r="d1">Open to full-time roles, contract work, and collaborations.</p>
+  <a href="mailto:hello@paultaylormade.com" class="cta" data-cursor="link" data-r>hello@paultaylormade.com</a>
+</section>
+<footer class="footer">
+  <span>&copy; 2026 Paul Taylor. Precision Lens.</span>
+  <div class="footer-links">
+    <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer" data-cursor="link">LinkedIn</a>
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" data-cursor="link">Instagram</a>
+    <a href="https://github.com" target="_blank" rel="noopener noreferrer" data-cursor="link">GitHub</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── GLOBALS ── */
+  let mx=window.innerWidth/2,my=window.innerHeight/2,lx=mx,ly=my,dx=mx,dy=my;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+
+  /* ── LENS CANVAS ── */
+  const lensCanvas=document.getElementById('lensCanvas');
+  const lctx=lensCanvas.getContext('2d');
+  const lensDot=document.getElementById('lensDot');
+  const crossH=document.getElementById('crossH');
+  const crossV=document.getElementById('crossV');
+  let W,H;
+  function resizeCanvas(){W=lensCanvas.width=window.innerWidth;H=lensCanvas.height=window.innerHeight}
+  resizeCanvas();window.addEventListener('resize',resizeCanvas);
+
+  // Load the hero photo as an image for the canvas
+  const heroImg=new Image();
+  heroImg.crossOrigin='anonymous';
+  heroImg.src='https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1920&q=80';
+
+  const LENS_R=120;
+
+  function drawLens(){
+    // Inertia
+    lx+=(mx-lx)*.1;ly+=(my-ly)*.1;
+    dx+=(mx-dx)*.22;dy+=(my-dy)*.22;
+
+    // Dot + crosshairs
+    lensDot.style.transform=`translate(${dx}px,${dy}px) translate(-50%,-50%)`;
+    crossH.style.top=ly+'px';
+    crossV.style.left=lx+'px';
+
+    // Canvas: draw the B&W photo only within the lens circle
+    lctx.clearRect(0,0,W,H);
+
+    if(heroImg.complete){
+      lctx.save();
+      lctx.beginPath();
+      lctx.arc(lx,ly+window.scrollY>window.innerHeight?-9999:0,LENS_R,0,Math.PI*2);
+      // Only draw lens in hero area
+      const heroBottom=document.getElementById('hero').getBoundingClientRect().bottom;
+      if(heroBottom>0){
+        // Adjust circle for scroll
+        const scrollAdjustedY=ly;
+        lctx.restore();
+        lctx.save();
+        lctx.beginPath();
+        lctx.arc(lx,scrollAdjustedY,LENS_R,0,Math.PI*2);
+        lctx.clip();
+
+        // Draw the photo scaled to viewport
+        const imgRatio=heroImg.naturalWidth/heroImg.naturalHeight;
+        const vpRatio=W/H;
+        let drawW,drawH,drawX,drawY;
+        if(imgRatio>vpRatio){drawH=H;drawW=H*imgRatio;drawX=(W-drawW)/2;drawY=0}
+        else{drawW=W;drawH=W/imgRatio;drawX=0;drawY=(H-drawH)/2}
+        lctx.filter='grayscale(85%) contrast(1.2)';
+        lctx.drawImage(heroImg,drawX,drawY,drawW,drawH);
+        lctx.filter='none';
+
+        // Lens border
+        lctx.restore();
+        lctx.beginPath();
+        lctx.arc(lx,scrollAdjustedY,LENS_R,0,Math.PI*2);
+        lctx.strokeStyle='rgba(26,26,26,.08)';
+        lctx.lineWidth=1;
+        lctx.stroke();
+      }else{
+        lctx.restore();
+      }
+    }
+
+    // Card covers: use CSS clip-path to cut circles
+    covers.forEach(cover=>{
+      const rect=cover.getBoundingClientRect();
+      const relX=mx-rect.left;
+      const relY=my-rect.top;
+      // If mouse is near the card, cut a circle in the cover
+      if(mx>rect.left-LENS_R&&mx<rect.right+LENS_R&&my>rect.top-LENS_R&&my<rect.bottom+LENS_R){
+        cover.style.clipPath=`polygon(0 0,100% 0,100% 100%,0 100%,0 0,${relX+LENS_R}px ${relY}px,${relX+LENS_R*.7}px ${relY-LENS_R*.7}px,${relX}px ${relY-LENS_R}px,${relX-LENS_R*.7}px ${relY-LENS_R*.7}px,${relX-LENS_R}px ${relY}px,${relX-LENS_R*.7}px ${relY+LENS_R*.7}px,${relX}px ${relY+LENS_R}px,${relX+LENS_R*.7}px ${relY+LENS_R*.7}px,${relX+LENS_R}px ${relY}px)`;
+      }else{
+        cover.style.clipPath='none';
+      }
+    });
+
+    // Annotations: glow when lens is near
+    annotations.forEach(ann=>{
+      const rect=ann.getBoundingClientRect();
+      const cx=rect.left+rect.width/2;
+      const cy=rect.top+rect.height/2;
+      const dist=Math.sqrt((mx-cx)**2+(my-cy)**2);
+      ann.classList.toggle('near',dist<250);
+    });
+
+    // Film frames: develop when mouse is near
+    filmFrames.forEach(f=>{
+      const rect=f.getBoundingClientRect();
+      const cx=rect.left+rect.width/2;
+      const cy=rect.top+rect.height/2;
+      const dist=Math.sqrt((mx-cx)**2+(my-cy)**2);
+      f.classList.toggle('developed',dist<200);
+    });
+
+    requestAnimationFrame(drawLens);
+  }
+
+  const covers=[document.getElementById('cover0'),document.getElementById('cover1'),document.getElementById('cover2'),document.getElementById('cover3')];
+  const annotations=document.querySelectorAll('.ic-annotation');
+  const filmFrames=document.querySelectorAll('.film-frame');
+
+  drawLens();
+
+  /* ── RULER TICKS ── */
+  const rulerTicks=document.getElementById('rulerTicks');
+  for(let i=0;i<60;i++){const t=document.createElement('div');t.className='ruler-tick';rulerTicks.appendChild(t)}
+
+  /* ── NAV MORPH ── */
+  const ruler=document.getElementById('ruler');
+  const focalNav=document.getElementById('focalNav');
+  const fnLens=document.getElementById('fnLens');
+  const fnDepth=document.getElementById('fnDepth');
+  const heroSection=document.getElementById('hero');
+  let navShown=false;
+  const cards=document.querySelectorAll('.inspect-card');
+  const docH=()=>document.documentElement.scrollHeight-window.innerHeight;
+
+  /* ── IO ── */
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')})},{threshold:.15});
+  document.querySelectorAll('[data-r]').forEach(el=>obs.observe(el));
+
+  function onScroll(){
+    const sy=window.scrollY;
+    const pct=Math.round((sy/docH())*100);
+    fnDepth.textContent='DEPTH: '+pct+'%';
+
+    // Nav morph
+    const heroBottom=heroSection.getBoundingClientRect().bottom;
+    if(heroBottom<window.innerHeight*.4&&!navShown){
+      navShown=true;ruler.classList.add('hide');focalNav.classList.add('on');
+    }else if(heroBottom>=window.innerHeight*.4&&navShown){
+      navShown=false;ruler.classList.remove('hide');focalNav.classList.remove('on');
+    }
+
+    // Focus label from nearest card
+    let focus='HERO';
+    cards.forEach(c=>{
+      const rect=c.getBoundingClientRect();
+      if(rect.top<window.innerHeight*.5&&rect.bottom>0){
+        focus=c.getAttribute('data-focus')||'WORK';
+      }
+    });
+    fnLens.textContent='LENS_FOCUS: '+focus;
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ── SMOOTH NAV ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+
+})();
+</script>
+</body>
+</html>

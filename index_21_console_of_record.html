@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — Console of Record</title>
+<meta name="description" content="Product Designer in Brooklyn. I design apps, then I build them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F6F1EB;--dark:#1A1A1A;--amber:#D4582A;--text:#1A1A1A;
+  --text2:#6B6359;--muted:#918A82;--muted2:#C8C0B8;
+  --line:rgba(26,26,26,.06);--line2:rgba(26,26,26,.03);
+  --sidebar:#FAF8F5;
+  --serif:'DM Serif Display',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --heavy:cubic-bezier(.22,1,.36,1);
+}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:var(--sans);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.6}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--amber);color:#fff}
+
+/* ================================================================
+   HERO — STROKE FILL + SPLIT
+   ================================================================ */
+.hero{position:relative;height:300vh}
+.hero-sticky{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+}
+/* The name — 1px stroke, filled by scroll */
+.hero-name-wrap{position:relative;z-index:3;text-align:center}
+.hero-name{
+  font-family:var(--serif);font-size:clamp(64px,15vw,200px);
+  line-height:.85;letter-spacing:-.04em;
+  color:transparent;
+  -webkit-text-stroke:1px var(--dark);
+  position:relative;will-change:auto;
+}
+/* Fill layer — clipped by JS */
+.hero-name-fill{
+  position:absolute;inset:0;
+  font-family:var(--serif);font-size:clamp(64px,15vw,200px);
+  line-height:.85;letter-spacing:-.04em;
+  color:var(--amber);
+  -webkit-text-stroke:0;
+  clip-path:inset(0 100% 0 0);
+  will-change:clip-path;
+  pointer-events:none;
+}
+.hero-hl{
+  font:700 clamp(14px,1.4vw,18px)/1.5 var(--sans);
+  color:var(--text);margin-top:20px;max-width:400px;margin-left:auto;margin-right:auto;
+}
+.hero-sub{font:400 12px/1 var(--mono);color:var(--muted);margin-top:8px;letter-spacing:.04em}
+
+/* Split reveal — two halves slide apart */
+.hero-split-top,.hero-split-bottom{
+  position:absolute;left:0;right:0;background:var(--bg);z-index:2;
+  will-change:transform;pointer-events:none;
+}
+.hero-split-top{top:0;height:50%;transform-origin:top}
+.hero-split-bottom{bottom:0;height:50%;transform-origin:bottom}
+
+/* ================================================================
+   FILE-TREE SIDEBAR NAV
+   ================================================================ */
+.file-tree{
+  position:fixed;top:0;left:0;bottom:0;z-index:500;
+  width:220px;background:var(--sidebar);
+  border-right:1px solid var(--line);
+  padding:16px 0;overflow-y:auto;
+  transform:translateX(-100%);opacity:0;
+  transition:transform .6s var(--heavy),opacity .4s;
+  display:flex;flex-direction:column;
+}
+.file-tree.on{transform:translateX(0);opacity:1}
+
+.ft-header{padding:0 16px 12px;border-bottom:1px solid var(--line)}
+.ft-title{font:600 10px/1 var(--mono);letter-spacing:.04em;color:var(--text);text-transform:uppercase;margin-bottom:4px}
+.ft-sub{font:300 9px/1 var(--mono);color:var(--muted)}
+
+.ft-section{padding:12px 0}
+.ft-section-label{
+  font:500 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);padding:4px 16px;display:flex;align-items:center;gap:6px;
+  margin-bottom:4px;
+}
+.ft-section-label svg{width:10px;height:10px;opacity:.4}
+
+.ft-file{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 16px 5px 28px;
+  font:400 11px/1 var(--mono);color:var(--text2);
+  cursor:default;transition:background .15s,color .15s;
+  position:relative;
+}
+.ft-file:hover{background:rgba(26,26,26,.03);color:var(--text)}
+.ft-file.active{background:rgba(212,88,42,.06);color:var(--amber)}
+.ft-file.active::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--amber);
+}
+.ft-icon{width:14px;height:14px;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ft-icon svg{width:10px;height:10px}
+.ft-icon.tsx{background:rgba(0,122,204,.08);color:#007ACC}
+.ft-icon.swift{background:rgba(255,69,58,.08);color:#FF453A}
+.ft-icon.ai{background:rgba(45,122,79,.08);color:#2D7A4F}
+.ft-icon.md{background:rgba(26,26,26,.05);color:var(--muted)}
+
+/* Live dot */
+.ft-live{width:5px;height:5px;border-radius:50%;background:#2D7A4F;box-shadow:0 0 4px rgba(45,122,79,.4);margin-left:auto;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+.ft-footer{margin-top:auto;padding:12px 16px;border-top:1px solid var(--line)}
+.ft-footer-item{font:300 9px/1 var(--mono);color:var(--muted);padding:4px 0;display:flex;align-items:center;gap:6px}
+.ft-footer-dot{width:4px;height:4px;border-radius:50%;background:#2D7A4F}
+
+/* ================================================================
+   MAIN CONTENT AREA (pushed right by sidebar)
+   ================================================================ */
+.main{transition:margin-left .6s var(--heavy)}
+.main.shifted{margin-left:220px}
+
+/* ================================================================
+   CENTER-STAGE WORK SECTIONS
+   ================================================================ */
+.work{padding:40px 0 0}
+.work-header{max-width:700px;margin:0 auto;padding:0 48px 72px;text-align:center}
+.sec-label{font:500 10px/1 var(--mono);letter-spacing:.06em;color:var(--amber);margin-bottom:8px}
+.sec-title{font-family:var(--serif);font-size:clamp(28px,4vw,48px);line-height:1.08}
+
+.stages{display:flex;flex-direction:column;gap:0}
+
+/* Center-stage section */
+.stage{
+  position:relative;overflow:hidden;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:80px 48px;
+}
+
+.stage-card{
+  width:min(900px,100%);
+  display:grid;grid-template-columns:1fr 1fr;gap:56px;
+  align-items:center;position:relative;
+  /* Scale up to fill 80% of screen */
+  transform:scale(.88);opacity:.5;
+  transition:transform 1s var(--heavy),opacity .8s var(--heavy);
+  will-change:transform;
+}
+.stage-card.focused{transform:scale(1);opacity:1}
+
+.stage.reverse .stage-card{direction:rtl}
+.stage.reverse .stage-card>*{direction:ltr}
+
+/* Visual */
+.stg-visual{position:relative}
+.stg-mockup{
+  width:min(260px,100%);aspect-ratio:9/16;border-radius:28px;
+  overflow:hidden;margin:0 auto;position:relative;
+  box-shadow:0 24px 56px rgba(0,0,0,.1);
+  will-change:transform;
+}
+.stgm{position:absolute;inset:8px;border-radius:21px;display:flex;flex-direction:column;padding:14px 12px;overflow:hidden}
+.stgm-top{display:flex;justify-content:space-between;font:400 8px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:12px}
+.stgm-h{font:600 17px/1.2 var(--sans);color:#fff;margin-bottom:3px}
+.stgm-s{font:400 8px/1 var(--mono);color:rgba(255,255,255,.2)}
+.stgm-bl{display:flex;gap:4px;margin-top:12px}
+.stgm-b{flex:1;height:34px;border-radius:7px;background:rgba(255,255,255,.05)}
+.stgm-rl{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.stgm-r{height:18px;border-radius:5px;background:rgba(255,255,255,.04)}
+.stgm-ch{display:flex;align-items:flex-end;gap:2px;height:56px;margin-top:auto;padding-top:8px}
+.stgm-cv{flex:1;border-radius:2px 2px 0 0;background:rgba(255,255,255,.06)}
+.stgm-cv.hi{background:rgba(255,255,255,.22)}
+
+/* Technical annotations */
+.stg-annotations{
+  position:absolute;z-index:3;display:flex;flex-direction:column;gap:4px;
+}
+.stg-annotations.left{top:20%;left:0}
+.stg-annotations.right{bottom:20%;right:0}
+.stg-ann{
+  font:500 7px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--amber);padding:4px 8px;
+  border-left:2px solid var(--amber);background:rgba(246,241,235,.8);
+  width:fit-content;
+}
+
+/* Content */
+.stg-content{display:flex;flex-direction:column;justify-content:center}
+.stg-num{font:500 10px/1 var(--mono);letter-spacing:.1em;color:var(--amber);margin-bottom:20px}
+.stg-title{font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);line-height:1.06;margin-bottom:10px}
+.stg-desc{font:400 14px/1.75 var(--sans);color:var(--text2);max-width:400px;margin-bottom:18px}
+.stg-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px}
+.stg-tag{font:400 10px/1 var(--sans);padding:5px 12px;border:1px solid var(--line);border-radius:100px;color:var(--muted)}
+.stg-super{font:500 11px/1 var(--sans);color:var(--amber);display:flex;align-items:center;gap:6px}
+.stg-super::before{content:'';width:5px;height:5px;background:var(--amber);border-radius:50%}
+
+/* Themes */
+.stage[data-p="mealmatch"] .stg-mockup{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.stage[data-p="ballrs"] .stg-mockup{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.stage[data-p="loupe"] .stg-mockup{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.stage[data-p="jetsweat"] .stg-mockup{background:linear-gradient(150deg,#D4582A,#A84420)}
+
+/* ================================================================
+   SYSTEM LOG TICKER
+   ================================================================ */
+.ticker{
+  position:fixed;bottom:0;left:0;right:0;z-index:400;
+  height:32px;display:flex;align-items:center;
+  background:var(--dark);overflow:hidden;
+  opacity:0;transition:opacity .4s;
+}
+.ticker.on{opacity:1}
+.ticker-track{
+  display:flex;gap:0;animation:tickScroll 40s linear infinite;
+  white-space:nowrap;
+}
+@keyframes tickScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{
+  font:400 10px/1 var(--mono);letter-spacing:.04em;
+  color:rgba(246,241,235,.35);padding:0 32px;flex-shrink:0;
+}
+.ticker-item .t-val{color:var(--amber)}
+.ticker-item .t-quote{font-style:italic;color:rgba(246,241,235,.5)}
+
+/* ================================================================
+   ABOUT — DEBUG WINDOW
+   ================================================================ */
+.about{padding:120px 48px;max-width:900px;margin:0 auto}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:48px;align-items:start}
+.ab-ed h2{font-family:var(--serif);font-size:clamp(24px,3vw,36px);line-height:1.15;margin-bottom:18px}
+.ab-ed h2 em{font-style:italic;color:var(--amber)}
+.ab-p{font:400 13px/1.8 var(--sans);color:var(--text2);margin-bottom:12px}
+
+/* Debug window */
+.debug-win{
+  border:1px solid var(--line);border-radius:8px;overflow:hidden;
+  background:var(--sidebar);
+}
+.dw-bar{
+  height:28px;display:flex;align-items:center;padding:0 10px;gap:6px;
+  background:var(--bg);border-bottom:1px solid var(--line);
+}
+.dw-dot{width:8px;height:8px;border-radius:50%}
+.dw-dot.r{background:#FF5F57}.dw-dot.y{background:#FFBD2E}.dw-dot.g{background:#28CA41}
+.dw-label{font:400 9px/1 var(--mono);color:var(--muted);margin-left:auto}
+.dw-body{padding:12px}
+
+/* Film strip inside debug */
+.dw-strip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}
+.dw-strip::-webkit-scrollbar{display:none}
+.dw-frame{
+  flex-shrink:0;width:120px;height:160px;border-radius:3px;overflow:hidden;
+  position:relative;background:#eee;
+}
+.dw-frame img{width:100%;height:100%;object-fit:cover;filter:grayscale(50%) contrast(1.1);transition:filter .4s}
+.dw-frame:hover img{filter:grayscale(0%)}
+.dw-frame-lbl{position:absolute;bottom:4px;left:4px;font:400 6px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:rgba(26,26,26,.4)}
+
+.dw-tl{padding:12px 0 0}
+.dt-i{display:flex;gap:12px;padding:8px 0;border-top:1px solid var(--line)}
+.dt-era{font:400 8px/1 var(--mono);letter-spacing:.06em;color:var(--amber);flex-shrink:0;width:64px;padding-top:2px}
+.dt-d{font:400 10px/1.5 var(--sans);color:var(--text2)}.dt-d strong{color:var(--text);font-weight:500}
+
+/* ================================================================
+   CONTACT
+   ================================================================ */
+.contact{padding:120px 48px 80px;max-width:700px;margin:0 auto;text-align:center;border-top:1px solid var(--line)}
+.contact h2{font-family:var(--serif);font-size:clamp(28px,4vw,48px);line-height:1.06;margin-bottom:12px}
+.contact p{font:400 14px/1.7 var(--sans);color:var(--text2);max-width:400px;margin:0 auto 32px}
+.cta{display:inline-flex;align-items:center;gap:8px;font:500 13px/1 var(--sans);color:#fff;background:var(--amber);padding:14px 28px;border-radius:100px;border:none;transition:background .3s,transform .3s var(--heavy)}
+.cta:hover{background:#C04E24;transform:scale(1.03)}
+.cta svg{transition:transform .3s}.cta:hover svg{transform:translateX(3px)}
+.footer{padding:28px 48px 64px;display:flex;justify-content:space-between;align-items:center;max-width:900px;margin:0 auto;border-top:1px solid var(--line)}
+.footer span{font:400 10px/1 var(--sans);color:var(--muted2)}
+.footer-links{display:flex;gap:16px}
+.footer-links a{font:400 10px/1 var(--sans);color:var(--muted);transition:color .2s}
+.footer-links a:hover{color:var(--amber)}
+
+@media(max-width:1000px){
+  .file-tree{display:none}
+  .main.shifted{margin-left:0}
+  .stage-card{grid-template-columns:1fr;gap:32px;padding:0}
+  .stage.reverse .stage-card{direction:ltr}
+  .stage{padding:60px 24px}
+  .stg-annotations{display:none}
+  .about-grid{grid-template-columns:1fr;gap:32px}
+  .about,.contact{padding-left:20px;padding-right:20px}
+  .footer{padding:20px 20px 56px;flex-direction:column;gap:8px}
+  .ticker{left:0}
+}
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     HERO — STROKE FILL + SPLIT
+     ================================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-sticky">
+    <div class="hero-split-top" id="splitTop"></div>
+    <div class="hero-split-bottom" id="splitBottom"></div>
+    <div class="hero-name-wrap">
+      <div class="hero-name" id="heroName">PAUL<br>TAYLOR</div>
+      <div class="hero-name-fill" id="heroFill" aria-hidden="true">PAUL<br>TAYLOR</div>
+      <p class="hero-hl">I design apps. Then I build them.</p>
+      <p class="hero-sub">Product Designer & Builder — Brooklyn, NY</p>
+    </div>
+  </div>
+</section>
+
+<!-- File-Tree Sidebar -->
+<aside class="file-tree" id="fileTree">
+  <div class="ft-header">
+    <div class="ft-title">Explorer</div>
+    <div class="ft-sub">paul-taylor-portfolio</div>
+  </div>
+
+  <div class="ft-section">
+    <div class="ft-section-label"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M6 4l4 4-4 4"/></svg>Projects</div>
+    <div class="ft-file active" data-target="mealmatch">
+      <div class="ft-icon ai"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6"/></svg></div>
+      MealMatch.ai
+      <div class="ft-live"></div>
+    </div>
+    <div class="ft-file" data-target="ballrs">
+      <div class="ft-icon tsx"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="3" width="10" height="10" rx="2"/></svg></div>
+      Ballrs.tsx
+      <div class="ft-live"></div>
+    </div>
+    <div class="ft-file" data-target="loupe">
+      <div class="ft-icon swift"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2l6 6-6 6-6-6z"/></svg></div>
+      Loupe.swift
+      <div class="ft-live"></div>
+    </div>
+    <div class="ft-file" data-target="jetsweat">
+      <div class="ft-icon tsx"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="3" width="10" height="10" rx="2"/></svg></div>
+      JetSweat.tsx
+    </div>
+  </div>
+
+  <div class="ft-section">
+    <div class="ft-section-label"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M6 4l4 4-4 4"/></svg>System</div>
+    <div class="ft-file" data-target="about">
+      <div class="ft-icon md"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="3" width="10" height="10" rx="1"/></svg></div>
+      README.md
+    </div>
+    <div class="ft-file" data-target="contact">
+      <div class="ft-icon md"><svg viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="3" width="10" height="10" rx="1"/></svg></div>
+      CONTACT.md
+    </div>
+  </div>
+
+  <div class="ft-footer">
+    <div class="ft-footer-item"><div class="ft-footer-dot"></div>BUILD: STABLE</div>
+    <div class="ft-footer-item" style="color:var(--text2)">Brooklyn, NY</div>
+  </div>
+</aside>
+
+<!-- System Log Ticker -->
+<div class="ticker" id="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">&gt;&gt; <span class="t-val">40+ PARTICIPANT STUDY</span> (MEALMATCH AI)</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-quote">"PAUL DISTILLS COMPLEX FEATURES INTO CLEAN DESIGNS"</span> — ALEXANDRA DANTZIG (CEO, JETSWEAT)</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-val">25% SIGNUP LIFT</span> (JETSWEAT)</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-val">3 APPS SHIPPED</span> TO APP STORE</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-quote">"TRANSFORMED COMPLEX CHALLENGES INTO ELEGANT SOLUTIONS"</span> — ALEX LEITE (MICROSOFT 365)</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-val">75% LESS MANUAL SETUP</span> (JETSWEAT CMS)</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-val">REACT NATIVE / TS</span> — BALLRS.TSX SHIPPED</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-val">VISION AI / SWIFTUI</span> — LOUPE.SWIFT SHIPPED</span>
+    <!-- Duplicate for loop -->
+    <span class="ticker-item">&gt;&gt; <span class="t-val">40+ PARTICIPANT STUDY</span> (MEALMATCH AI)</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-quote">"PAUL DISTILLS COMPLEX FEATURES INTO CLEAN DESIGNS"</span> — ALEXANDRA DANTZIG (CEO, JETSWEAT)</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-val">25% SIGNUP LIFT</span> (JETSWEAT)</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-val">3 APPS SHIPPED</span> TO APP STORE</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-quote">"TRANSFORMED COMPLEX CHALLENGES INTO ELEGANT SOLUTIONS"</span> — ALEX LEITE (MICROSOFT 365)</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-val">75% LESS MANUAL SETUP</span> (JETSWEAT CMS)</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-val">REACT NATIVE / TS</span> — BALLRS.TSX SHIPPED</span>
+    <span class="ticker-item">&gt;&gt; <span class="t-val">VISION AI / SWIFTUI</span> — LOUPE.SWIFT SHIPPED</span>
+  </div>
+</div>
+
+<!-- ================================================================
+     MAIN CONTENT
+     ================================================================ -->
+<div class="main" id="main">
+
+  <section class="work" id="work">
+    <div class="work-header">
+      <div class="sec-label">Selected Work</div>
+      <h2 class="sec-title">Projects I've designed,<br>built, and shipped.</h2>
+    </div>
+
+    <div class="stages">
+
+      <div class="stage" data-p="mealmatch" data-file="mealmatch" id="stage-mealmatch">
+        <div class="stage-card">
+          <div class="stg-visual">
+            <div class="stg-mockup"><div class="stgm"><div class="stgm-top"><span>9:41</span><span>MealMatch</span></div><div class="stgm-h">Your Plan</div><div class="stgm-s">3 meals curated by AI</div><div class="stgm-bl"><div class="stgm-b"></div><div class="stgm-b"></div><div class="stgm-b"></div></div><div class="stgm-rl"><div class="stgm-r"></div><div class="stgm-r"></div><div class="stgm-r"></div></div></div></div>
+            <div class="stg-annotations left">
+              <span class="stg-ann">AI_ASSISTANT_V3</span>
+              <span class="stg-ann">40_USER_STUDY</span>
+              <span class="stg-ann">DESIGN_SYSTEM_128</span>
+            </div>
+          </div>
+          <div class="stg-content">
+            <div class="stg-num">01 — Lead Designer</div>
+            <h3 class="stg-title">MealMatch AI</h3>
+            <p class="stg-desc">AI-powered meal planning. Built the design system from zero — 128 tokens, component libraries. Ran 40+ participant research studies to validate every core flow.</p>
+            <div class="stg-tags"><span class="stg-tag">AI UX</span><span class="stg-tag">Design Systems</span><span class="stg-tag">Research</span></div>
+            <div class="stg-super">40+ research studies, full design system</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage reverse" data-p="ballrs" data-file="ballrs" id="stage-ballrs">
+        <div class="stage-card">
+          <div class="stg-content">
+            <div class="stg-num">02 — Designer & Engineer</div>
+            <h3 class="stg-title">Ballrs</h3>
+            <p class="stg-desc">End-to-end. React Native & TypeScript. Designed every screen, wrote every component, shipped to the App Store.</p>
+            <div class="stg-tags"><span class="stg-tag">React Native</span><span class="stg-tag">TypeScript</span><span class="stg-tag">Full-Stack</span></div>
+            <div class="stg-super">Designed + engineered, App Store live</div>
+          </div>
+          <div class="stg-visual">
+            <div class="stg-mockup"><div class="stgm"><div class="stgm-top"><span>9:41</span><span>Ballrs</span></div><div class="stgm-h">Daily Pick</div><div class="stgm-s">Who scored more?</div><div class="stgm-bl"><div class="stgm-b" style="height:55px"></div><div class="stgm-b" style="height:55px"></div></div><div class="stgm-rl"><div class="stgm-r"></div><div class="stgm-r"></div></div></div></div>
+            <div class="stg-annotations right">
+              <span class="stg-ann">REACT_NATIVE_BUILD</span>
+              <span class="stg-ann">TYPESCRIPT_STRICT</span>
+              <span class="stg-ann">APP_STORE_LIVE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage" data-p="loupe" data-file="loupe" id="stage-loupe">
+        <div class="stage-card">
+          <div class="stg-visual">
+            <div class="stg-mockup"><div class="stgm"><div class="stgm-top"><span>Loupe</span><span>v1.2</span></div><div class="stgm-h">Library</div><div class="stgm-s">2,481 photos tagged</div><div class="stgm-bl"><div class="stgm-b"></div><div class="stgm-b"></div><div class="stgm-b"></div></div><div class="stgm-rl"><div class="stgm-r"></div><div class="stgm-r"></div><div class="stgm-r"></div><div class="stgm-r"></div></div></div></div>
+            <div class="stg-annotations left">
+              <span class="stg-ann">VISION_FRAMEWORK</span>
+              <span class="stg-ann">SWIFTUI_NATIVE</span>
+              <span class="stg-ann">ON_DEVICE_ML</span>
+            </div>
+          </div>
+          <div class="stg-content">
+            <div class="stg-num">03 — Solo Builder</div>
+            <h3 class="stg-title">Loupe</h3>
+            <p class="stg-desc">Native Mac app. Local AI tags your entire photo library using Apple's Vision framework. No cloud, no subscriptions, fully private.</p>
+            <div class="stg-tags"><span class="stg-tag">macOS Native</span><span class="stg-tag">Vision AI</span><span class="stg-tag">SwiftUI</span></div>
+            <div class="stg-super">On-device AI, zero cloud dependency</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage reverse" data-p="jetsweat" data-file="jetsweat" id="stage-jetsweat">
+        <div class="stage-card">
+          <div class="stg-content">
+            <div class="stg-num">04 — Product Designer</div>
+            <h3 class="stg-title">JetSweat</h3>
+            <p class="stg-desc">B2B fitness SaaS. Redesigned onboarding, rebuilt the CMS. 25% more sign-ups, 75% less manual setup.</p>
+            <div class="stg-tags"><span class="stg-tag">Growth</span><span class="stg-tag">SaaS</span><span class="stg-tag">CMS Design</span></div>
+            <div class="stg-super">25% sign-up lift, 75% less manual work</div>
+          </div>
+          <div class="stg-visual">
+            <div class="stg-mockup"><div class="stgm"><div class="stgm-top"><span>9:41</span><span>JetSweat</span></div><div class="stgm-h">Dashboard</div><div class="stgm-s">Studio analytics</div><div class="stgm-ch"><div class="stgm-cv" style="height:25%"></div><div class="stgm-cv" style="height:45%"></div><div class="stgm-cv hi" style="height:75%"></div><div class="stgm-cv" style="height:38%"></div><div class="stgm-cv hi" style="height:92%"></div><div class="stgm-cv" style="height:55%"></div><div class="stgm-cv hi" style="height:68%"></div></div></div></div>
+            <div class="stg-annotations right">
+              <span class="stg-ann">SUPABASE_BACKEND</span>
+              <span class="stg-ann">25%_SIGNUP_LIFT</span>
+              <span class="stg-ann">CMS_REBUILD</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="about" id="about">
+    <div class="sec-label">README.md</div>
+    <h2 class="sec-title">The Backstory</h2>
+    <div class="about-grid">
+      <div>
+        <div class="ab-ed">
+          <h2>London PM.<br>Freelance <em>photographer</em>.<br>Now I build products.</h2>
+          <p class="ab-p">Started in product management in London. Followed the camera — shot for Netflix, HBO, National Geographic. Now I design and build apps.</p>
+        </div>
+      </div>
+      <div>
+        <div class="debug-win">
+          <div class="dw-bar"><div class="dw-dot r"></div><div class="dw-dot y"></div><div class="dw-dot g"></div><span class="dw-label">photography_archive.log</span></div>
+          <div class="dw-body">
+            <div class="dw-strip">
+              <div class="dw-frame"><img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=240&h=320&fit=crop" alt="" loading="lazy"><span class="dw-frame-lbl">NYC 01</span></div>
+              <div class="dw-frame"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=240&h=320&fit=crop" alt="" loading="lazy"><span class="dw-frame-lbl">BTS 02</span></div>
+              <div class="dw-frame"><img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=240&h=320&fit=crop" alt="" loading="lazy"><span class="dw-frame-lbl">EDT 03</span></div>
+              <div class="dw-frame"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=240&h=320&fit=crop" alt="" loading="lazy"><span class="dw-frame-lbl">LND 04</span></div>
+              <div class="dw-frame"><img src="https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=240&h=320&fit=crop" alt="" loading="lazy"><span class="dw-frame-lbl">STR 05</span></div>
+            </div>
+            <div class="dw-tl">
+              <div class="dt-i"><span class="dt-era">London</span><span class="dt-d"><strong>Product Manager</strong> — roadmaps, sprints, metrics.</span></div>
+              <div class="dt-i"><span class="dt-era">Freelance</span><span class="dt-d"><strong>Photographer</strong> — Netflix, HBO, Nat Geo.</span></div>
+              <div class="dt-i"><span class="dt-era">Now</span><span class="dt-d"><strong>Designer & Builder</strong> — shipping apps.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <h2>Got a project?<br>Let's talk.</h2>
+    <p>Open to full-time roles, contract work, and collaborations.</p>
+    <a href="mailto:hello@paultaylormade.com" class="cta">
+      Get in touch
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </section>
+  <footer class="footer">
+    <span>&copy; 2026 Paul Taylor</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </footer>
+</div>
+
+<!-- Lenis + GSAP -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  'use strict';
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ── LENIS ── */
+  const lenis=new Lenis({duration:1.2,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),smoothWheel:true});
+  function raf(time){lenis.raf(time);requestAnimationFrame(raf)}
+  requestAnimationFrame(raf);
+  lenis.on('scroll',ScrollTrigger.update);
+  gsap.ticker.add(time=>lenis.raf(time*1000));
+  gsap.ticker.lagSmoothing(0);
+
+  /* ── HERO: STROKE FILL + SPLIT ── */
+  const heroFill=document.getElementById('heroFill');
+  const splitTop=document.getElementById('splitTop');
+  const splitBottom=document.getElementById('splitBottom');
+  const fileTree=document.getElementById('fileTree');
+  const mainEl=document.getElementById('main');
+  const ticker=document.getElementById('ticker');
+
+  // Phase 1: Fill the stroke (0-60% of hero scroll)
+  gsap.to(heroFill,{
+    scrollTrigger:{trigger:'#hero',start:'top top',end:'40% top',scrub:.5},
+    clipPath:'inset(0 0% 0 0)',ease:'none'
+  });
+
+  // Phase 2: Split (60-100% of hero scroll)
+  gsap.to(splitTop,{
+    scrollTrigger:{trigger:'#hero',start:'40% top',end:'70% top',scrub:.5},
+    y:'-100%',ease:'power2.inOut'
+  });
+  gsap.to(splitBottom,{
+    scrollTrigger:{trigger:'#hero',start:'40% top',end:'70% top',scrub:.5},
+    y:'100%',ease:'power2.inOut'
+  });
+
+  // Show file tree + ticker after hero
+  ScrollTrigger.create({
+    trigger:'#hero',start:'70% top',
+    onEnter:()=>{fileTree.classList.add('on');mainEl.classList.add('shifted');ticker.classList.add('on')},
+    onLeaveBack:()=>{fileTree.classList.remove('on');mainEl.classList.remove('shifted');ticker.classList.remove('on')}
+  });
+
+  /* ── CENTER-STAGE FOCUS ── */
+  document.querySelectorAll('.stage-card').forEach(card=>{
+    ScrollTrigger.create({
+      trigger:card.closest('.stage'),
+      start:'top 70%',end:'bottom 30%',
+      onEnter:()=>card.classList.add('focused'),
+      onLeave:()=>card.classList.remove('focused'),
+      onEnterBack:()=>card.classList.add('focused'),
+      onLeaveBack:()=>card.classList.remove('focused')
+    });
+  });
+
+  /* ── MOCKUP PARALLAX ── */
+  document.querySelectorAll('.stg-mockup').forEach(m=>{
+    gsap.to(m,{
+      scrollTrigger:{trigger:m.closest('.stage'),start:'top bottom',end:'bottom top',scrub:1},
+      y:-40,ease:'none'
+    });
+  });
+
+  /* ── FILE TREE ACTIVE STATE ── */
+  const ftFiles=document.querySelectorAll('.ft-file[data-target]');
+  document.querySelectorAll('.stage[data-file]').forEach(stage=>{
+    ScrollTrigger.create({
+      trigger:stage,start:'top center',end:'bottom center',
+      onEnter:()=>setActiveFile(stage.getAttribute('data-file')),
+      onEnterBack:()=>setActiveFile(stage.getAttribute('data-file'))
+    });
+  });
+  ScrollTrigger.create({trigger:'#about',start:'top center',onEnter:()=>setActiveFile('about'),onEnterBack:()=>setActiveFile('about')});
+  ScrollTrigger.create({trigger:'#contact',start:'top center',onEnter:()=>setActiveFile('contact'),onEnterBack:()=>setActiveFile('contact')});
+
+  function setActiveFile(target){
+    ftFiles.forEach(f=>f.classList.toggle('active',f.getAttribute('data-target')===target));
+  }
+
+  /* ── FILE TREE CLICK → SCROLL ── */
+  ftFiles.forEach(f=>{
+    f.addEventListener('click',()=>{
+      const target=f.getAttribute('data-target');
+      const el=document.getElementById('stage-'+target)||document.getElementById(target);
+      if(el)lenis.scrollTo(el,{offset:-100});
+    });
+  });
+
+  /* ── SMOOTH NAV ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      e.preventDefault();
+      const t=document.querySelector(a.getAttribute('href'));
+      if(t)lenis.scrollTo(t,{offset:0});
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

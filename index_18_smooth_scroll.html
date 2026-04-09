@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — Precision Motion</title>
+<meta name="description" content="Product Designer in Brooklyn. I design apps. Then I build them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FFFFFF;--text:#1D1D1F;--blue:#0071E3;--muted:#86868B;
+  --muted2:#D2D2D7;--surface:#F5F5F7;--wire:rgba(0,0,0,.04);
+  --geist-mono:'Geist Mono',monospace;
+  --inter:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --heavy:cubic-bezier(.22,1,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --apple:cubic-bezier(.25,.1,.25,1);
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:auto}
+body{font-family:var(--inter);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.6}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--blue);color:#fff}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+.hero{position:relative;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:0 32px}
+
+.hero-name{
+  font:800 clamp(48px,11vw,140px)/1 var(--geist-mono);
+  letter-spacing:-.06em;color:var(--text);text-align:center;
+  will-change:transform;
+  transform-origin:top left;
+}
+.hero-hl{
+  font:300 clamp(16px,2vw,24px)/1.5 var(--inter);
+  color:var(--muted);text-align:center;
+  margin-top:20px;max-width:420px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .8s .3s var(--apple),transform .8s .3s var(--apple);
+}
+.hero-hl.on{opacity:1;transform:none}
+.hero-hl em{font-weight:500;color:var(--text);font-style:normal}
+.hero-chips{
+  display:flex;gap:8px;margin-top:20px;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .8s .5s var(--apple),transform .8s .5s var(--apple);
+}
+.hero-chips.on{opacity:1;transform:none}
+.hc{font:400 11px/1 var(--mono);letter-spacing:.04em;padding:6px 14px;border:1px solid var(--wire);border-radius:100px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.hc .hd{width:4px;height:4px;border-radius:50%}
+
+/* ================================================================
+   GLASS PILL NAV
+   ================================================================ */
+.glass-pill{
+  position:fixed;top:12px;left:50%;z-index:600;
+  transform:translateX(-50%) translateY(-60px);opacity:0;
+  background:rgba(255,255,255,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(0,0,0,.06);border-radius:100px;
+  padding:8px 12px 8px 18px;display:flex;align-items:center;gap:6px;
+  transition:transform .6s var(--apple),opacity .4s,padding .5s var(--apple);
+  pointer-events:auto;will-change:padding;
+}
+.glass-pill.on{transform:translateX(-50%) translateY(0);opacity:1}
+.gp-name{font:700 11px/1 var(--geist-mono);letter-spacing:-.02em;color:var(--text);margin-right:4px;white-space:nowrap}
+.gp-sep{width:1px;height:12px;background:rgba(0,0,0,.06)}
+.gp-nav a{
+  font:400 12px/1 var(--inter);color:var(--muted);
+  padding:6px 12px;border-radius:100px;
+  transition:color .2s,background .2s;
+}
+.gp-nav a:hover{color:var(--text);background:rgba(0,0,0,.03)}
+.gp-data{font:300 9px/1 var(--mono);letter-spacing:.06em;color:var(--muted2);text-transform:uppercase;white-space:nowrap}
+.gp-dot{width:5px;height:5px;border-radius:50%;background:#34d399;animation:pulse 2s ease-in-out infinite;margin-left:4px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ================================================================
+   DEEP PARALLAX CARDS
+   ================================================================ */
+.work{padding:80px 0 0;max-width:100%}
+.work-header{max-width:800px;margin:0 auto;padding:0 48px 64px;text-align:center}
+.sec-label{font:500 12px/1 var(--inter);letter-spacing:.04em;color:var(--blue);margin-bottom:8px}
+.sec-title{font:600 clamp(28px,4vw,48px)/1.1 var(--inter);letter-spacing:-.02em}
+
+.cards{display:flex;flex-direction:column;gap:0}
+
+/* Each card section */
+.pcard{
+  position:relative;min-height:100vh;overflow:hidden;
+  display:flex;align-items:center;padding:80px 0;
+}
+/* Deep parallax background image — moves at 0.5x */
+.pcard-bg{
+  position:absolute;inset:-20%;
+  background-size:cover;background-position:center;
+  filter:grayscale(60%);opacity:.04;
+  will-change:transform;
+}
+.pcard:nth-child(4n+1) .pcard-bg{background-image:url('https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=1920&q=60')}
+.pcard:nth-child(4n+2) .pcard-bg{background-image:url('https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1920&q=60')}
+.pcard:nth-child(4n+3) .pcard-bg{background-image:url('https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=1920&q=60')}
+.pcard:nth-child(4n) .pcard-bg{background-image:url('https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=1920&q=60')}
+
+.pcard-inner{
+  max-width:1000px;margin:0 auto;padding:0 48px;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;
+  align-items:center;position:relative;z-index:2;
+  opacity:0;transform:translateY(60px);
+  transition:opacity 1s var(--apple),transform 1.2s var(--apple);
+}
+.pcard-inner.vis{opacity:1;transform:none}
+.pcard.reverse .pcard-inner{direction:rtl}
+.pcard.reverse .pcard-inner>*{direction:ltr}
+
+.pc-visual{position:relative}
+/* Mockup with parallax offset */
+.pc-mockup-wrap{
+  position:relative;will-change:transform;
+}
+.pc-mockup{
+  width:min(260px,100%);aspect-ratio:9/16;border-radius:28px;
+  overflow:hidden;margin:0 auto;position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.08);
+  transition:transform .6s var(--apple);
+}
+.pcard:hover .pc-mockup{transform:translateY(-8px) scale(1.01)}
+.pcm{position:absolute;inset:8px;border-radius:21px;display:flex;flex-direction:column;padding:16px 14px;overflow:hidden}
+.pcm-top{display:flex;justify-content:space-between;font:400 9px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:14px}
+.pcm-h{font:600 18px/1.2 var(--inter);color:#fff;margin-bottom:3px}
+.pcm-s{font:400 9px/1 var(--mono);color:rgba(255,255,255,.2)}
+.pcm-bl{display:flex;gap:5px;margin-top:14px}
+.pcm-b{flex:1;height:36px;border-radius:8px;background:rgba(255,255,255,.06)}
+.pcm-rl{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+.pcm-r{height:20px;border-radius:6px;background:rgba(255,255,255,.04)}
+.pcm-ch{display:flex;align-items:flex-end;gap:2px;height:60px;margin-top:auto;padding-top:8px}
+.pcm-cv{flex:1;border-radius:3px 3px 0 0;background:rgba(255,255,255,.06)}
+.pcm-cv.hi{background:rgba(255,255,255,.2)}
+
+.pc-labels{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:16px}
+.pc-lbl{font:500 9px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--blue);border:1px solid rgba(0,113,227,.15);padding:5px 12px;border-radius:100px}
+
+.pc-content{display:flex;flex-direction:column;justify-content:center}
+.pc-num{font:500 11px/1 var(--mono);letter-spacing:.1em;color:var(--blue);margin-bottom:24px}
+.pc-title{font:600 clamp(28px,3.5vw,44px)/1.08 var(--inter);letter-spacing:-.02em;margin-bottom:12px}
+.pc-desc{font:400 15px/1.7 var(--inter);color:var(--muted);margin-bottom:18px;max-width:400px}
+.pc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px}
+.pc-tag{font:400 10px/1 var(--mono);letter-spacing:.04em;padding:5px 12px;border:1px solid var(--wire);border-radius:100px;color:var(--muted)}
+.pc-super{font:500 11px/1 var(--mono);color:var(--blue);display:flex;align-items:center;gap:6px}
+.pc-super::before{content:'';width:5px;height:5px;background:var(--blue);border-radius:50%}
+
+/* Mockup themes */
+.pcard[data-p="mealmatch"] .pc-mockup{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.pcard[data-p="ballrs"] .pc-mockup{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.pcard[data-p="loupe"] .pc-mockup{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.pcard[data-p="jetsweat"] .pc-mockup{background:linear-gradient(150deg,#D4582A,#A84420)}
+
+/* ================================================================
+   AMBIENT TESTIMONIAL OVERLAYS
+   ================================================================ */
+.ambient{
+  padding:80px 48px;max-width:700px;margin:0 auto;text-align:center;
+  opacity:0;transform:translateY(32px);
+  transition:opacity .8s var(--apple),transform .9s var(--apple);
+}
+.ambient.vis{opacity:1;transform:none}
+.amb-line{width:40px;height:2px;background:var(--blue);margin:0 auto 24px;border-radius:1px}
+.amb-quote{font:300 clamp(18px,2.5vw,30px)/1.45 var(--inter);color:var(--text);margin-bottom:16px}
+.amb-attr{font:500 11px/1 var(--mono);letter-spacing:.08em;color:var(--blue)}
+.amb-role{font:400 11px/1 var(--inter);color:var(--muted);margin-top:4px}
+
+/* ================================================================
+   FILM STRIP WITH PARALLAX OFFSET
+   ================================================================ */
+.film-section{padding:120px 48px;max-width:1100px;margin:0 auto}
+.fs-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;margin-top:48px}
+.fs-ed h2{font:600 clamp(24px,3vw,38px)/1.15 var(--inter);letter-spacing:-.02em;margin-bottom:20px}
+.fs-ed h2 em{color:var(--blue);font-style:normal}
+.fs-p{font:400 14px/1.8 var(--inter);color:var(--muted);margin-bottom:14px}
+.fs-tl{display:flex;flex-direction:column;margin-top:20px}
+.ft-i{display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--wire)}
+.ft-era{font:500 10px/1 var(--mono);letter-spacing:.06em;color:var(--blue);flex-shrink:0;width:56px;padding-top:2px}
+.ft-d{font:400 13px/1.6 var(--inter);color:var(--muted)}.ft-d strong{color:var(--text);font-weight:500}
+
+/* Film strip — moves horizontally on vertical scroll */
+.film-strip-wrap{position:relative;overflow:hidden;border-radius:12px}
+.film-strip{display:flex;gap:8px;will-change:transform}
+.film-fr{
+  flex-shrink:0;width:200px;height:270px;border-radius:8px;
+  overflow:hidden;background:var(--surface);
+}
+.film-fr img{width:100%;height:100%;object-fit:cover;filter:grayscale(30%);transition:filter .4s,transform .5s var(--apple)}
+.film-fr:hover img{filter:grayscale(0%);transform:scale(1.04)}
+
+/* ================================================================
+   CONTACT
+   ================================================================ */
+.contact{padding:120px 48px 80px;max-width:700px;margin:0 auto;text-align:center}
+.contact h2{font:600 clamp(28px,4vw,48px)/1.1 var(--inter);letter-spacing:-.02em;margin-bottom:14px}
+.contact p{font:400 15px/1.7 var(--inter);color:var(--muted);max-width:420px;margin:0 auto 36px}
+.cta{
+  display:inline-flex;align-items:center;gap:8px;
+  font:500 14px/1 var(--inter);color:#fff;background:var(--blue);
+  padding:14px 28px;border-radius:100px;border:none;
+  transition:background .3s,transform .3s var(--apple);
+}
+.cta:hover{background:#0077ED;transform:scale(1.03)}
+.cta svg{transition:transform .3s var(--apple)}.cta:hover svg{transform:translateX(3px)}
+.footer{padding:28px 48px;display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:0 auto;border-top:1px solid var(--wire)}
+.footer span{font:400 11px/1 var(--inter);color:var(--muted2)}
+.footer-links{display:flex;gap:16px}
+.footer-links a{font:400 11px/1 var(--inter);color:var(--muted);transition:color .2s}
+.footer-links a:hover{color:var(--blue)}
+
+@media(max-width:900px){
+  .pcard-inner{grid-template-columns:1fr;gap:32px;padding:0 24px}
+  .pcard.reverse .pcard-inner{direction:ltr}
+  .fs-grid{grid-template-columns:1fr;gap:32px}
+  .work-header,.film-section,.contact{padding-left:20px;padding-right:20px}
+  .footer{padding:20px;flex-direction:column;gap:8px}
+  .glass-pill{width:calc(100% - 24px);left:12px;transform:translateX(0) translateY(-60px)}
+  .glass-pill.on{transform:translateX(0) translateY(0)}
+}
+</style>
+</head>
+<body>
+
+<!-- Glass Pill Nav -->
+<nav class="glass-pill" id="glassPill">
+  <span class="gp-name">Paul Taylor</span>
+  <div class="gp-sep"></div>
+  <div class="gp-nav">
+    <a href="#work">Work</a>
+    <a href="#film">Story</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="gp-sep"></div>
+  <span class="gp-data" id="gpData">LOC: BKLYN</span>
+  <div class="gp-dot"></div>
+</nav>
+
+<!-- ================================================================
+     HERO
+     ================================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-name" id="heroName">PAUL TAYLOR</div>
+  <div class="hero-hl" id="heroHl">I design apps. Then I <em>build</em> them.</div>
+  <div class="hero-chips" id="heroChips">
+    <span class="hc"><span class="hd" style="background:#34d399"></span>MealMatch AI</span>
+    <span class="hc"><span class="hd" style="background:var(--blue)"></span>3 Apps Shipped</span>
+    <span class="hc"><span class="hd" style="background:#FF9500"></span>Brooklyn, NY</span>
+  </div>
+</section>
+
+<!-- ================================================================
+     DEEP PARALLAX CARDS
+     ================================================================ -->
+<section class="work" id="work">
+  <div class="work-header">
+    <div class="sec-label">Selected Work</div>
+    <h2 class="sec-title">Projects I've designed,<br>built, and shipped.</h2>
+  </div>
+
+  <div class="cards">
+
+    <div class="pcard" data-p="mealmatch">
+      <div class="pcard-bg"></div>
+      <div class="pcard-inner">
+        <div class="pc-visual">
+          <div class="pc-mockup-wrap"><div class="pc-mockup"><div class="pcm" style="background:linear-gradient(180deg,#2D5A3D,#1a3d28)"><div class="pcm-top"><span>9:41</span><span>MealMatch</span></div><div class="pcm-h">Your Plan</div><div class="pcm-s">3 meals curated</div><div class="pcm-bl"><div class="pcm-b"></div><div class="pcm-b"></div><div class="pcm-b"></div></div><div class="pcm-rl"><div class="pcm-r"></div><div class="pcm-r"></div><div class="pcm-r"></div></div></div></div></div>
+          <div class="pc-labels"><span class="pc-lbl">AI UX</span><span class="pc-lbl">40+ Studies</span><span class="pc-lbl">Design System</span></div>
+        </div>
+        <div class="pc-content">
+          <div class="pc-num">01 — Case Study</div>
+          <h3 class="pc-title">MealMatch AI</h3>
+          <p class="pc-desc">AI-powered meal planning. Scaled a design system from zero and ran 40+ participant research studies to validate core flows.</p>
+          <div class="pc-tags"><span class="pc-tag">AI UX</span><span class="pc-tag">Design Systems</span><span class="pc-tag">Research</span></div>
+          <div class="pc-super">40+ participant studies, full design system</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ambient">
+      <div class="amb-line"></div>
+      <div class="amb-quote">He consistently transformed complex challenges into elegant, user-centered solutions that elevated the entire product experience.</div>
+      <div class="amb-attr">Alex Leite</div>
+      <div class="amb-role">Senior Director, Microsoft 365</div>
+    </div>
+
+    <div class="pcard reverse" data-p="ballrs">
+      <div class="pcard-bg"></div>
+      <div class="pcard-inner">
+        <div class="pc-content">
+          <div class="pc-num">02 — Case Study</div>
+          <h3 class="pc-title">Ballrs</h3>
+          <p class="pc-desc">End-to-end design and engineering. Built with React Native & TypeScript. Designed, coded, and shipped to the App Store.</p>
+          <div class="pc-tags"><span class="pc-tag">React Native</span><span class="pc-tag">TypeScript</span><span class="pc-tag">Full-Stack</span></div>
+          <div class="pc-super">Designed + engineered, live on App Store</div>
+        </div>
+        <div class="pc-visual">
+          <div class="pc-mockup-wrap"><div class="pc-mockup"><div class="pcm" style="background:linear-gradient(180deg,#1A1A2E,#111528)"><div class="pcm-top"><span>9:41</span><span>Ballrs</span></div><div class="pcm-h">Daily Pick</div><div class="pcm-s">Who scored more?</div><div class="pcm-bl"><div class="pcm-b" style="height:60px"></div><div class="pcm-b" style="height:60px"></div></div><div class="pcm-rl"><div class="pcm-r"></div><div class="pcm-r"></div></div></div></div></div>
+          <div class="pc-labels"><span class="pc-lbl">React Native</span><span class="pc-lbl">TypeScript</span><span class="pc-lbl">App Store</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ambient">
+      <div class="amb-line"></div>
+      <div class="amb-quote">He is strong in all areas of UX from research to design, with an aptitude for prototyping. Paul would make a great addition to any team.</div>
+      <div class="amb-attr">Kim Hartford</div>
+      <div class="amb-role">Founding Product Designer</div>
+    </div>
+
+    <div class="pcard" data-p="loupe">
+      <div class="pcard-bg"></div>
+      <div class="pcard-inner">
+        <div class="pc-visual">
+          <div class="pc-mockup-wrap"><div class="pc-mockup"><div class="pcm" style="background:linear-gradient(180deg,#5B4FA0,#3D3578)"><div class="pcm-top"><span>Loupe</span><span>v1.2</span></div><div class="pcm-h">Library</div><div class="pcm-s">2,481 tagged</div><div class="pcm-bl"><div class="pcm-b"></div><div class="pcm-b"></div><div class="pcm-b"></div></div><div class="pcm-rl"><div class="pcm-r"></div><div class="pcm-r"></div><div class="pcm-r"></div><div class="pcm-r"></div></div></div></div></div>
+          <div class="pc-labels"><span class="pc-lbl">SwiftUI</span><span class="pc-lbl">Vision AI</span><span class="pc-lbl">macOS</span></div>
+        </div>
+        <div class="pc-content">
+          <div class="pc-num">03 — Shipped App</div>
+          <h3 class="pc-title">Loupe</h3>
+          <p class="pc-desc">Native Mac app for photographers. Uses local AI to tag and organize your library. No cloud, no subscriptions.</p>
+          <div class="pc-tags"><span class="pc-tag">macOS Native</span><span class="pc-tag">Vision AI</span><span class="pc-tag">SwiftUI</span></div>
+          <div class="pc-super">On-device AI, zero cloud dependency</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ambient">
+      <div class="amb-line"></div>
+      <div class="amb-quote">Paul is a talented UX designer with a unique ability to distill complex features into clean designs and seamless user flows.</div>
+      <div class="amb-attr">Alexandra Dantzig</div>
+      <div class="amb-role">Co-Founder & CEO, JetSweat</div>
+    </div>
+
+    <div class="pcard reverse" data-p="jetsweat">
+      <div class="pcard-bg"></div>
+      <div class="pcard-inner">
+        <div class="pc-content">
+          <div class="pc-num">04 — Case Study</div>
+          <h3 class="pc-title">JetSweat</h3>
+          <p class="pc-desc">Product-led growth for B2B fitness SaaS. 25% more sign-ups, 75% less manual CMS setup. Numbers that move a business.</p>
+          <div class="pc-tags"><span class="pc-tag">Growth</span><span class="pc-tag">SaaS</span><span class="pc-tag">CMS Design</span></div>
+          <div class="pc-super">25% sign-up lift, 75% less manual work</div>
+        </div>
+        <div class="pc-visual">
+          <div class="pc-mockup-wrap"><div class="pc-mockup"><div class="pcm" style="background:linear-gradient(180deg,#D4582A,#a84420)"><div class="pcm-top"><span>9:41</span><span>JetSweat</span></div><div class="pcm-h">Dashboard</div><div class="pcm-s">Analytics</div><div class="pcm-ch"><div class="pcm-cv" style="height:25%"></div><div class="pcm-cv" style="height:45%"></div><div class="pcm-cv hi" style="height:75%"></div><div class="pcm-cv" style="height:38%"></div><div class="pcm-cv hi" style="height:92%"></div><div class="pcm-cv" style="height:55%"></div><div class="pcm-cv hi" style="height:68%"></div></div></div></div></div>
+          <div class="pc-labels"><span class="pc-lbl">+25% Sign-ups</span><span class="pc-lbl">-75% Manual</span><span class="pc-lbl">PLG</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================================================================
+     FILM STRIP
+     ================================================================ -->
+<section class="film-section" id="film">
+  <div class="sec-label" style="text-align:center">The Backstory</div>
+  <h2 class="sec-title" style="text-align:center;max-width:600px;margin:0 auto">How I got here.</h2>
+
+  <div class="fs-grid">
+    <div>
+      <div class="fs-ed">
+        <h2>London PM.<br>Freelance photographer.<br>Now I <em>build</em> products.</h2>
+        <p class="fs-p">Started in product management in London. Followed the camera — shot for Netflix, HBO, National Geographic. Kept asking: why does this app work the way it does?</p>
+        <p class="fs-p">So I learned to answer it myself. Now I design and build apps, with the eye of a photographer and the instincts of someone who's shipped real products.</p>
+      </div>
+      <div class="fs-tl">
+        <div class="ft-i"><span class="ft-era">London</span><span class="ft-d"><strong>Product Manager</strong> — products, roadmaps, metrics.</span></div>
+        <div class="ft-i"><span class="ft-era">Freelance</span><span class="ft-d"><strong>Photographer</strong> — Netflix, HBO, Nat Geo.</span></div>
+        <div class="ft-i"><span class="ft-era">Now</span><span class="ft-d"><strong>Designer & Builder</strong> — shipping apps.</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="film-strip-wrap">
+        <div class="film-strip" id="filmStrip">
+          <div class="film-fr"><img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&h=540&fit=crop" alt="" loading="lazy"></div>
+          <div class="film-fr"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&h=540&fit=crop" alt="" loading="lazy"></div>
+          <div class="film-fr"><img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=400&h=540&fit=crop" alt="" loading="lazy"></div>
+          <div class="film-fr"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=540&fit=crop" alt="" loading="lazy"></div>
+          <div class="film-fr"><img src="https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=400&h=540&fit=crop" alt="" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <h2>Got a project?<br>Let's talk.</h2>
+  <p>Open to full-time roles, contract work, and collaborations. Building something that matters? I want to hear about it.</p>
+  <a href="mailto:hello@paultaylormade.com" class="cta">
+    Get in touch
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</section>
+<footer class="footer">
+  <span>&copy; 2026 Paul Taylor</span>
+  <div class="footer-links">
+    <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+    <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </div>
+</footer>
+
+<!-- Lenis Smooth Scroll (CDN) -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  /* ── LENIS SMOOTH SCROLL ── */
+  const lenis=new Lenis({
+    duration:1.2,
+    easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),
+    orientation:'vertical',
+    smoothWheel:true,
+  });
+  function raf(time){lenis.raf(time);requestAnimationFrame(raf)}
+  requestAnimationFrame(raf);
+
+  /* ── ELEMENTS ── */
+  const heroName=document.getElementById('heroName');
+  const heroHl=document.getElementById('heroHl');
+  const heroChips=document.getElementById('heroChips');
+  const glassPill=document.getElementById('glassPill');
+  const gpData=document.getElementById('gpData');
+  const filmStrip=document.getElementById('filmStrip');
+  const heroSection=document.getElementById('hero');
+  const vh=()=>window.innerHeight;
+
+  // Trigger hero content reveal
+  setTimeout(()=>{heroHl.classList.add('on');heroChips.classList.add('on')},200);
+
+  /* ── IO ── */
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')});
+  },{threshold:.15,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.pcard-inner,.ambient').forEach(el=>obs.observe(el));
+
+  /* ── SCROLL HANDLER (Lenis-driven) ── */
+  let pillShown=false;
+
+  lenis.on('scroll',({scroll,velocity})=>{
+    const sy=scroll;
+
+    /* ── HERO NAME: compress and slide to top-left ── */
+    const heroH=heroSection.offsetHeight;
+    const progress=Math.min(1,sy/(heroH*.5));
+
+    // Scale: 1 → 0.12, translate to top-left
+    const scale=1-progress*.88;
+    const translateX=-progress*(window.innerWidth/2-100);
+    const translateY=-progress*(vh()/2-24);
+    const opacity=1-progress*.5;
+
+    heroName.style.transform=`translate(${translateX}px,${translateY}px) scale(${scale})`;
+    heroName.style.opacity=opacity;
+
+    /* ── GLASS PILL ── */
+    if(progress>.6&&!pillShown){pillShown=true;glassPill.classList.add('on')}
+    else if(progress<=.6&&pillShown){pillShown=false;glassPill.classList.remove('on')}
+
+    // Pill breathing — padding oscillates with scroll
+    const breath=Math.sin(sy*.002)*3;
+    glassPill.style.padding=`${8+breath}px ${12+breath*1.5}px ${8+breath}px ${18+breath*1.5}px`;
+
+    // Data updates
+    const absVel=Math.abs(velocity).toFixed(1);
+    gpData.textContent=parseFloat(absVel)>0.5?`VEL: ${absVel}`:'LOC: BKLYN // STABLE';
+
+    /* ── DEEP PARALLAX: bg images at 0.5x ── */
+    document.querySelectorAll('.pcard-bg').forEach(bg=>{
+      const rect=bg.parentElement.getBoundingClientRect();
+      const offset=(rect.top-vh())*.15;
+      bg.style.transform=`translateY(${offset}px)`;
+    });
+
+    /* ── MOCKUP PARALLAX: moves at 0.5x relative to card ── */
+    document.querySelectorAll('.pc-mockup-wrap').forEach(wrap=>{
+      const rect=wrap.closest('.pcard').getBoundingClientRect();
+      const cardCenter=rect.top+rect.height/2;
+      const viewCenter=vh()/2;
+      const offset=(cardCenter-viewCenter)*.12;
+      wrap.style.transform=`translateY(${-offset}px)`;
+    });
+
+    /* ── FILM STRIP PARALLAX ── */
+    if(filmStrip){
+      const filmRect=document.getElementById('film').getBoundingClientRect();
+      const filmOffset=(vh()-filmRect.top)*.15;
+      filmStrip.style.transform=`translateX(${-Math.max(0,filmOffset)}px)`;
+    }
+  });
+
+  /* ── SMOOTH NAV ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      e.preventDefault();
+      const t=document.querySelector(a.getAttribute('href'));
+      if(t)lenis.scrollTo(t,{offset:0});
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

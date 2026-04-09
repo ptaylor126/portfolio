@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — Designer & Builder</title>
+<meta name="description" content="Product Designer in Brooklyn. I design apps. Then I build them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#FFFFFF;--cream:#FAF8F5;--warm:#F4F0EB;--border:#D9D0C4;
+  --accent:#D4582A;--text:#1A1A1A;--muted:#A09890;--muted2:#C8C0B8;
+  --gara:'Cormorant Garamond',Georgia,serif;
+  --mono:'JetBrains Mono','SF Mono',monospace;
+  --heavy:cubic-bezier(.22,1,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:auto}
+body{font-family:var(--mono);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.6;cursor:none}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--accent);color:#fff}
+
+/* ── CURSOR: Lens flare / flash ── */
+.lens{
+  position:fixed;width:280px;height:280px;border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(255,255,255,.95) 0%,rgba(255,255,255,.7) 25%,rgba(255,255,255,0) 70%);
+  mix-blend-mode:normal;
+  will-change:transform;
+  transition:width .3s,height .3s;
+}
+.lens-dot{
+  position:fixed;width:6px;height:6px;background:var(--accent);
+  border-radius:50%;pointer-events:none;z-index:10001;
+  transform:translate(-50%,-50%);will-change:transform;
+  box-shadow:0 0 8px rgba(212,88,42,.4);
+}
+/* On hero: lens is revealing agent */
+.lens.hero-mode{
+  background:radial-gradient(circle,transparent 0%,transparent 40%,rgba(255,255,255,.92) 65%,rgba(255,255,255,.98) 100%);
+  width:360px;height:360px;
+  mix-blend-mode:normal;
+}
+@media(max-width:900px){.lens,.lens-dot{display:none}body{cursor:auto}}
+
+/* ================================================================
+   HERO — THE FLASH
+   ================================================================ */
+.hero{
+  position:relative;height:100vh;overflow:hidden;
+  background:var(--bg);
+}
+/* Hidden B&W photo underneath */
+.hero-photo{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1920&q=80') center/cover;
+  filter:grayscale(90%) contrast(1.2);
+}
+.hero-grain{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;opacity:.2;pointer-events:none;
+}
+/* White overlay that the lens "erases" */
+.hero-white{
+  position:absolute;inset:0;background:var(--bg);
+  /* The lens cursor punches through this via mix-blend-mode on the lens */
+  z-index:2;
+  pointer-events:none;
+}
+
+/* Identity centered */
+.hero-identity{
+  position:absolute;inset:0;z-index:3;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.hero-name{
+  font:300 clamp(48px,10vw,140px)/1 var(--gara);
+  letter-spacing:-.02em;color:var(--text);
+  position:relative;
+  /* Refraction handled by JS canvas behind text */
+}
+.hero-name-inner{position:relative;z-index:2}
+
+.hero-bottom{
+  position:absolute;bottom:40px;left:0;right:0;z-index:4;
+  display:flex;justify-content:space-between;align-items:flex-end;
+  padding:0 48px;pointer-events:none;
+}
+.hero-hl{
+  font:400 11px/1.6 var(--mono);color:var(--muted);
+  letter-spacing:.04em;
+}
+.hero-loc{
+  font:300 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:6px;
+}
+.hero-loc-dot{width:5px;height:5px;border-radius:50%;background:#34d399;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ================================================================
+   APERTURE NAV (floating glass pill)
+   ================================================================ */
+.ap-nav{
+  position:fixed;top:20px;left:50%;z-index:600;
+  transform:translateX(-50%);
+  background:rgba(255,255,255,.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:100px;
+  padding:8px 24px;
+  display:flex;align-items:center;gap:16px;
+  font:400 10px/1 var(--mono);color:var(--muted);
+  letter-spacing:.06em;
+  will-change:width;
+  transition:padding .5s var(--heavy),opacity .3s;
+  opacity:0;
+}
+.ap-nav.on{opacity:1}
+.ap-nav a{color:var(--muted);transition:color .2s;cursor:none;padding:4px 0}
+.ap-nav a:hover,.ap-nav a.active{color:var(--text)}
+.ap-sep{width:1px;height:12px;background:var(--border)}
+.ap-data{font:300 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);font-variant-numeric:tabular-nums}
+
+/* ================================================================
+   WORK — DEPTH-OF-FIELD STACK
+   ================================================================ */
+.work{padding:120px 0;max-width:900px;margin:0 auto}
+.work-header{padding:0 48px 80px}
+.sec-label{font:500 9px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.sec-label::before{content:'';width:20px;height:1px;background:var(--accent)}
+.sec-title{font:400 clamp(28px,4vw,48px)/1.15 var(--gara)}
+
+.dof-stack{display:flex;flex-direction:column;gap:48px;padding:0 48px}
+
+/* Slide card */
+.slide-card{
+  position:relative;border-radius:12px;overflow:visible;
+  background:var(--cream);border:1px solid rgba(217,208,196,.4);
+  padding:4px;
+  /* Out-of-focus by default */
+  filter:blur(6px);
+  opacity:.5;
+  transform:scale(.97);
+  transition:filter .7s var(--heavy),opacity .7s var(--heavy),transform .7s var(--heavy);
+  will-change:filter,transform;
+}
+.slide-card.focused{
+  filter:blur(0);opacity:1;transform:scale(1);
+}
+.slide-inner{
+  display:grid;grid-template-columns:1.1fr 1fr;
+  border-radius:10px;overflow:hidden;
+  min-height:380px;
+}
+.slide-visual{
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.slide-mockup{
+  width:180px;height:250px;border-radius:22px;overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.12);position:relative;
+  transition:transform .6s var(--heavy);z-index:2;
+}
+.slide-card.focused:hover .slide-mockup{transform:translateY(-6px) rotate(-1.5deg) scale(1.03)}
+.sm-in{position:absolute;inset:7px;border-radius:16px;display:flex;flex-direction:column;padding:12px 10px;overflow:hidden}
+.sm-top{display:flex;justify-content:space-between;font:400 7px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:10px}
+.sm-h{font:400 14px/1.2 var(--gara);color:#fff;margin-bottom:2px}
+.sm-s{font:400 7px/1 var(--mono);color:rgba(255,255,255,.2)}
+.sm-bl{display:flex;gap:4px;margin-top:10px}
+.sm-b{flex:1;height:30px;border-radius:5px;background:rgba(255,255,255,.05)}
+.sm-rl{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.sm-r{height:16px;border-radius:4px;background:rgba(255,255,255,.04)}
+.sm-ch{display:flex;align-items:flex-end;gap:2px;height:50px;margin-top:auto;padding-top:6px}
+.sm-cv{flex:1;border-radius:2px 2px 0 0;background:rgba(255,255,255,.06)}
+.sm-cv.hi{background:rgba(255,255,255,.22)}
+
+/* Superpower tags on visual */
+.slide-tags-overlay{
+  position:absolute;bottom:16px;left:16px;z-index:3;
+  display:flex;flex-direction:column;gap:4px;
+}
+.sto{font:500 7px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);background:rgba(0,0,0,.3);backdrop-filter:blur(6px);padding:4px 8px;border-radius:3px;width:fit-content}
+
+.slide-content{padding:32px 28px;display:flex;flex-direction:column;justify-content:center}
+.sc-num{font:400 9px/1 var(--mono);letter-spacing:.12em;color:var(--muted);margin-bottom:20px}
+.sc-title{font:400 28px/1.1 var(--gara);margin-bottom:8px}
+.sc-desc{font:400 12px/1.7 var(--mono);color:var(--muted);margin-bottom:16px}
+.sc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.sc-tag{font:400 8px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(217,208,196,.5);border-radius:100px;color:var(--muted)}
+.sc-super{font:500 10px/1 var(--mono);color:var(--accent);display:flex;align-items:center;gap:6px}
+.sc-super::before{content:'';width:4px;height:4px;background:var(--accent);border-radius:50%}
+
+/* Etched testimonial on card frame */
+.etched{
+  padding:12px 20px;font:300 11px/1.6 var(--gara);font-style:italic;
+  color:rgba(26,26,26,.08);
+  transition:color .6s var(--heavy);
+  text-align:center;
+}
+.slide-card.focused .etched{color:rgba(26,26,26,.3)}
+.etched-attr{font:500 8px/1 var(--mono);font-style:normal;letter-spacing:.1em;text-transform:uppercase;color:rgba(212,88,42,.15);margin-top:6px;transition:color .6s}
+.slide-card.focused .etched-attr{color:rgba(212,88,42,.5)}
+
+/* Card themes */
+.slide-card[data-p="mealmatch"] .slide-visual{background:linear-gradient(135deg,#e8f0eb,#d4e0d8)}
+.slide-card[data-p="mealmatch"] .slide-mockup{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.slide-card[data-p="ballrs"] .slide-visual{background:linear-gradient(135deg,#e0e3ea,#cdd2dc)}
+.slide-card[data-p="ballrs"] .slide-mockup{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.slide-card[data-p="loupe"] .slide-visual{background:linear-gradient(135deg,#e4e0ee,#d4d0e2)}
+.slide-card[data-p="loupe"] .slide-mockup{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.slide-card[data-p="jetsweat"] .slide-visual{background:linear-gradient(135deg,#efe6df,#e0d4cc)}
+.slide-card[data-p="jetsweat"] .slide-mockup{background:linear-gradient(150deg,#D4582A,#A84420)}
+
+/* ================================================================
+   CONTACT SHEET — SCANNING GRID
+   ================================================================ */
+.contact-sheet{padding:160px 48px;max-width:1100px;margin:0 auto}
+.cs-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:6px;
+  margin-top:60px;position:relative;
+}
+/* Scan laser line */
+.cs-grid::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(212,88,42,.6),transparent);
+  box-shadow:0 0 12px rgba(212,88,42,.3);
+  animation:scanLine 6s ease-in-out infinite;
+  z-index:5;pointer-events:none;
+}
+@keyframes scanLine{0%{top:0}50%{top:100%}100%{top:0}}
+
+.cs-frame{
+  aspect-ratio:3/4;overflow:hidden;position:relative;
+  background:var(--warm);border:3px solid var(--cream);
+  box-shadow:0 1px 4px rgba(0,0,0,.04);
+}
+.cs-frame img{
+  width:100%;height:100%;object-fit:cover;
+  filter:grayscale(60%) contrast(1.1);
+  transition:filter .5s;
+}
+.cs-frame:hover img{filter:grayscale(0%) contrast(1.05)}
+.cs-label{
+  position:absolute;bottom:4px;left:4px;
+  font:400 6px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(26,26,26,.4);
+}
+/* Sprocket holes */
+.cs-frame::before{
+  content:'';position:absolute;top:4px;right:4px;
+  width:4px;height:4px;border-radius:50%;
+  border:1px solid rgba(26,26,26,.1);z-index:2;
+}
+
+/* ================================================================
+   BACKSTORY
+   ================================================================ */
+.backstory{padding:0 48px 160px;max-width:900px;margin:0 auto}
+.bs-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.bs-ed h2{font:400 clamp(24px,3vw,38px)/1.2 var(--gara);margin-bottom:24px}
+.bs-ed h2 em{font-style:italic;color:var(--accent)}
+.bs-txt{font:400 12px/1.8 var(--mono);color:var(--muted);margin-bottom:16px}
+.bs-tl{display:flex;flex-direction:column;margin-top:24px}
+.bt-i{display:flex;gap:16px;padding:14px 0;border-top:1px solid rgba(217,208,196,.3)}
+.bt-era{font:400 9px/1 var(--mono);letter-spacing:.1em;color:var(--accent);flex-shrink:0;width:60px;padding-top:2px}
+.bt-d{font:400 11px/1.6 var(--mono);color:var(--muted)}.bt-d strong{color:var(--text);font-weight:500}
+
+/* ================================================================
+   CONTACT
+   ================================================================ */
+.contact{padding:120px 48px 80px;max-width:700px;margin:0 auto;text-align:center}
+.contact h2{font:400 clamp(28px,4vw,52px)/1.1 var(--gara);margin-bottom:16px}
+.contact p{font:400 12px/1.8 var(--mono);color:var(--muted);max-width:400px;margin:0 auto 40px}
+.cta{
+  display:inline-flex;align-items:center;gap:10px;
+  font:500 12px/1 var(--mono);color:var(--accent);
+  border:1.5px solid var(--accent);padding:14px 32px;border-radius:100px;
+  transition:background .3s,color .3s,transform .3s var(--spring);cursor:none;
+}
+.cta:hover{background:var(--accent);color:#fff;transform:scale(1.04)}
+.cta svg{transition:transform .3s var(--spring)}.cta:hover svg{transform:translateX(4px)}
+.footer{
+  padding:28px 48px;display:flex;justify-content:space-between;align-items:center;
+  max-width:1100px;margin:0 auto;border-top:1px solid rgba(217,208,196,.3);
+}
+.footer span{font:400 10px/1 var(--mono);color:var(--muted2)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font:400 10px/1 var(--mono);color:var(--muted);transition:color .3s;cursor:none}
+.footer-links a:hover{color:var(--accent)}
+
+/* ── REVEAL ── */
+[data-r]{opacity:0;transform:translateY(40px) scale(.96);transition:opacity .9s var(--heavy),transform 1s var(--heavy);will-change:transform,opacity}
+[data-r].vis{opacity:1;transform:none}
+[data-r="d1"]{transition-delay:.1s}[data-r="d2"]{transition-delay:.2s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .slide-inner{grid-template-columns:1fr}
+  .slide-visual{height:260px}
+  .work,.contact-sheet,.backstory{padding-left:20px;padding-right:20px}
+  .work-header{padding:0 20px 60px}
+  .hero-bottom{padding:0 20px}
+  .cs-grid{grid-template-columns:repeat(3,1fr)}
+  .bs-grid{grid-template-columns:1fr;gap:40px}
+  .contact{padding:80px 20px 60px}
+  .footer{padding:20px;flex-direction:column;gap:10px}
+  .ap-nav{width:calc(100% - 32px);left:16px;transform:none;justify-content:center}
+}
+@media(max-width:600px){
+  .cs-grid{grid-template-columns:repeat(2,1fr)}
+  .dof-stack{padding:0 20px;gap:32px}
+}
+</style>
+</head>
+<body>
+
+<!-- Lens cursor -->
+<div class="lens hero-mode" id="lens"></div>
+<div class="lens-dot" id="lensDot"></div>
+
+<!-- ================================================================
+     APERTURE NAV
+     ================================================================ -->
+<nav class="ap-nav" id="apNav">
+  <a href="#work" data-cursor="link">Work</a>
+  <a href="#contact-sheet" data-cursor="link">Archive</a>
+  <a href="#contact" data-cursor="link">Contact</a>
+  <div class="ap-sep"></div>
+  <span class="ap-data" id="apFocal">f/1.4</span>
+  <div class="ap-sep"></div>
+  <span class="ap-data" id="apSubject">HERO</span>
+</nav>
+
+<!-- ================================================================
+     HERO — THE FLASH
+     ================================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-photo"></div>
+  <div class="hero-grain"></div>
+  <!-- White overlay — lens reveals the photo underneath by being transparent where cursor is -->
+  <div class="hero-white" id="heroWhite"></div>
+
+  <div class="hero-identity">
+    <div class="hero-name" id="heroName">
+      <span class="hero-name-inner">PAUL TAYLOR</span>
+    </div>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="hero-hl">I design apps. Then I build them.</div>
+    <div class="hero-loc"><div class="hero-loc-dot"></div>Brooklyn, NY</div>
+  </div>
+</section>
+
+<!-- ================================================================
+     WORK — DEPTH-OF-FIELD STACK
+     ================================================================ -->
+<section class="work" id="work">
+  <div class="work-header">
+    <div class="sec-label">Selected Work</div>
+    <h2 class="sec-title">Projects I've designed,<br>built, and shipped.</h2>
+  </div>
+
+  <div class="dof-stack">
+
+    <div class="slide-card" data-p="mealmatch" data-subject="MEALMATCH AI">
+      <div class="slide-inner">
+        <div class="slide-visual">
+          <div class="slide-mockup"><div class="sm-in" style="background:linear-gradient(180deg,#2D5A3D,#1a3d28)">
+            <div class="sm-top"><span>9:41</span><span>MealMatch</span></div>
+            <div class="sm-h">Your Plan</div><div class="sm-s">3 meals curated</div>
+            <div class="sm-bl"><div class="sm-b"></div><div class="sm-b"></div><div class="sm-b"></div></div>
+            <div class="sm-rl"><div class="sm-r"></div><div class="sm-r"></div><div class="sm-r"></div></div>
+          </div></div>
+          <div class="slide-tags-overlay"><span class="sto">AI UX & RESEARCH</span><span class="sto">40+ PARTICIPANTS</span><span class="sto">DESIGN SYSTEM LEAD</span></div>
+        </div>
+        <div class="slide-content">
+          <div class="sc-num">01 — Case Study</div>
+          <h3 class="sc-title">MealMatch AI</h3>
+          <p class="sc-desc">AI-powered meal planning. Scaled a design system from zero. Ran 40+ participant research studies.</p>
+          <div class="sc-tags"><span class="sc-tag">AI UX</span><span class="sc-tag">Design Systems</span><span class="sc-tag">Research</span></div>
+          <div class="sc-super">40+ participant studies, full design system</div>
+        </div>
+      </div>
+      <div class="etched">
+        "He consistently transformed complex challenges into elegant, user-centered solutions that elevated the entire product experience."
+        <div class="etched-attr">Alex Leite — Sr. Director, Microsoft 365</div>
+      </div>
+    </div>
+
+    <div class="slide-card" data-p="ballrs" data-subject="BALLRS">
+      <div class="slide-inner">
+        <div class="slide-visual">
+          <div class="slide-mockup"><div class="sm-in" style="background:linear-gradient(180deg,#1A1A2E,#111528)">
+            <div class="sm-top"><span>9:41</span><span>Ballrs</span></div>
+            <div class="sm-h">Daily Pick</div><div class="sm-s">Who scored more?</div>
+            <div class="sm-bl"><div class="sm-b" style="height:50px"></div><div class="sm-b" style="height:50px"></div></div>
+            <div class="sm-rl"><div class="sm-r"></div><div class="sm-r"></div></div>
+          </div></div>
+          <div class="slide-tags-overlay"><span class="sto">REACT NATIVE / TS</span><span class="sto">APP STORE LIVE</span></div>
+        </div>
+        <div class="slide-content">
+          <div class="sc-num">02 — Case Study</div>
+          <h3 class="sc-title">Ballrs</h3>
+          <p class="sc-desc">End-to-end design and engineering. React Native & TypeScript. Designed, coded, shipped.</p>
+          <div class="sc-tags"><span class="sc-tag">React Native</span><span class="sc-tag">TypeScript</span><span class="sc-tag">Full-Stack</span></div>
+          <div class="sc-super">Designed + engineered, live on App Store</div>
+        </div>
+      </div>
+      <div class="etched">
+        "He is strong in all areas of UX from research to design, with an aptitude for prototyping."
+        <div class="etched-attr">Kim Hartford — Founding Product Designer</div>
+      </div>
+    </div>
+
+    <div class="slide-card" data-p="loupe" data-subject="LOUPE">
+      <div class="slide-inner">
+        <div class="slide-visual">
+          <div class="slide-mockup"><div class="sm-in" style="background:linear-gradient(180deg,#5B4FA0,#3D3578)">
+            <div class="sm-top"><span>Loupe</span><span>v1.2</span></div>
+            <div class="sm-h">Library</div><div class="sm-s">2,481 tagged</div>
+            <div class="sm-bl"><div class="sm-b"></div><div class="sm-b"></div><div class="sm-b"></div></div>
+            <div class="sm-rl"><div class="sm-r"></div><div class="sm-r"></div><div class="sm-r"></div><div class="sm-r"></div></div>
+          </div></div>
+          <div class="slide-tags-overlay"><span class="sto">SWIFTUI / VISION</span><span class="sto">ON-DEVICE AI</span><span class="sto">NATIVE MAC</span></div>
+        </div>
+        <div class="slide-content">
+          <div class="sc-num">03 — Shipped App</div>
+          <h3 class="sc-title">Loupe</h3>
+          <p class="sc-desc">Native Mac app for photographers. Local AI tags your library. No cloud, no subscriptions.</p>
+          <div class="sc-tags"><span class="sc-tag">macOS</span><span class="sc-tag">Vision AI</span><span class="sc-tag">SwiftUI</span></div>
+          <div class="sc-super">On-device AI, zero cloud dependency</div>
+        </div>
+      </div>
+      <div class="etched">
+        "He excels in team settings, always welcoming diverse perspectives and ensuring everyone feels valued and heard."
+        <div class="etched-attr">Joella Degollado — Experience Designer</div>
+      </div>
+    </div>
+
+    <div class="slide-card" data-p="jetsweat" data-subject="JETSWEAT">
+      <div class="slide-inner">
+        <div class="slide-visual">
+          <div class="slide-mockup"><div class="sm-in" style="background:linear-gradient(180deg,#D4582A,#a84420)">
+            <div class="sm-top"><span>9:41</span><span>JetSweat</span></div>
+            <div class="sm-h">Dashboard</div><div class="sm-s">Analytics</div>
+            <div class="sm-ch"><div class="sm-cv" style="height:25%"></div><div class="sm-cv" style="height:45%"></div><div class="sm-cv hi" style="height:75%"></div><div class="sm-cv" style="height:38%"></div><div class="sm-cv hi" style="height:92%"></div><div class="sm-cv" style="height:55%"></div><div class="sm-cv hi" style="height:68%"></div></div>
+          </div></div>
+          <div class="slide-tags-overlay"><span class="sto">PRODUCT-LED GROWTH</span><span class="sto">+25% SIGN-UPS</span></div>
+        </div>
+        <div class="slide-content">
+          <div class="sc-num">04 — Case Study</div>
+          <h3 class="sc-title">JetSweat</h3>
+          <p class="sc-desc">Product-led growth for B2B fitness SaaS. 25% more sign-ups, 75% less manual setup.</p>
+          <div class="sc-tags"><span class="sc-tag">Growth</span><span class="sc-tag">SaaS</span><span class="sc-tag">CMS</span></div>
+          <div class="sc-super">25% sign-up lift, 75% less manual work</div>
+        </div>
+      </div>
+      <div class="etched">
+        "Paul is a talented UX designer with a unique ability to distill complex features into clean designs and seamless user flows."
+        <div class="etched-attr">Alexandra Dantzig — CEO, JetSweat</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================================================================
+     CONTACT SHEET + BACKSTORY
+     ================================================================ -->
+<section class="contact-sheet" id="contact-sheet">
+  <div class="sec-label">The Contact Sheet</div>
+  <h2 class="sec-title" data-r>London PM. NYC Photographer.<br>Now I build products.</h2>
+
+  <div class="cs-grid" data-r="d1">
+    <div class="cs-frame"><img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="cs-label">NYC 001</span></div>
+    <div class="cs-frame"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="cs-label">BTS 002</span></div>
+    <div class="cs-frame"><img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="cs-label">EDT 003</span></div>
+    <div class="cs-frame"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="cs-label">LND 004</span></div>
+    <div class="cs-frame"><img src="https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="cs-label">STR 005</span></div>
+    <div class="cs-frame"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="cs-label">PRT 006</span></div>
+    <div class="cs-frame"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="cs-label">PRT 007</span></div>
+    <div class="cs-frame"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="cs-label">EDT 008</span></div>
+    <div class="cs-frame"><img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="cs-label">SET 009</span></div>
+    <div class="cs-frame"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=400&fit=crop" alt="" loading="lazy"><span class="cs-label">HBO 010</span></div>
+  </div>
+</section>
+
+<section class="backstory" id="backstory">
+  <div class="bs-grid">
+    <div data-r>
+      <div class="bs-ed">
+        <h2>From the lens<br>to the <em>screen</em>.</h2>
+        <p class="bs-txt">Started in product management in London. Followed the camera — shot for Netflix, HBO, National Geographic. Kept asking: why does this app work the way it does?</p>
+        <p class="bs-txt">So I learned to answer it myself. Now I design and build apps, with the eye of a photographer and the instincts of someone who's shipped real products.</p>
+      </div>
+    </div>
+    <div data-r="d1">
+      <div class="bs-tl">
+        <div class="bt-i"><span class="bt-era">London</span><span class="bt-d"><strong>Product Manager</strong> — learned how products ship, what breaks, why metrics matter.</span></div>
+        <div class="bt-i"><span class="bt-era">Freelance</span><span class="bt-d"><strong>Photographer</strong> — Netflix, HBO, Nat Geo. Trained my eye for composition and narrative.</span></div>
+        <div class="bt-i"><span class="bt-era">Now</span><span class="bt-d"><strong>Designer & Builder</strong> — designing intelligent experiences, shipping my own apps.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     CONTACT
+     ================================================================ -->
+<section class="contact" id="contact">
+  <div class="sec-label" style="justify-content:center">Get In Touch</div>
+  <h2 data-r>Got a project?<br>Let's talk.</h2>
+  <p data-r="d1">Open to full-time roles, contract work, and collaborations. Building something that matters? I want to hear about it.</p>
+  <a href="mailto:hello@paultaylormade.com" class="cta" data-cursor="link" data-r="d2">
+    hello@paultaylormade.com
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </a>
+</section>
+<footer class="footer">
+  <span>&copy; 2026 Paul Taylor. Hand-built.</span>
+  <div class="footer-links">
+    <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer" data-cursor="link">LinkedIn</a>
+    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" data-cursor="link">Instagram</a>
+    <a href="https://github.com" target="_blank" rel="noopener noreferrer" data-cursor="link">GitHub</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── LENS CURSOR ── */
+  const lens=document.getElementById('lens');
+  const dot=document.getElementById('lensDot');
+  const heroWhite=document.getElementById('heroWhite');
+  const heroSection=document.getElementById('hero');
+  let lx=0,ly=0,dx=0,dy=0,mx=0,my=0;
+
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+
+  (function tick(){
+    // Heavy glass inertia
+    lx+=(mx-lx)*.07;ly+=(my-ly)*.07;
+    dx+=(mx-dx)*.2;dy+=(my-dy)*.2;
+    lens.style.transform=`translate(${lx}px,${ly}px) translate(-50%,-50%)`;
+    dot.style.transform=`translate(${dx}px,${dy}px) translate(-50%,-50%)`;
+
+    // Hero white layer: cut a hole at cursor position
+    const heroRect=heroSection.getBoundingClientRect();
+    if(heroRect.bottom>0&&heroRect.top<window.innerHeight){
+      const relX=lx;const relY=ly-heroRect.top;
+      heroWhite.style.background=`radial-gradient(circle 160px at ${relX}px ${relY}px, transparent 0%, transparent 60%, white 80%, white 100%)`;
+    }
+
+    requestAnimationFrame(tick);
+  })();
+
+  // Switch lens mode when leaving hero
+  const apNav=document.getElementById('apNav');
+  const apFocal=document.getElementById('apFocal');
+  const apSubject=document.getElementById('apSubject');
+  let inHero=true;
+
+  /* ── DOF FOCUS with IntersectionObserver ── */
+  const cards=document.querySelectorAll('.slide-card');
+  const focusObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting&&e.intersectionRatio>.4){
+        // Focus this card
+        cards.forEach(c=>c.classList.remove('focused'));
+        e.target.classList.add('focused');
+        // Update nav subject
+        const subj=e.target.getAttribute('data-subject');
+        if(subj)apSubject.textContent=subj;
+      }
+    });
+  },{threshold:[.4,.6,.8],rootMargin:'-20% 0px -20% 0px'});
+  cards.forEach(c=>focusObs.observe(c));
+
+  /* ── REVEAL ── */
+  const revObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')});
+  },{threshold:.15,rootMargin:'0px 0px -10% 0px'});
+  document.querySelectorAll('[data-r]').forEach(el=>revObs.observe(el));
+
+  /* ── SCROLL HANDLER ── */
+  const sections=document.querySelectorAll('section[id]');
+  const docH=()=>document.documentElement.scrollHeight-window.innerHeight;
+
+  function onScroll(){
+    const sy=window.scrollY;
+    const pct=Math.min(1,sy/docH());
+
+    // Focal length: f/1.4 → f/22 based on scroll
+    const focalNum=(1.4+pct*20.6).toFixed(1);
+    apFocal.textContent='f/'+focalNum;
+
+    // Nav breathing: padding changes with scroll
+    const breath=Math.sin(sy*.003)*4;
+    apNav.style.padding=`${8+breath}px ${24+breath*2}px`;
+
+    // Show nav after hero
+    const heroBottom=heroSection.getBoundingClientRect().bottom;
+    if(heroBottom<window.innerHeight*.7){
+      apNav.classList.add('on');
+      if(inHero){inHero=false;lens.classList.remove('hero-mode')}
+    }else{
+      apNav.classList.remove('on');
+      if(!inHero){inHero=true;lens.classList.add('hero-mode')}
+    }
+
+    // Active section for subject
+    let active='HERO';
+    sections.forEach(s=>{
+      if(s.getBoundingClientRect().top<window.innerHeight*.45){
+        const id=s.id;
+        if(id==='work')active='WORK';
+        else if(id==='contact-sheet')active='ARCHIVE';
+        else if(id==='contact')active='CONTACT';
+      }
+    });
+    // Only update if no project is focused
+    if(!document.querySelector('.slide-card.focused')){
+      apSubject.textContent=active;
+    }
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ── SMOOTH NAV ── */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      e.preventDefault();
+      const t=document.querySelector(a.getAttribute('href'));
+      if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+
+  /* ── NAME REFRACTION (subtle distort on mousemove) ── */
+  const heroName=document.getElementById('heroName');
+  document.addEventListener('mousemove',e=>{
+    const heroRect=heroSection.getBoundingClientRect();
+    if(heroRect.bottom<0)return;
+    const cx=window.innerWidth/2;const cy=window.innerHeight/2;
+    const distX=(e.clientX-cx)/cx;const distY=(e.clientY-cy)/cy;
+    const skewX=distX*2;const skewY=distY*1;
+    const scale=1+Math.abs(distX)*.02;
+    heroName.style.transform=`skew(${skewX}deg,${skewY}deg) scale(${scale})`;
+  });
+
+})();
+</script>
+</body>
+</html>

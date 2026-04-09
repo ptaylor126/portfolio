@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Taylor — Product Designer & Builder</title>
+<meta name="description" content="Lead Product Designer & Builder specializing in AI systems and high-fidelity mobile execution. Currently leading design at MealMatch AI. Based in Brooklyn.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Geist+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F6F1EB;--text:#1A1A1A;--navy:#002366;--text2:#6B6359;
+  --muted:#918A82;--muted2:#C8C0B8;--line:rgba(26,26,26,.06);
+  --sidebar:#FAFAF7;--green:#2D7A4F;
+  --serif:'DM Serif Display',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'Geist Mono','JetBrains Mono',monospace;
+  --heavy:cubic-bezier(.22,1,.36,1);
+}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:var(--sans);font-weight:400;color:var(--text);background:var(--bg);overflow-x:hidden;line-height:1.6}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
+::selection{background:var(--navy);color:#fff}
+
+/* ================================================================
+   HERO — STROKE FILL + SPLIT
+   ================================================================ */
+.hero{position:relative;height:300vh}
+.hero-sticky{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+}
+.hero-wrap{position:relative;z-index:3;text-align:center;max-width:720px;padding:0 32px}
+.hero-name{
+  font-family:var(--serif);font-size:clamp(64px,15vw,200px);
+  line-height:.85;letter-spacing:-.04em;
+  color:transparent;-webkit-text-stroke:1px var(--text);
+}
+.hero-fill{
+  position:absolute;inset:0;
+  font-family:var(--serif);font-size:clamp(64px,15vw,200px);
+  line-height:.85;letter-spacing:-.04em;
+  color:var(--navy);-webkit-text-stroke:0;
+  clip-path:inset(0 100% 0 0);will-change:clip-path;pointer-events:none;
+}
+.hero-strapline{
+  font:400 clamp(13px,1.3vw,16px)/1.7 var(--sans);
+  color:var(--text2);margin-top:24px;max-width:540px;margin-left:auto;margin-right:auto;
+}
+.hero-strapline strong{color:var(--text);font-weight:500}
+.hero-split-top,.hero-split-bot{
+  position:absolute;left:0;right:0;background:var(--bg);z-index:2;
+  will-change:transform;pointer-events:none;
+}
+.hero-split-top{top:0;height:50%}
+.hero-split-bot{bottom:0;height:50%}
+
+/* ================================================================
+   MANIFEST SIDEBAR
+   ================================================================ */
+.manifest{
+  position:fixed;top:0;left:0;bottom:0;z-index:500;
+  width:240px;background:var(--sidebar);
+  border-right:1px solid var(--line);
+  padding:20px 0;overflow-y:auto;
+  transform:translateX(-100%);opacity:0;
+  transition:transform .6s var(--heavy),opacity .4s;
+  display:flex;flex-direction:column;
+}
+.manifest.on{transform:translateX(0);opacity:1}
+
+.mf-head{padding:0 20px 16px;border-bottom:1px solid var(--line)}
+.mf-name{font:700 14px/1 var(--sans);color:var(--text);margin-bottom:3px}
+.mf-role{font:400 10px/1.4 var(--sans);color:var(--text2)}
+
+.mf-group{padding:14px 0}
+.mf-group-title{font:600 8px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 20px;margin-bottom:8px}
+
+.mf-row{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 20px;cursor:default;transition:background .12s;position:relative;
+}
+.mf-row:hover{background:rgba(0,35,102,.02)}
+.mf-row.active{background:rgba(0,35,102,.04)}
+.mf-row.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--navy)}
+.mf-tag{
+  font:600 7px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 7px;border-radius:3px;flex-shrink:0;
+}
+.mf-tag.lead{background:rgba(0,35,102,.06);color:var(--navy)}
+.mf-tag.shipped{background:rgba(45,122,79,.06);color:var(--green)}
+.mf-tag.research{background:rgba(212,88,42,.06);color:#D4582A}
+.mf-tag.history{background:rgba(26,26,26,.04);color:var(--muted)}
+.mf-label{font:400 12px/1 var(--sans);color:var(--text)}
+.mf-row.active .mf-label{color:var(--navy);font-weight:500}
+.mf-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 4px rgba(45,122,79,.3);margin-left:auto;flex-shrink:0;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+.mf-foot{margin-top:auto;padding:14px 20px;border-top:1px solid var(--line)}
+.mf-foot-line{font:300 9px/1.5 var(--mono);color:var(--muted);display:flex;align-items:center;gap:5px}
+.mf-foot-dot{width:4px;height:4px;border-radius:50%;background:var(--green)}
+
+/* ================================================================
+   MAIN
+   ================================================================ */
+.main{transition:margin-left .6s var(--heavy)}
+.main.shifted{margin-left:240px}
+
+/* ================================================================
+   CINEMATIC MODULES
+   ================================================================ */
+.work{padding:40px 0 0}
+.work-head{max-width:800px;margin:0 auto;padding:0 60px 72px}
+.sec-over{font:500 10px/1 var(--sans);letter-spacing:.04em;color:var(--navy);margin-bottom:8px}
+.sec-title{font:700 clamp(28px,4vw,44px)/1.08 var(--sans);letter-spacing:-.02em}
+
+.mods{display:flex;flex-direction:column;gap:0}
+
+/* Big card — 80vw */
+.big{position:relative;width:80vw;max-width:1000px;margin:0 auto;padding:0 0 48px}
+.big-card{
+  border-radius:16px;overflow:hidden;
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:420px;background:var(--sidebar);border:1px solid var(--line);
+}
+.big.rev .big-card{direction:rtl}
+.big.rev .big-card>*{direction:ltr}
+
+/* Visual */
+.big-vis{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:36px 20px}
+.big-mock{
+  width:200px;height:280px;border-radius:24px;overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.1);position:relative;z-index:2;will-change:transform;
+}
+.bm{position:absolute;inset:7px;border-radius:18px;display:flex;flex-direction:column;padding:14px 11px;overflow:hidden}
+.bm-top{display:flex;justify-content:space-between;font:400 8px/1 var(--mono);color:rgba(255,255,255,.3);margin-bottom:12px}
+.bm-h{font:600 16px/1.2 var(--sans);color:#fff;margin-bottom:2px}
+.bm-s{font:400 8px/1 var(--mono);color:rgba(255,255,255,.2)}
+.bm-bl{display:flex;gap:4px;margin-top:12px}
+.bm-b{flex:1;height:30px;border-radius:6px;background:rgba(255,255,255,.05)}
+.bm-rl{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.bm-r{height:16px;border-radius:5px;background:rgba(255,255,255,.04)}
+.bm-ch{display:flex;align-items:flex-end;gap:2px;height:50px;margin-top:auto;padding-top:6px}
+.bm-cv{flex:1;border-radius:2px 2px 0 0;background:rgba(255,255,255,.06)}
+.bm-cv.hi{background:rgba(255,255,255,.22)}
+
+/* Tags on visual */
+.big-tags{position:absolute;bottom:14px;left:14px;z-index:3;display:flex;flex-direction:column;gap:3px}
+.bt{font:500 7px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(0,35,102,.65);backdrop-filter:blur(5px);padding:4px 8px;border-radius:3px;width:fit-content}
+/* Impact tags top-right */
+.big-impact{position:absolute;top:14px;right:14px;z-index:3;display:flex;flex-direction:column;gap:3px;align-items:flex-end}
+.bi{font:700 8px/1 var(--mono);letter-spacing:.04em;color:var(--navy);background:rgba(246,241,235,.85);backdrop-filter:blur(5px);padding:4px 9px;border-radius:3px}
+
+/* Content */
+.big-con{padding:36px 32px;display:flex;flex-direction:column;justify-content:center}
+.bc-num{font:500 10px/1 var(--mono);letter-spacing:.08em;color:var(--navy);margin-bottom:20px}
+.bc-title{font:700 clamp(24px,3vw,36px)/1.08 var(--sans);letter-spacing:-.02em;margin-bottom:10px}
+.bc-desc{font:400 14px/1.75 var(--sans);color:var(--text2);margin-bottom:16px}
+.bc-pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.bc-pill{font:400 10px/1 var(--sans);padding:5px 12px;border:1px solid var(--line);border-radius:100px;color:var(--muted)}
+.bc-super{font:500 12px/1 var(--sans);color:var(--navy);display:flex;align-items:center;gap:6px}
+.bc-super::before{content:'';width:5px;height:5px;background:var(--navy);border-radius:50%}
+
+/* Themes */
+.big[data-p="mealmatch"] .big-vis{background:linear-gradient(135deg,#d8e5db,#c0d4c6)}
+.big[data-p="mealmatch"] .big-mock{background:linear-gradient(150deg,#2D5A3D,#1B3E2A)}
+.big[data-p="ballrs"] .big-vis{background:linear-gradient(135deg,#d4d8e2,#c0c6d4)}
+.big[data-p="ballrs"] .big-mock{background:linear-gradient(150deg,#1A1A2E,#111528)}
+.big[data-p="loupe"] .big-vis{background:linear-gradient(135deg,#dcd8ea,#cac6dc)}
+.big[data-p="loupe"] .big-mock{background:linear-gradient(150deg,#5B4FA0,#3D3578)}
+.big[data-p="allergytracker"] .big-vis{background:linear-gradient(135deg,#d4dee8,#bccad8)}
+.big[data-p="allergytracker"] .big-mock{background:linear-gradient(150deg,#1B4B72,#0F3150)}
+.big[data-p="jetsweat"] .big-vis{background:linear-gradient(135deg,#e4dad2,#d6c8bc)}
+.big[data-p="jetsweat"] .big-mock{background:linear-gradient(150deg,#D4582A,#A84420)}
+
+/* Testimonial */
+.quote{padding:28px 0;max-width:600px;margin:0 auto;text-align:center}
+.q-text{font:300 clamp(16px,2vw,24px)/1.5 var(--serif);font-style:italic;color:var(--navy);margin-bottom:10px}
+.q-text::before{content:'\201C';font-size:1.15em}
+.q-text::after{content:'\201D';font-size:1.15em}
+.q-attr{font:600 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--navy)}
+.q-role{font:400 9px/1 var(--sans);color:var(--muted);margin-top:3px}
+
+/* ================================================================
+   LINEAR TIMELINE
+   ================================================================ */
+.timeline{padding:100px 60px;max-width:1000px;margin:0 auto}
+.tl-head{margin-bottom:48px}
+.tl-head h2{font:700 clamp(24px,3vw,36px)/1.1 var(--sans);letter-spacing:-.02em}
+.tl-wrap{position:relative;padding:48px 0 80px}
+.tl-line{height:1px;background:var(--navy)}
+.tl-nodes{position:absolute;top:-8px;left:0;right:0;display:flex;justify-content:space-between}
+.tl-n{position:relative;display:flex;flex-direction:column;align-items:center;cursor:default}
+.tl-dot{width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--navy);z-index:2;transition:background .2s,transform .2s}
+.tl-n:hover .tl-dot{background:var(--navy);transform:scale(1.2)}
+.tl-n.now .tl-dot{background:var(--navy)}
+.tl-yr{font:500 9px/1 var(--mono);letter-spacing:.04em;color:var(--navy);margin-top:10px;white-space:nowrap}
+.tl-lb{font:400 10px/1 var(--sans);color:var(--text2);margin-top:3px;white-space:nowrap}
+/* Tooltip */
+.tl-tip{
+  position:absolute;bottom:calc(100% + 14px);left:50%;
+  transform:translateX(-50%) translateY(6px);
+  width:200px;border-radius:6px;overflow:hidden;
+  box-shadow:0 6px 20px rgba(0,0,0,.08);
+  opacity:0;pointer-events:none;transition:opacity .3s,transform .3s var(--heavy);z-index:10;
+}
+.tl-n:hover .tl-tip{opacity:1;transform:translateX(-50%) translateY(0)}
+.tl-tip img{width:100%;height:130px;object-fit:cover;filter:grayscale(80%) contrast(1.2)}
+.tl-tip-g{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.4'/%3E%3C/svg%3E");mix-blend-mode:overlay;opacity:.2;pointer-events:none}
+.tl-tip-l{position:absolute;bottom:5px;left:6px;font:400 7px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.4);padding:2px 5px;border-radius:2px}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+.site-footer{padding:80px 60px 48px;max-width:1000px;margin:0 auto;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:48px;align-items:start}
+.sf-hl{font:700 clamp(20px,2.5vw,28px)/1.2 var(--sans);letter-spacing:-.01em;margin-bottom:6px}
+.sf-sub{font:400 13px/1.6 var(--sans);color:var(--text2);margin-bottom:20px;max-width:440px}
+.sf-links{display:flex;gap:10px;flex-wrap:wrap}
+.sf-lk{font:500 11px/1 var(--sans);color:var(--navy);padding:8px 18px;border:1px solid rgba(0,35,102,.12);border-radius:100px;transition:background .2s,color .2s;display:flex;align-items:center;gap:4px}
+.sf-lk:hover{background:var(--navy);color:#fff}
+.sf-lk svg{width:12px;height:12px}
+.sf-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.sf-copy{font:400 10px/1 var(--sans);color:var(--muted2)}
+.sf-soc{display:flex;gap:14px}
+.sf-soc a{font:400 10px/1 var(--sans);color:var(--muted);transition:color .2s}
+.sf-soc a:hover{color:var(--navy)}
+
+@media(max-width:1000px){
+  .manifest{display:none}.main.shifted{margin-left:0}
+  .big-card{grid-template-columns:1fr}.big.rev .big-card{direction:ltr}
+  .big{width:95vw}
+  .big-con{padding:24px 20px}
+  .work-head,.timeline{padding-left:24px;padding-right:24px}
+  .tl-nodes{flex-wrap:wrap;gap:16px;position:relative;top:0}
+  .tl-line{display:none}.tl-tip{display:none}
+  .site-footer{padding:48px 24px;grid-template-columns:1fr;gap:24px}
+  .sf-right{align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     HERO
+     ================================================================ -->
+<section class="hero" id="hero">
+  <div class="hero-sticky">
+    <div class="hero-split-top" id="splitTop"></div>
+    <div class="hero-split-bot" id="splitBot"></div>
+    <div class="hero-wrap">
+      <div class="hero-name">PAUL<br>TAYLOR</div>
+      <div class="hero-fill" id="heroFill" aria-hidden="true">PAUL<br>TAYLOR</div>
+      <p class="hero-strapline">Lead Product Designer & Builder specializing in <strong>AI systems</strong> and <strong>high-fidelity mobile execution</strong>. Currently leading design at <strong>MealMatch AI</strong>. Based in Brooklyn.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Manifest -->
+<aside class="manifest" id="manifest">
+  <div class="mf-head">
+    <div class="mf-name">Paul Taylor</div>
+    <div class="mf-role">Product Designer & Builder<br>Brooklyn, NY</div>
+  </div>
+  <div class="mf-group">
+    <div class="mf-group-title">Production Record</div>
+    <div class="mf-row active" data-t="mealmatch"><span class="mf-tag lead">Lead Design</span><span class="mf-label">MealMatch AI</span></div>
+  </div>
+  <div class="mf-group">
+    <div class="mf-group-title">Shipped Apps</div>
+    <div class="mf-row" data-t="ballrs"><span class="mf-tag shipped">Shipped</span><span class="mf-label">Ballrs</span><div class="mf-dot"></div></div>
+    <div class="mf-row" data-t="loupe"><span class="mf-tag shipped">Shipped</span><span class="mf-label">Loupe</span><div class="mf-dot"></div></div>
+    <div class="mf-row"><span class="mf-tag shipped">Shipped</span><span class="mf-label">Beat Block</span><div class="mf-dot"></div></div>
+  </div>
+  <div class="mf-group">
+    <div class="mf-group-title">Research & Impact</div>
+    <div class="mf-row" data-t="allergytracker"><span class="mf-tag research">Research</span><span class="mf-label">AllergyTracker</span></div>
+    <div class="mf-row" data-t="jetsweat"><span class="mf-tag research">Research</span><span class="mf-label">JetSweat</span></div>
+  </div>
+  <div class="mf-group">
+    <div class="mf-group-title">System</div>
+    <div class="mf-row" data-t="timeline"><span class="mf-tag history">History</span><span class="mf-label">The Archive</span></div>
+    <div class="mf-row" data-t="footer"><span class="mf-tag history">Ready</span><span class="mf-label">Contact</span></div>
+  </div>
+  <div class="mf-foot">
+    <div class="mf-foot-line"><div class="mf-foot-dot"></div>BUILD: STABLE</div>
+    <div class="mf-foot-line">3 apps live — App Store</div>
+  </div>
+</aside>
+
+<!-- ================================================================
+     MAIN
+     ================================================================ -->
+<div class="main" id="main">
+
+<section class="work" id="work">
+  <div class="work-head">
+    <div class="sec-over">Selected Work</div>
+    <h2 class="sec-title">Projects I've led, designed,<br>and shipped.</h2>
+  </div>
+
+  <div class="mods">
+
+    <!-- MealMatch AI -->
+    <div class="big" data-p="mealmatch" data-f="mealmatch" id="s-mealmatch">
+      <div class="big-card">
+        <div class="big-vis">
+          <div class="big-mock"><div class="bm"><div class="bm-top"><span>9:41</span><span>MealMatch</span></div><div class="bm-h">Your Plan</div><div class="bm-s">AI assistant + onboarding</div><div class="bm-bl"><div class="bm-b"></div><div class="bm-b"></div><div class="bm-b"></div></div><div class="bm-rl"><div class="bm-r"></div><div class="bm-r"></div><div class="bm-r"></div></div></div></div>
+          <div class="big-tags"><span class="bt">ROLE: LEAD_DESIGN</span><span class="bt">FOUNDING_TEAM</span><span class="bt">AI_UX</span></div>
+        </div>
+        <div class="big-con">
+          <div class="bc-num">01 — Lead Designer, Founding Team</div>
+          <h3 class="bc-title">MealMatch AI</h3>
+          <p class="bc-desc">AI-powered meal planning. Led design from day one as part of the founding team. Built the design system (128 tokens, component libraries), ran 40+ participant research studies, and designed the AI assistant character and onboarding flow.</p>
+          <div class="bc-pills"><span class="bc-pill">AI UX</span><span class="bc-pill">Design Systems</span><span class="bc-pill">User Research</span><span class="bc-pill">Figma</span></div>
+          <div class="bc-super">40+ research studies, full design system from zero</div>
+        </div>
+      </div>
+      <div class="quote">
+        <div class="q-text">A true visionary in product design. His Figma expertise is unmatched and his testing is meticulous. He elevated every aspect of our product experience.</div>
+        <div class="q-attr">MealMatch AI — Founding Team</div>
+        <div class="q-role">Internal Review</div>
+      </div>
+    </div>
+
+    <!-- Ballrs -->
+    <div class="big rev" data-p="ballrs" data-f="ballrs" id="s-ballrs">
+      <div class="big-card">
+        <div class="big-con">
+          <div class="bc-num">02 — Designed & Built</div>
+          <h3 class="bc-title">Ballrs</h3>
+          <p class="bc-desc">Daily sports trivia. End-to-end — designed every screen, wrote every component in React Native & TypeScript, shipped to the App Store. Full-stack from Figma to production.</p>
+          <div class="bc-pills"><span class="bc-pill">React Native</span><span class="bc-pill">TypeScript</span><span class="bc-pill">Full-Stack</span></div>
+          <div class="bc-super">Designed + engineered, live on App Store</div>
+        </div>
+        <div class="big-vis">
+          <div class="big-mock"><div class="bm"><div class="bm-top"><span>9:41</span><span>Ballrs</span></div><div class="bm-h">Daily Pick</div><div class="bm-s">Who scored more?</div><div class="bm-bl"><div class="bm-b" style="height:50px"></div><div class="bm-b" style="height:50px"></div></div><div class="bm-rl"><div class="bm-r"></div><div class="bm-r"></div></div></div></div>
+          <div class="big-tags"><span class="bt">ROLE: DESIGN_&_BUILD</span><span class="bt">SHIPPED_TO_STORE</span><span class="bt">TS_REACT_NATIVE</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loupe -->
+    <div class="big" data-p="loupe" data-f="loupe" id="s-loupe">
+      <div class="big-card">
+        <div class="big-vis">
+          <div class="big-mock"><div class="bm"><div class="bm-top"><span>Loupe</span><span>v1.2</span></div><div class="bm-h">Library</div><div class="bm-s">2,481 photos tagged</div><div class="bm-bl"><div class="bm-b"></div><div class="bm-b"></div><div class="bm-b"></div></div><div class="bm-rl"><div class="bm-r"></div><div class="bm-r"></div><div class="bm-r"></div><div class="bm-r"></div></div></div></div>
+          <div class="big-tags"><span class="bt">ROLE: DESIGN_&_BUILD</span><span class="bt">NATIVE_MAC</span><span class="bt">LOCAL_AI</span></div>
+        </div>
+        <div class="big-con">
+          <div class="bc-num">03 — Designed & Built</div>
+          <h3 class="bc-title">Loupe</h3>
+          <p class="bc-desc">Native Mac app for photographers. Uses Apple's Vision framework to auto-tag your library on-device. No cloud, no subscriptions. Built because I needed it — then shipped it.</p>
+          <div class="bc-pills"><span class="bc-pill">macOS Native</span><span class="bc-pill">Vision AI</span><span class="bc-pill">SwiftUI</span></div>
+          <div class="bc-super">On-device AI, fully private</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AllergyTracker -->
+    <div class="big rev" data-p="allergytracker" data-f="allergytracker" id="s-allergytracker">
+      <div class="big-card">
+        <div class="big-con">
+          <div class="bc-num">04 — UX Researcher & Designer</div>
+          <h3 class="bc-title">AllergyTracker</h3>
+          <p class="bc-desc">Designing for cognitive impairment during allergic episodes. Accessibility-first UX with voice UI integration. Research-driven redesign tested with users experiencing real-time cognitive load.</p>
+          <div class="bc-pills"><span class="bc-pill">Accessibility</span><span class="bc-pill">Voice UI</span><span class="bc-pill">Health Tech</span></div>
+          <div class="bc-super">20% faster tracking, cognitive impairment design</div>
+        </div>
+        <div class="big-vis">
+          <div class="big-mock"><div class="bm"><div class="bm-top"><span>9:41</span><span>AllergyTracker</span></div><div class="bm-h">Log Symptoms</div><div class="bm-s">Voice input active</div><div class="bm-bl"><div class="bm-b" style="height:44px"></div><div class="bm-b" style="height:44px"></div></div><div class="bm-rl"><div class="bm-r"></div><div class="bm-r"></div><div class="bm-r"></div></div></div></div>
+          <div class="big-tags"><span class="bt">COGNITIVE_UX</span><span class="bt">VOICE_UI</span><span class="bt">ACCESSIBILITY</span></div>
+          <div class="big-impact"><span class="bi">20% TASK REDUCTION</span></div>
+        </div>
+      </div>
+      <div class="quote">
+        <div class="q-text">He is strong in all areas of UX from research to design, with an aptitude for prototyping. Paul would make a great addition to any team.</div>
+        <div class="q-attr">Kim Hartford</div>
+        <div class="q-role">Founding Product Designer</div>
+      </div>
+    </div>
+
+    <!-- JetSweat -->
+    <div class="big" data-p="jetsweat" data-f="jetsweat" id="s-jetsweat">
+      <div class="big-card">
+        <div class="big-vis">
+          <div class="big-mock"><div class="bm"><div class="bm-top"><span>9:41</span><span>JetSweat</span></div><div class="bm-h">Dashboard</div><div class="bm-s">Studio analytics</div><div class="bm-ch"><div class="bm-cv" style="height:25%"></div><div class="bm-cv" style="height:45%"></div><div class="bm-cv hi" style="height:75%"></div><div class="bm-cv" style="height:38%"></div><div class="bm-cv hi" style="height:92%"></div><div class="bm-cv" style="height:55%"></div><div class="bm-cv hi" style="height:68%"></div></div></div></div>
+          <div class="big-tags"><span class="bt">PRODUCT_DESIGN</span><span class="bt">B2B_SAAS</span><span class="bt">PLG</span></div>
+          <div class="big-impact"><span class="bi">+25% SIGNUP LIFT</span><span class="bi">-75% MANUAL SETUP</span></div>
+        </div>
+        <div class="big-con">
+          <div class="bc-num">05 — Product Designer</div>
+          <h3 class="bc-title">JetSweat</h3>
+          <p class="bc-desc">B2B fitness SaaS. Redesigned onboarding, rebuilt the CMS, introduced self-serve studio management. 25% more sign-ups, 75% less manual setup for operations.</p>
+          <div class="bc-pills"><span class="bc-pill">B2B SaaS</span><span class="bc-pill">Growth</span><span class="bc-pill">CMS Design</span></div>
+          <div class="bc-super">25% sign-up lift, 75% less manual work</div>
+        </div>
+      </div>
+      <div class="quote">
+        <div class="q-text">Paul is a talented UX designer with a unique ability to distill complex features into clean designs and seamless user flows.</div>
+        <div class="q-attr">Alexandra Dantzig</div>
+        <div class="q-role">Co-Founder & CEO, JetSweat</div>
+      </div>
+    </div>
+
+    <!-- General leadership quote -->
+    <div class="quote" style="padding:48px 0">
+      <div class="q-text">He consistently transformed complex challenges into elegant, user-centered solutions that elevated the entire product experience.</div>
+      <div class="q-attr">Alex Leite</div>
+      <div class="q-role">Senior Director, Microsoft 365</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Timeline -->
+<section class="timeline" id="timeline">
+  <div class="tl-head">
+    <div class="sec-over">The Archive</div>
+    <h2 class="sec-title">How I got here.</h2>
+  </div>
+  <div class="tl-wrap">
+    <div class="tl-line"></div>
+    <div class="tl-nodes">
+      <div class="tl-n"><div class="tl-tip"><img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&h=260&fit=crop" alt=""><div class="tl-tip-g"></div><span class="tl-tip-l">London</span></div><div class="tl-dot"></div><span class="tl-yr">2014</span><span class="tl-lb">Product Manager</span></div>
+      <div class="tl-n"><div class="tl-tip"><img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&h=260&fit=crop" alt=""><div class="tl-tip-g"></div><span class="tl-tip-l">Netflix / NYC</span></div><div class="tl-dot"></div><span class="tl-yr">2016</span><span class="tl-lb">Photographer</span></div>
+      <div class="tl-n"><div class="tl-tip"><img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=400&h=260&fit=crop" alt=""><div class="tl-tip-g"></div><span class="tl-tip-l">HBO / Amazon</span></div><div class="tl-dot"></div><span class="tl-yr">2018</span><span class="tl-lb">HBO / Nat Geo</span></div>
+      <div class="tl-n"><div class="tl-tip"><img src="https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?w=400&h=260&fit=crop" alt=""><div class="tl-tip-g"></div><span class="tl-tip-l">GA / Freelance</span></div><div class="tl-dot"></div><span class="tl-yr">2020</span><span class="tl-lb">GA & Freelance</span></div>
+      <div class="tl-n now"><div class="tl-dot"></div><span class="tl-yr">2024–Now</span><span class="tl-lb">Lead Design</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer" id="footer">
+  <div>
+    <div class="sf-hl">Currently open for design and build opportunities in New York City.</div>
+    <p class="sf-sub">Product design roles, contract work, or interesting collaborations. If you're building something that matters, I'd like to hear about it.</p>
+    <div class="sf-links">
+      <a href="mailto:hello@paultaylormade.com" class="sf-lk">Contact <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+      <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer" class="sf-lk">LinkedIn</a>
+      <a href="https://drive.google.com/file/d/1XDFRARRMCelp--CW1QSG9yTvu3VQGOKT/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="sf-lk">Resume</a>
+    </div>
+  </div>
+  <div class="sf-right">
+    <div class="sf-copy">&copy; 2026 Paul Taylor</div>
+    <div class="sf-soc">
+      <a href="https://linkedin.com/in/paultaylor" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<!-- Lenis + GSAP -->
+<script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  'use strict';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const lenis=new Lenis({duration:1.2,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t)),smoothWheel:true});
+  function raf(time){lenis.raf(time);requestAnimationFrame(raf)}
+  requestAnimationFrame(raf);
+  lenis.on('scroll',ScrollTrigger.update);
+  gsap.ticker.add(time=>lenis.raf(time*1000));
+  gsap.ticker.lagSmoothing(0);
+
+  const manifest=document.getElementById('manifest');
+  const mainEl=document.getElementById('main');
+
+  // Hero stroke fill
+  gsap.to('#heroFill',{scrollTrigger:{trigger:'#hero',start:'top top',end:'40% top',scrub:.5},clipPath:'inset(0 0% 0 0)',ease:'none'});
+
+  // Hero split
+  gsap.to('#splitTop',{scrollTrigger:{trigger:'#hero',start:'40% top',end:'70% top',scrub:.5},y:'-100%',ease:'power2.inOut'});
+  gsap.to('#splitBot',{scrollTrigger:{trigger:'#hero',start:'40% top',end:'70% top',scrub:.5},y:'100%',ease:'power2.inOut'});
+
+  ScrollTrigger.create({trigger:'#hero',start:'70% top',
+    onEnter:()=>{manifest.classList.add('on');mainEl.classList.add('shifted')},
+    onLeaveBack:()=>{manifest.classList.remove('on');mainEl.classList.remove('shifted')}
+  });
+
+  // Card reveals
+  document.querySelectorAll('.big-card').forEach(c=>{
+    gsap.from(c,{scrollTrigger:{trigger:c,start:'top 88%',toggleActions:'play none none none'},y:50,opacity:0,duration:1,ease:'power3.out'});
+  });
+
+  // Testimonial reveals
+  document.querySelectorAll('.quote').forEach(q=>{
+    gsap.from(q,{scrollTrigger:{trigger:q,start:'top 88%',toggleActions:'play none none none'},y:20,opacity:0,duration:.7,ease:'power2.out'});
+  });
+
+  // Mockup parallax
+  document.querySelectorAll('.big-mock').forEach(m=>{
+    gsap.to(m,{scrollTrigger:{trigger:m.closest('.big'),start:'top bottom',end:'bottom top',scrub:1},y:-40,ease:'none'});
+  });
+
+  // Timeline draw
+  gsap.from('.tl-line',{scrollTrigger:{trigger:'.tl-wrap',start:'top 80%'},scaleX:0,transformOrigin:'left',duration:1.2,ease:'power3.inOut'});
+  gsap.from('.tl-n',{scrollTrigger:{trigger:'.tl-wrap',start:'top 75%'},y:20,opacity:0,stagger:.1,duration:.6,ease:'power2.out',delay:.3});
+
+  // Manifest active tracking
+  const mfRows=document.querySelectorAll('.mf-row[data-t]');
+  document.querySelectorAll('.big[data-f]').forEach(b=>{
+    ScrollTrigger.create({trigger:b,start:'top center',end:'bottom center',
+      onEnter:()=>setA(b.getAttribute('data-f')),onEnterBack:()=>setA(b.getAttribute('data-f'))});
+  });
+  ScrollTrigger.create({trigger:'#timeline',start:'top center',onEnter:()=>setA('timeline'),onEnterBack:()=>setA('timeline')});
+  ScrollTrigger.create({trigger:'#footer',start:'top center',onEnter:()=>setA('footer'),onEnterBack:()=>setA('footer')});
+  function setA(t){mfRows.forEach(r=>r.classList.toggle('active',r.getAttribute('data-t')===t))}
+
+  // Manifest click
+  mfRows.forEach(r=>{r.addEventListener('click',()=>{
+    const t=r.getAttribute('data-t');
+    const el=document.getElementById('s-'+t)||document.getElementById(t);
+    if(el)lenis.scrollTo(el,{offset:-80});
+  })});
+
+  // Smooth nav
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)lenis.scrollTo(t,{offset:-60})})});
+})();
+</script>
+</body>
+</html>
