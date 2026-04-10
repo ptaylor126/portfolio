@@ -41,6 +41,7 @@ a{color:inherit}img{display:block;max-width:100%}
   position:sticky;top:var(--frame);z-index:100;
   display:flex;align-items:center;gap:16px;
   padding:32px calc(var(--frame) + var(--pad));
+  max-width:1200px;margin:0 auto;
   background:var(--bg);
 }
 .topbar-name{
@@ -60,7 +61,7 @@ a{color:inherit}img{display:block;max-width:100%}
   margin-top:.35em;
 }
 .topbar-btn:hover{background:var(--orange)}
-.topbar-right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:16px;position:relative}
 .topbar-menu{
   font:600 12px/1 var(--mono);color:var(--ink);letter-spacing:.03em;
   cursor:pointer;background:none;border:none;
@@ -71,7 +72,7 @@ a{color:inherit}img{display:block;max-width:100%}
 
 /* Dropdown */
 .dropdown{
-  position:fixed;top:calc(var(--frame) + 70px);right:calc(var(--frame) + var(--pad));
+  position:absolute;top:calc(100% + 12px);right:0;
   z-index:200;
   background:var(--bg);border:2px solid var(--ink);
   box-shadow:8px 8px 0 var(--ink);
@@ -100,10 +101,11 @@ a{color:inherit}img{display:block;max-width:100%}
    TWO-COLUMN LAYOUT (60/40)
    ================================================================ */
 .about-body{
-  padding:64px calc(var(--frame) + var(--pad)) 80px;
+  padding:64px calc(var(--frame) + var(--pad)) 32px;
   display:grid;
   grid-template-columns:1fr 340px;
   gap:80px;
+  max-width:1200px;margin:0 auto;
   position:relative;z-index:1;
 }
 
@@ -116,12 +118,14 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .about-story p{
   font:400 16px/1.8 var(--sans);color:#555;
-  margin-bottom:20px;
+  margin-bottom:20px;max-width:65ch;
 }
 .about-story .lead{
   font-weight:700;font-size:18px;color:var(--ink);line-height:1.7;
 }
 .about-story .lead .orange{color:var(--orange);font-style:italic}
+.inline-link{color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(0,0,0,.2);transition:text-decoration-color .2s,color .2s}
+.inline-link:hover{color:var(--orange);text-decoration-color:var(--orange)}
 
 /* ── Right Column: Timeline ── */
 .about-sidebar{}
@@ -157,6 +161,7 @@ a{color:inherit}img{display:block;max-width:100%}
    ================================================================ */
 .photo-archive{
   padding:0 calc(var(--frame) + var(--pad)) 120px;
+  max-width:1200px;margin:0 auto;
   position:relative;z-index:1;
 }
 .archive-label{
@@ -275,6 +280,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .contact-footer{
   position:relative;z-index:1;
   padding:48px calc(var(--frame) + var(--pad));
+  max-width:1200px;margin:0 auto;
   border-top:2px solid var(--ink);
   background:var(--bg);
 }
@@ -305,7 +311,7 @@ a{color:inherit}img{display:block;max-width:100%}
 /* ================================================================
    RESPONSIVE
    ================================================================ */
-@media(max-width:900px){
+@media(max-width:1024px){
   .about-body{grid-template-columns:1fr;gap:48px}
   .about-top{flex-direction:column}
   .about-photo{width:100%;min-width:0;height:auto;aspect-ratio:3/4;max-width:280px}
@@ -362,6 +368,9 @@ a{color:inherit}img{display:block;max-width:100%}
   .contact-icons .icon-link svg{width:28px;height:28px}
   .contact-copy{text-align:center}
 }
+.back-to-top{position:relative;z-index:2;display:flex;justify-content:center;padding:32px 0}
+.back-to-top a{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s}
+.back-to-top a:hover{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -373,6 +382,7 @@ a{color:inherit}img{display:block;max-width:100%}
 <!-- Mobile nav -->
 <button class="mob-burger" id="mobBurger"><span></span><span></span><span></span></button>
 <div class="mob-overlay" id="mobOverlay">
+  <a href="index.html">Home</a>
   <a href="index.html#work">Work</a>
   <a href="about.html">About</a>
   <a href="#contact">Contact</a>
@@ -381,23 +391,21 @@ a{color:inherit}img{display:block;max-width:100%}
 <!-- Top bar -->
 <nav class="topbar">
   <a class="topbar-name" href="index.html">Paul Taylor</a>
-  <a class="topbar-btn" href="about.html">Who's this?!</a>
   <div class="topbar-right">
     <button class="topbar-menu" id="menuBtn">[ MENU ]</button>
+    <!-- Dropdown menu -->
+    <div class="dropdown" id="dropdown">
+      <a class="dd-link" href="index.html">Home</a>
+      <a class="dd-link active" href="about.html">About</a>
+      <div class="dd-sep"></div>
+      <div class="dd-label">[ Case Studies ]</div>
+      <a class="dd-case" href="mealmatch.html">MealMatch AI</a>
+      <a class="dd-case" href="ballrs.html">Ballrs</a>
+      <a class="dd-case" href="jetsweat.html">JetSweat</a>
+      <a class="dd-case" href="loupe.html">Loupe</a>
+    </div>
   </div>
 </nav>
-
-<!-- Dropdown menu -->
-<div class="dropdown" id="dropdown">
-  <a class="dd-link" href="index.html">Home</a>
-  <a class="dd-link active" href="about.html">About</a>
-  <div class="dd-sep"></div>
-  <div class="dd-label">[ Case Studies ]</div>
-  <a class="dd-case" href="mealmatch.html">MealMatch AI</a>
-  <a class="dd-case" href="ballrs.html">Ballrs</a>
-  <a class="dd-case" href="jetsweat.html">JetSweat</a>
-  <a class="dd-case" href="loupe.html">Loupe</a>
-</div>
 
 <!-- Two-column body -->
 <div class="about-body">
@@ -407,7 +415,7 @@ a{color:inherit}img{display:block;max-width:100%}
     <div class="about-top">
       <img class="about-photo" src="public/images/about/profilepicwebsite.png" alt="Paul Taylor">
       <div>
-        <p class="lead">I design and ship products that people actually use&mdash;<span class="orange">not things that look good in a pitch deck.</span></p>
+        <p class="lead">I design and ship products that people actually use&mdash;<span class="orange">not just things that look good in a pitch deck.</span></p>
         <p>I grew up in the UK during what was probably the best time to be a kid who liked technology. I remember when video game controllers went from wired to infrared and it blew my mind. I went from recording songs off the radio onto cassettes, to minidiscs, to burning CDs, to an original iPod, and I was obsessed with every step of that evolution.</p>
       </div>
     </div>
@@ -415,8 +423,8 @@ a{color:inherit}img{display:block;max-width:100%}
     <p>I worked as a product manager in London for a few years, spending my weekends shooting music festivals across the UK and Europe. When I turned 30 I bought a one-way ticket to Bangkok, travelled around Southeast Asia, and ended up in New Zealand for a year. Four months of that was in a people carrier with the seats pulled out and a mattress thrown in the back, sneaking into campsites for showers.</p>
     <p>Eventually I landed in New York and started working as a photographer, shooting experiential marketing events for companies like Netflix, Amazon, and HBO.</p>
     <p>Photography sharpened the creative side, product management taught me how to work with different people and understand that everyone operates differently. An eye for detail, a feel for how things should look, and the ability to get things done with a team.</p>
-    <p>Now I build products. I&rsquo;ve led design on an AI meal planning app, shipped a sports trivia app solo to both app stores, and I&rsquo;m building a Mac app that tags photos using local AI. Two on the App Store, a third in beta.</p>
-    <p>When I&rsquo;m not designing I&rsquo;m watching football (soccer), playing it, or shooting street photography.</p>
+    <p>Now I build products. I&rsquo;ve led design on an <a class="inline-link" href="mealmatch.html">AI meal planning app</a>, shipped a <a class="inline-link" href="ballrs.html">sports trivia app</a> solo to both app stores, and I&rsquo;m building a <a class="inline-link" href="https://tagwithloupe.com" target="_blank" rel="noopener">Mac app that tags photos using local AI</a>. Two on the App Store, a third in beta.</p>
+    <p>When I&rsquo;m not designing I&rsquo;m watching football (soccer), playing it, or taking photos. There&rsquo;s more but I think this is long enough now.</p>
   </div>
 
   <!-- Right Column: Timeline -->
@@ -450,16 +458,15 @@ a{color:inherit}img{display:block;max-width:100%}
 
 <!-- Photography Archive -->
 <section class="photo-archive">
-  <div class="archive-label">[ Archive ]</div>
   <div class="archive-grid">
 
     <!-- Street -->
     <div class="film-strip">
       <div class="strip-label">Street</div>
       <div class="strip-wrap">
-        <a href="#" data-lb data-cap="// Street-1 // NYC // 2024"><img src="public/images/about/photos-for-site/street/street-1.JPG" alt="Street photography"></a>
-        <a href="#" data-lb data-cap="// Street-2 // NYC // 2024"><img src="public/images/about/photos-for-site/street/street-2.jpg" alt="Street photography"></a>
-        <a href="#" data-lb data-cap="// Street-3 // NYC // 2023"><img src="public/images/about/photos-for-site/street/street-3.jpg" alt="Street photography"></a>
+        <a href="#" data-lb data-cap="// Street // NYC"><img src="public/images/about/photos-for-site/street/street-1.JPG" alt="Street photography"></a>
+        <a href="#" data-lb data-cap="// Street // NYC"><img src="public/images/about/photos-for-site/street/street-2.jpg" alt="Street photography"></a>
+        <a href="#" data-lb data-cap="// Street // NYC"><img src="public/images/about/photos-for-site/street/street-3.jpg" alt="Street photography"></a>
       </div>
     </div>
 
@@ -467,9 +474,9 @@ a{color:inherit}img{display:block;max-width:100%}
     <div class="film-strip">
       <div class="strip-label">Events</div>
       <div class="strip-wrap">
-        <a href="#" data-lb data-cap="// Events // Client: HBO // NYC"><img src="public/images/about/photos-for-site/events/events-1.webp" alt="HBO event"></a>
-        <a href="#" data-lb data-cap="// Events // Client: Netflix // NYC"><img src="public/images/about/photos-for-site/events/events-2.webp" alt="Netflix event"></a>
-        <a href="#" data-lb data-cap="// Events // Client: Amazon // NYC"><img src="public/images/about/photos-for-site/events/events-3.webp" alt="Amazon event"></a>
+        <a href="#" data-lb data-cap="// Events // Client: Amazon // NYC"><img src="public/images/about/photos-for-site/events/events-1.webp" alt="Amazon event"></a>
+        <a href="#" data-lb data-cap="// Events // Client: HBO // NYC"><img src="public/images/about/photos-for-site/events/events-2.webp" alt="HBO event"></a>
+        <a href="#" data-lb data-cap="// Events // Client: Netflix // NYC"><img src="public/images/about/photos-for-site/events/events-3.webp" alt="Netflix event"></a>
       </div>
       <div class="strip-clients">
         <span>// HBO</span>
@@ -482,9 +489,9 @@ a{color:inherit}img{display:block;max-width:100%}
     <div class="film-strip">
       <div class="strip-label">Music</div>
       <div class="strip-wrap">
-        <a href="#" data-lb data-cap="// Music-1 // Festival // UK"><img src="public/images/about/photos-for-site/music/music-1.webp" alt="Music photography"></a>
-        <a href="#" data-lb data-cap="// Music-2 // Festival // UK"><img src="public/images/about/photos-for-site/music/music-2.webp" alt="Music photography"></a>
-        <a href="#" data-lb data-cap="// Music-3 // Festival // Europe"><img src="public/images/about/photos-for-site/music/music-3.webp" alt="Music photography"></a>
+        <a href="#" data-lb data-cap="// Music // Leon Bridges"><img src="public/images/about/photos-for-site/music/music-1.webp" alt="Leon Bridges"></a>
+        <a href="#" data-lb data-cap="// Music // FKA Twigs"><img src="public/images/about/photos-for-site/music/music-2.webp" alt="FKA Twigs"></a>
+        <a href="#" data-lb data-cap="// Music // Frank Ocean"><img src="public/images/about/photos-for-site/music/music-3.webp" alt="Frank Ocean"></a>
       </div>
     </div>
 
@@ -492,9 +499,9 @@ a{color:inherit}img{display:block;max-width:100%}
     <div class="film-strip">
       <div class="strip-label">Travel</div>
       <div class="strip-wrap">
-        <a href="#" data-lb data-cap="// Travel-1 // New Zealand // 2018"><img src="public/images/about/photos-for-site/travel/travel-1.webp" alt="Travel photography"></a>
-        <a href="#" data-lb data-cap="// Travel-2 // Southeast Asia // 2017"><img src="public/images/about/photos-for-site/travel/travel-2.webp" alt="Travel photography"></a>
-        <a href="#" data-lb data-cap="// Travel-3 // New Zealand // 2018"><img src="public/images/about/photos-for-site/travel/travel-3.webp" alt="Travel photography"></a>
+        <a href="#" data-lb data-cap="// Travel // Chiang Mai"><img src="public/images/about/photos-for-site/travel/travel-1.webp" alt="Chiang Mai"></a>
+        <a href="#" data-lb data-cap="// Travel // New Zealand"><img src="public/images/about/photos-for-site/travel/travel-2.webp" alt="New Zealand"></a>
+        <a href="#" data-lb data-cap="// Travel // Bangkok"><img src="public/images/about/photos-for-site/travel/travel-3.webp" alt="Bangkok"></a>
       </div>
     </div>
 
@@ -513,6 +520,7 @@ a{color:inherit}img{display:block;max-width:100%}
 </div>
 
 <!-- Contact footer -->
+<div class="back-to-top"><a href="#"><span class="btt-arrow">&uarr;</span>Back to top</a></div>
 <footer class="contact-footer" id="contact">
   <div class="contact-label">Get In Touch</div>
   <div class="contact-row">

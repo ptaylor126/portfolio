@@ -561,7 +561,7 @@ img.filmstrip-img{
 
 /* Characters */
 .kofi-char{
-  position:absolute;max-height:400px;max-width:70%;
+  position:absolute;max-height:min(400px,60vh);max-width:70%;
   width:auto;height:auto;object-fit:contain;
   opacity:0;transition:opacity .5s ease;z-index:4;
 }
@@ -584,14 +584,14 @@ img.filmstrip-img{
 /* Vertical column (stage 5) */
 .kofi-vee{
   position:absolute;
-  display:flex;flex-direction:column;gap:48px;
+  display:flex;flex-direction:column;gap:clamp(12px,3vh,48px);
   align-items:center;justify-content:center;
   height:80%;
   opacity:0;transition:opacity 1.5s;z-index:4;
 }
 .kofi-vee.active{opacity:1}
 .kofi-vee-cell{
-  width:120px;height:120px;
+  width:clamp(60px,12vh,120px);height:clamp(60px,12vh,120px);
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
 }
@@ -806,6 +806,9 @@ img.filmstrip-img{
   .contact-icons .icon-link svg{width:28px;height:28px}
   .contact-copy{text-align:center}
 }
+.back-to-top{position:relative;z-index:2;display:flex;justify-content:center;padding:32px 0}
+.back-to-top a{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s}
+.back-to-top a:hover{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -814,6 +817,7 @@ img.filmstrip-img{
 <div class="grain"></div>
 <button class="mob-burger" id="mobBurger"><span></span><span></span><span></span></button>
 <div class="mob-overlay" id="mobOverlay">
+  <a href="index.html">Home</a>
   <a href="index.html#work">Work</a>
   <a href="about.html">About</a>
   <a href="#contact">Contact</a>
@@ -1418,6 +1422,7 @@ img.filmstrip-img{
 </div>
 
 <!-- Contact footer -->
+<div class="back-to-top"><a href="#"><span class="btt-arrow">&uarr;</span>Back to top</a></div>
 <footer class="contact-footer" id="contact">
   <div class="contact-label">Get In Touch</div>
   <div class="contact-row">

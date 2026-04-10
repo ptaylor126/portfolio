@@ -379,15 +379,18 @@ a{color:inherit}img{display:block;max-width:100%}
    RESPONSIVE
    ================================================================ */
 @media(max-width:800px){
-  .case-hero{padding-left:calc(var(--frame) + 20px);padding-right:calc(var(--frame) + 20px)}
+  .case-hero{padding:calc(var(--frame) + 12px) calc(var(--frame) + 20px) 32px}
   .minimap{display:none}
-  .case-body{padding:0 20px;padding-right:20px}
-  .case-section{padding-top:40px}
-  .case-content{padding:0 0 48px}
+  .case-body{padding:0 calc(var(--frame) + 20px)}
+  .case-section{padding-top:32px!important}
+  .case-content{padding:0 0 24px}
   .ba-row{flex-direction:column;gap:24px}
   .contact-footer{padding:32px calc(var(--frame) + 20px)}
   .contact-row{flex-direction:column;gap:16px}
-  .cms-ann{display:none}
+  .cms-ann .cms-ann-card{font-size:7px;padding:4px 6px}
+  .cms-ann .cms-ann-card strong{font-size:7px}
+  .dash-ann{transform:scale(.75);transform-origin:top left}
+  .dash-ann[style*="right"]{transform-origin:top right}
 }
 /* Mobile hamburger nav */
 .mob-burger{display:none;position:fixed;top:calc(var(--frame) + 16px);right:calc(var(--frame) + 16px);z-index:1000;width:40px;height:40px;background:rgba(255,255,255,.55);backdrop-filter:blur(8px);border:none;border-radius:8px;cursor:pointer;padding:6px}
@@ -413,6 +416,9 @@ a{color:inherit}img{display:block;max-width:100%}
   .contact-icons .icon-link svg{width:28px;height:28px}
   .contact-copy{text-align:center}
 }
+.back-to-top{position:relative;z-index:2;display:flex;justify-content:center;padding:32px 0}
+.back-to-top a{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s}
+.back-to-top a:hover{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -420,6 +426,7 @@ a{color:inherit}img{display:block;max-width:100%}
 <div class="grain"></div>
 <button class="mob-burger" id="mobBurger"><span></span><span></span><span></span></button>
 <div class="mob-overlay" id="mobOverlay">
+  <a href="index.html">Home</a>
   <a href="index.html#work">Work</a>
   <a href="about.html">About</a>
   <a href="#contact">Contact</a>
@@ -705,6 +712,7 @@ a{color:inherit}img{display:block;max-width:100%}
 </div><!-- /case-body -->
 
 <!-- Contact footer -->
+<div class="back-to-top"><a href="#"><span class="btt-arrow">&uarr;</span>Back to top</a></div>
 <footer class="contact-footer" id="contact">
   <div class="contact-label">Get In Touch</div>
   <div class="contact-row">

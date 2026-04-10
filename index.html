@@ -57,8 +57,9 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
 /* ── "Who's this?!" badge — pops up after PAUL TAYLOR reveals ── */
 .morph-row{position:relative}
 .whos-this{
-  position:absolute;
-  top:-.3em;right:1em;
+  display:inline-block;vertical-align:top;
+  position:relative;
+  top:-.3em;margin-left:.3em;
   opacity:0;
   transform:scale(.5) rotate(-6deg);
   transform-origin:bottom left;
@@ -93,7 +94,7 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
   height:100vh;
   display:flex;flex-direction:column;justify-content:center;
   padding:calc(var(--frame) + 80px) calc(var(--frame) + var(--pad)) calc(var(--frame) + 80px);
-  max-width:1400px;
+  max-width:1400px;margin:0 auto;
   overflow:visible;
 }
 
@@ -227,6 +228,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .bento{
   position:relative;z-index:1;
   padding:80px calc(var(--frame) + var(--pad) + 16px) 80px;
+  max-width:1400px;margin:0 auto;
   display:grid;
   grid-template-columns:1fr 1fr;
   grid-auto-rows:1fr;
@@ -274,9 +276,10 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 /* Content — bottom-left, static above overlay */
 .bt-content{position:relative;z-index:2}
 
-/* Spec badges — solid dark fill for legibility */
+/* Spec badges — pinned to top-left of card */
 .bt-badges{
-  display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;
+  position:absolute;top:20px;right:20px;z-index:5;
+  display:flex;gap:8px;flex-wrap:wrap;
 }
 .bt-badges span{
   font:500 9px/1 var(--mono);letter-spacing:.05em;
@@ -321,6 +324,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .bt-mint{background:#2D6A4F}
 .bt-navy{background:#1E3A8A}
 .bt-purple{background:#3D2C5E}
+.bt-purple .bt-img{filter:brightness(1)}
 .bt-burnt{background:#C45A2D}
 
 
@@ -364,6 +368,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .contact-footer{
   position:relative;z-index:2;
   padding:48px clamp(32px,8vw,96px);
+  max-width:1400px;margin:0 auto;
   border-top:2px solid var(--ink);
   background:var(--bg);
 }
@@ -399,6 +404,9 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .contact-icons .icon-link svg{width:28px;height:28px}
   .contact-copy{text-align:center}
 }
+.back-to-top{position:relative;z-index:2;display:flex;justify-content:center;padding:32px 0}
+.back-to-top a{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s}
+.back-to-top a:hover{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -412,6 +420,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 <!-- Mobile nav -->
 <button class="mob-burger" id="mobBurger"><span></span><span></span><span></span></button>
 <div class="mob-overlay" id="mobOverlay">
+  <a href="index.html">Home</a>
   <a href="#work">Work</a>
   <a href="about.html">About</a>
   <a href="#contact">Contact</a>
@@ -451,10 +460,6 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     <img class="bt-img" src="public/images/mealmatch/section-1/mealmatch-hero-screen.png" alt="MealMatch AI">
     <div class="bt-overlay"></div>
     <div class="bt-content">
-      <div class="bt-badges">
-        <span>Role: Design Lead</span>
-        <span>Status: Shipped</span>
-      </div>
       <div class="bt-title">MealMatch AI</div>
       <p class="bt-desc">Led design on an AI meal planning app from research to App Store launch.</p>
       <div class="bt-tags">
@@ -471,10 +476,6 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     <img class="bt-img" src="public/images/ballrs/S4-P3.PNG" alt="Ballrs">
     <div class="bt-overlay"></div>
     <div class="bt-content">
-      <div class="bt-badges">
-        <span>Solo Shipped</span>
-        <span>28+ Daily Puzzles</span>
-      </div>
       <div class="bt-title">Ballrs</div>
       <p class="bt-desc">Designed, built, and shipped a multi-sport trivia app solo.</p>
       <div class="bt-tags">
@@ -491,10 +492,6 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     <img class="bt-img" src="public/images/loupe/tag-editor.png" alt="Loupe Tag Editor">
     <div class="bt-overlay"></div>
     <div class="bt-content">
-      <div class="bt-badges">
-        <span>Beta: TestFlight</span>
-        <span>Local AI Tagging</span>
-      </div>
       <div class="bt-title">Loupe</div>
       <p class="bt-desc">A Mac app that tags photos using local AI. Built with SwiftUI and Claude Code.</p>
       <div class="bt-tags">
@@ -511,10 +508,6 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     <img class="bt-img" src="public/images/jetsweat/new-dashboard.png" alt="JetSweat Dashboard">
     <div class="bt-overlay"></div>
     <div class="bt-content">
-      <div class="bt-badges">
-        <span>B2B SaaS</span>
-        <span>Dashboard // CMS</span>
-      </div>
       <div class="bt-title">JetSweat</div>
       <p class="bt-desc">Redesigned a B2B fitness platform. Dashboard, onboarding, and CMS in 3 months.</p>
       <div class="bt-tags">
@@ -528,6 +521,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 </section>
 
 <!-- Contact footer -->
+<div class="back-to-top"><a href="#"><span class="btt-arrow">&uarr;</span>Back to top</a></div>
 <footer class="contact-footer" id="contact">
   <div class="contact-label">Get In Touch</div>
   <div class="contact-row">
