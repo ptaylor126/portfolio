@@ -11,7 +11,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#F9F9F9;--ink:#000;--orange:#FF4F00;--grey:#6B6B6B;--slate:#475569;
+  --bg:#F9F9F9;--ink:#000;--orange:#FF6B00;--grey:#6B6B6B;--slate:#475569;
   --tight:'Inter',system-ui,sans-serif;
   --mono:'JetBrains Mono','SF Mono',monospace;
   --frame:12px;
@@ -24,7 +24,10 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
 ::selection{background:var(--orange);color:#fff}
 
 /* Frame */
-.frame{position:fixed;inset:0;border:var(--frame) solid var(--ink);pointer-events:none;z-index:900}
+.frame{position:fixed;inset:0;pointer-events:none;z-index:900;
+  box-shadow:inset 0 0 0 var(--frame) var(--ink);
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+}
 
 /* Grain */
 .grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.02;
@@ -154,12 +157,59 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 @media(max-width:900px){
   .morph-row{font-size:clamp(40px,12vw,80px);padding-left:12px}
   .ms-line{font-size:clamp(40px,12vw,80px)!important}
-  .morph-secondary{padding-left:12px;margin-top:8px;gap:4px}
-  .hero-status{white-space:normal;font-size:10px;padding-left:12px;flex-direction:column;align-items:flex-start;gap:6px}
+  .morph-secondary{padding-left:12px;margin-top:4px;gap:2px}
+  .hero-status{white-space:normal;font-size:10px;padding-left:12px;margin-top:16px;flex-wrap:wrap;gap:4px}
+  .hero-status .meta-dot{display:none}
   .hero-status .meta-sep{display:none}
   .hero{padding:calc(var(--frame) + 60px) calc(var(--frame) + 20px) calc(var(--frame) + 60px)}
   .scroll-sig{bottom:calc(var(--frame) + 20px)}
-  .whos-this{display:none}
+  .whos-this{display:none!important}
+}
+
+/* ── Mobile hamburger nav ── */
+.mob-burger{
+  display:none;
+  position:fixed;top:calc(var(--frame) + 16px);right:calc(var(--frame) + 16px);
+  z-index:1000;
+  width:40px;height:40px;
+  background:rgba(255,255,255,.55);backdrop-filter:blur(8px);
+  border:none;border-radius:8px;cursor:pointer;
+  padding:6px;
+}
+.mob-burger span{
+  display:block;width:100%;height:2px;
+  background:var(--ink);margin-bottom:6px;
+  transition:transform .3s,opacity .3s;
+}
+.mob-burger span:last-child{margin-bottom:0}
+.mob-burger.active span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+.mob-burger.active span:nth-child(2){opacity:0}
+.mob-burger.active span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+.mob-burger.active span{background:#fff}
+.mob-burger.active{background:transparent;backdrop-filter:none}
+
+.mob-overlay{
+  display:none;
+  position:fixed;inset:0;z-index:799;
+  background:var(--ink);
+  flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:32px;
+  opacity:0;
+  transition:opacity .3s;
+}
+.mob-overlay.open{display:flex;opacity:1}
+.mob-overlay a{
+  font:800 clamp(28px,8vw,48px)/1.2 var(--tight);
+  text-transform:uppercase;letter-spacing:-.03em;
+  color:#fff;text-decoration:none;
+  transition:color .2s;
+}
+.mob-overlay a:hover{color:var(--orange)}
+
+@media(max-width:768px){
+  :root{--frame:6px}
+  .mob-burger{display:block}
 }
 
 /* ── 8px grid — covers hero + bento ── */
@@ -296,9 +346,14 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 }
 .view-cursor.active{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
+/* ── Touch-active: mirrors hover for mobile scroll trigger ── */
+.bento-tile.touch-active .bt-img{transform:translate(-50%,-50%) scale(1.05)!important}
+.bento-tile.touch-active .bt-badges span{color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.25)}
+.bento-tile.touch-active .bt-tags span{background:var(--orange);border-color:var(--orange);color:#fff}
+
 /* ── Responsive ── */
 @media(max-width:900px){
-  .bento{grid-template-columns:1fr;gap:20px;padding:48px 20px}
+  .bento{grid-template-columns:1fr;gap:20px;padding:48px calc(var(--frame) + 20px)}
   .bt-img{height:60%}
   .bento-tile{min-height:360px;padding:32px}
 }
@@ -335,9 +390,14 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   margin-top:32px;
   font:400 10px/1 var(--mono);color:rgba(0,0,0,.3);
 }
-@media(max-width:700px){
-  .contact-footer{padding:32px 20px}
-  .contact-row{flex-direction:column;gap:16px}
+@media(max-width:768px){
+  .contact-footer{padding:32px calc(var(--frame) + 20px);text-align:center}
+  .contact-label{text-align:center}
+  .contact-row{flex-direction:column;gap:16px;align-items:center}
+  .contact-icons{gap:24px}
+  .contact-icons .icon-link{width:44px;height:44px;justify-content:center}
+  .contact-icons .icon-link svg{width:28px;height:28px}
+  .contact-copy{text-align:center}
 }
 </style>
 </head>
@@ -348,6 +408,14 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 <div class="page-grid"></div>
 <div class="cur" id="cur"></div>
 <div class="view-cursor" id="viewCur">View</div>
+
+<!-- Mobile nav -->
+<button class="mob-burger" id="mobBurger"><span></span><span></span><span></span></button>
+<div class="mob-overlay" id="mobOverlay">
+  <a href="#work">Work</a>
+  <a href="about.html">About</a>
+  <a href="#contact">Contact</a>
+</div>
 
 
 <!-- Hero runway (200vh scroll zone, hero stays pinned) -->
@@ -460,7 +528,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 </section>
 
 <!-- Contact footer -->
-<footer class="contact-footer">
+<footer class="contact-footer" id="contact">
   <div class="contact-label">Get In Touch</div>
   <div class="contact-row">
     <a href="mailto:thisispaultaylor@icloud.com">thisispaultaylor@icloud.com</a>
@@ -475,6 +543,20 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
 <script>
 (function(){
+  /* ── MOBILE NAV ── */
+  var burger=document.getElementById('mobBurger');
+  var overlay=document.getElementById('mobOverlay');
+  burger.addEventListener('click',function(){
+    burger.classList.toggle('active');
+    overlay.classList.toggle('open');
+  });
+  overlay.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){
+      burger.classList.remove('active');
+      overlay.classList.remove('open');
+    });
+  });
+
   /* ── BENTO REVEAL ── */
   var bentoTiles=document.querySelectorAll('.bento-tile');
   if(bentoTiles.length){
@@ -485,6 +567,21 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     },{threshold:0.15});
     bentoTiles.forEach(function(t){bentoObs.observe(t)});
   }
+
+  /* ── MOBILE: trigger hover effects on scroll ── */
+  var isMobile=window.matchMedia('(max-width:768px)');
+  function setupTouchObs(){
+    if(!isMobile.matches) return;
+    var touchObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('touch-active')}
+        else{e.target.classList.remove('touch-active')}
+      });
+    },{threshold:0.4});
+    bentoTiles.forEach(function(t){touchObs.observe(t)});
+  }
+  setupTouchObs();
+  isMobile.addEventListener('change',setupTouchObs);
 
   /* ── VIEW CURSOR ── */
   var vc=document.getElementById('viewCur');
@@ -584,7 +681,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     mlAul.style.opacity=k4;
     mlSpace.style.opacity=k4;
     mlAylor.style.opacity=k4;
-    var nameColor=k4>=1?'#FF4F00':'';
+    var nameColor=k4>=1?'#FF6B00':'';
     mlP.style.color=nameColor;
     mlT.style.color=nameColor;
 

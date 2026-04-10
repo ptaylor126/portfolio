@@ -17,8 +17,8 @@
   --frame:12px;
   --pad:clamp(24px,5vw,64px);
 }
-html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
-body{font-family:var(--sans);color:var(--ink);background:var(--bg);overflow-x:hidden;line-height:1.6}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth;overflow-x:hidden}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);overflow-x:hidden;max-width:100vw;line-height:1.6}
 a{color:inherit}img{display:block;max-width:100%}
 ::selection{background:var(--accent);color:var(--ink)}
 
@@ -102,7 +102,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .progress-track{
   position:fixed;right:calc(var(--frame) + 1px);
   top:var(--frame);bottom:var(--frame);
-  width:3px;background:rgba(0,0,0,.06);z-index:800;
+  width:3px;background:rgba(0,0,0,.06);z-index:1000;
 }
 .progress-fill{
   position:absolute;top:0;left:0;width:100%;height:0%;
@@ -309,12 +309,12 @@ a{color:inherit}img{display:block;max-width:100%}
   gap:8px;padding:0 8px;
 }
 .ba-pivot-arrow{
-  width:48px;height:2px;background:#F2C94C;position:relative;
+  width:2px;height:28px;background:#F2C94C;position:relative;
 }
 .ba-pivot-arrow::after{
-  content:'';position:absolute;right:-2px;top:-4px;
+  content:'';position:absolute;bottom:-2px;left:-4px;
   border:5px solid transparent;
-  border-left:6px solid #F2C94C;
+  border-top:6px solid #F2C94C;
 }
 .ba-pivot-label{
   font:700 10px/1 var(--mono);letter-spacing:.04em;
@@ -362,8 +362,8 @@ a{color:inherit}img{display:block;max-width:100%}
   .ba-row{flex-direction:column;gap:24px}
   .ba-phone,.ba-phone-placeholder{width:200px}
   .ba-video-wrap{width:200px}
-  .ba-pivot-center{flex-direction:row}
-  .ba-pivot-arrow{width:32px}
+  .ba-pivot-center{flex-direction:column}
+  .ba-pivot-arrow{width:2px;height:20px}
 }
 
 /* ================================================================
@@ -471,17 +471,9 @@ a{color:inherit}img{display:block;max-width:100%}
 .hs-dot--3{top:52%}
 .hs-dot--4{top:85%}
 @media(max-width:900px){
-  .hs-row{gap:32px}
-  .hs-card{width:180px}
-  .hs-dot-line{width:10px}
-  .hs-dot-num{width:16px;height:16px;font-size:9px;line-height:16px}
-  .hs-dot-label{font-size:8px}
-}
-@media(max-width:600px){
-  .hs-row{gap:20px;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
-  .hs-row::-webkit-scrollbar{display:none}
-  .hs-card{width:160px}
-  .hs-dot{display:none}
+  .hs-row{flex-direction:column!important;gap:32px!important;align-items:center!important}
+  .hs-card{width:100%!important;max-width:260px!important}
+  .hs-dot{display:none!important}
 }
 
 /* Quote card */
@@ -1331,14 +1323,49 @@ a{color:inherit}img{display:block;max-width:100%}
    RESPONSIVE
    ================================================================ */
 @media(max-width:800px){
-  .case-body{padding:0 20px;padding-right:20px}
-  .case-section{padding-top:40px}
+  .case-body{padding:0 calc(var(--frame) + 20px)}
+  .case-section{padding-top:40px!important}
   .case-content{padding:0 0 48px}
   .case-hero{padding-left:calc(var(--frame) + 20px);padding-right:calc(var(--frame) + 20px)}
-  .topbar{padding:20px 20px}
-  .contact-footer{padding:32px 20px}
+  .topbar{padding:20px calc(var(--frame) + 20px)}
+  .contact-footer{padding:32px calc(var(--frame) + 20px)}
   .contact-row{flex-direction:column;gap:16px}
   .minimap{display:none}
+  .stat-bar{grid-template-columns:1fr;gap:24px}
+  .timeline{flex-direction:column;gap:32px;align-items:center}
+  .timeline-card{max-width:260px;width:100%}
+  .s1-stats{grid-template-columns:repeat(2,1fr);gap:8px;margin-left:0;margin-top:24px}
+  .s1-stat{padding:12px}
+  .s1-pills{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .s1-pill{text-align:center}
+  img,video{max-width:100%!important}
+  .soft-frame{width:100%!important;max-width:260px}
+  [style*="min-width"]{min-width:0!important}
+  [style*="flex:1"]{flex:1 1 100%!important}
+}
+/* Mobile hamburger nav */
+.mob-burger{display:none;position:fixed;top:calc(var(--frame) + 16px);right:calc(var(--frame) + 16px);z-index:1000;width:40px;height:40px;background:rgba(255,255,255,.55);backdrop-filter:blur(8px);border:none;border-radius:8px;cursor:pointer;padding:6px}
+.mob-burger span{display:block;width:100%;height:2px;background:var(--ink);margin-bottom:6px;transition:transform .3s,opacity .3s}
+.mob-burger span:last-child{margin-bottom:0}
+.mob-burger.active span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+.mob-burger.active span:nth-child(2){opacity:0}
+.mob-burger.active span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+.mob-burger.active span{background:#fff}
+.mob-burger.active{background:transparent;backdrop-filter:none}
+.mob-overlay{display:none;position:fixed;inset:0;z-index:799;background:var(--ink);flex-direction:column;align-items:center;justify-content:center;gap:32px;opacity:0;transition:opacity .3s}
+.mob-overlay.open{display:flex;opacity:1}
+.mob-overlay a{font:800 clamp(28px,8vw,48px)/1.2 'Inter',system-ui,sans-serif;text-transform:uppercase;letter-spacing:-.03em;color:#fff;text-decoration:none;transition:color .2s}
+.mob-overlay a:hover{color:#FF6B00}
+@media(max-width:768px){:root{--frame:6px}.mob-burger{display:block}.topbar-menu{display:none}}
+/* Mobile footer */
+@media(max-width:768px){
+  .contact-footer{padding:32px calc(var(--frame) + 20px);text-align:center}
+  .contact-label{text-align:center}
+  .contact-row{flex-direction:column;gap:16px;align-items:center}
+  .contact-icons{gap:24px}
+  .contact-icons .icon-link{width:44px;height:44px;display:inline-flex;justify-content:center;align-items:center}
+  .contact-icons .icon-link svg{width:28px;height:28px}
+  .contact-copy{text-align:center}
 }
 </style>
 </head>
@@ -1346,6 +1373,13 @@ a{color:inherit}img{display:block;max-width:100%}
 
 <div class="frame"></div>
 <div class="grain"></div>
+
+<button class="mob-burger" id="mobBurger"><span></span><span></span><span></span></button>
+<div class="mob-overlay" id="mobOverlay">
+  <a href="index.html#work">Work</a>
+  <a href="about.html">About</a>
+  <a href="#contact">Contact</a>
+</div>
 
 <!-- Top bar -->
 <nav class="topbar">
@@ -2059,7 +2093,7 @@ a{color:inherit}img{display:block;max-width:100%}
 </div>
 
 <!-- Contact footer -->
-<footer class="contact-footer">
+<footer class="contact-footer" id="contact">
   <div class="contact-label">Get In Touch</div>
   <div class="contact-row">
     <a href="mailto:thisispaultaylor@icloud.com">thisispaultaylor@icloud.com</a>
@@ -2074,6 +2108,12 @@ a{color:inherit}img{display:block;max-width:100%}
 
 <script>
 (function(){
+  /* MOBILE NAV */
+  var burger=document.getElementById('mobBurger');
+  var overlay=document.getElementById('mobOverlay');
+  burger.addEventListener('click',function(){burger.classList.toggle('active');overlay.classList.toggle('open')});
+  overlay.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){burger.classList.remove('active');overlay.classList.remove('open')})});
+
   /* ── MENU TOGGLE ── */
   var menuBtn=document.getElementById('menuBtn');
   var dropdown=document.getElementById('dropdown');

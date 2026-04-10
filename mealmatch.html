@@ -102,7 +102,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .progress-track{
   position:fixed;right:calc(var(--frame) + 1px);
   top:var(--frame);bottom:var(--frame);
-  width:3px;background:rgba(0,0,0,.06);z-index:800;
+  width:3px;background:rgba(0,0,0,.06);z-index:1000;
 }
 .progress-fill{
   position:absolute;top:0;left:0;width:100%;height:0%;
@@ -228,7 +228,7 @@ a{color:inherit}img{display:block;max-width:100%}
 @media(max-width:600px){
   .s1-split{grid-template-columns:1fr;text-align:center}
   .s1-phone img{width:200px;margin:0 auto}
-  .s1-stats{align-items:center}
+  .s1-stats{align-items:center;margin-top:24px;gap:24px}
 }
 
 /* ================================================================
@@ -664,14 +664,33 @@ img.filmstrip-img{
 }
 .kofi-body{font:400 17px/1.8 var(--sans);color:#555;max-width:48ch}
 
+/* Mobile-only Kofi images — hidden on desktop */
+.kofi-mob-img,.kofi-mob-row,.kofi-mob-wall{display:none}
+
 @media(max-width:800px){
   .kofi-rail{grid-template-columns:1fr;min-height:auto}
   .kofi-stage-col{display:none}
   .kofi-narr-col{padding:0 20px}
   .kofi-narr-block{height:auto;min-height:auto}
-  .kofi-narr-inner{position:relative;top:0;opacity:1;padding:48px 0}
+  .kofi-narr-inner{position:relative;top:0;opacity:1;padding:32px 0;transform:none}
   .kofi-stage-num{font-size:80px}
   .vault-grid{grid-template-columns:repeat(3,1fr)}
+  /* Show mobile images */
+  .kofi-mob-img{display:block;max-width:200px;margin:24px auto 0;height:auto}
+  .kofi-mob-row{display:flex;gap:8px;margin-top:24px;justify-content:center}
+  .kofi-mob-row img{width:30%;height:auto;object-fit:contain}
+  .kofi-mob-row-5{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .kofi-mob-row-5 img{width:calc(33.33% - 6px);max-width:calc(33.33% - 6px);height:100px;object-fit:contain}
+  .kofi-mob-row-5 img:last-child{transform:scale(1.15);margin-left:12px}
+  /* Midjourney wall — full width grid, natural scroll */
+  .kofi-mob-wall{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:3px;
+    margin:24px -20px 0;
+    width:calc(100% + 40px);
+  }
+  .kofi-mob-wall img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
 }
 
 /* ================================================================
@@ -747,18 +766,45 @@ img.filmstrip-img{
    ================================================================ */
 @media(max-width:800px){
   .case-body{padding:0 20px;padding-right:20px}
-  .case-section{padding-top:40px}
+  .case-section{padding-top:40px!important}
   .case-content{padding:0 0 48px}
   .case-img-row{grid-template-columns:1fr}
   .ds-grid-2{grid-template-columns:1fr}
-  .ds-grid-3{grid-template-columns:1fr}
+  .ds-grid-3{grid-template-columns:repeat(3,1fr);gap:8px}
+  .ds-grid-3 img{height:200px;object-position:top}
+  .ds-grid-3 .ba-label{margin-top:4px!important;text-align:center;font-size:8px}
+  .spacing-img{max-width:80%!important;margin:16px auto!important}
   .funnel-label{width:120px;font-size:9px}
   .funnel-track{height:22px}
   .case-hero{padding-left:calc(var(--frame) + 20px);padding-right:calc(var(--frame) + 20px)}
-  .topbar{padding:20px 20px}
-  .contact-footer{padding:32px 20px}
+  .topbar{padding:20px calc(var(--frame) + 20px)}
+  .contact-footer{padding:32px calc(var(--frame) + 20px)}
   .contact-row{flex-direction:column;gap:16px}
   .minimap{display:none}
+}
+/* Mobile hamburger nav */
+.mob-burger{display:none;position:fixed;top:calc(var(--frame) + 16px);right:calc(var(--frame) + 16px);z-index:1000;width:40px;height:40px;background:rgba(255,255,255,.55);backdrop-filter:blur(8px);border:none;border-radius:8px;cursor:pointer;padding:6px}
+.mob-burger span{display:block;width:100%;height:2px;background:var(--ink);margin-bottom:6px;transition:transform .3s,opacity .3s}
+.mob-burger span:last-child{margin-bottom:0}
+.mob-burger.active span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+.mob-burger.active span:nth-child(2){opacity:0}
+.mob-burger.active span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+.mob-burger.active span{background:#fff}
+.mob-burger.active{background:transparent;backdrop-filter:none}
+.mob-overlay{display:none;position:fixed;inset:0;z-index:799;background:var(--ink);flex-direction:column;align-items:center;justify-content:center;gap:32px;opacity:0;transition:opacity .3s}
+.mob-overlay.open{display:flex;opacity:1}
+.mob-overlay a{font:800 clamp(28px,8vw,48px)/1.2 'Inter',system-ui,sans-serif;text-transform:uppercase;letter-spacing:-.03em;color:#fff;text-decoration:none;transition:color .2s}
+.mob-overlay a:hover{color:#FF6B00}
+@media(max-width:768px){:root{--frame:6px}.mob-burger{display:block}.topbar-menu{display:none}}
+/* Mobile footer */
+@media(max-width:768px){
+  .contact-footer{padding:32px 20px;text-align:center}
+  .contact-label{text-align:center}
+  .contact-row{flex-direction:column;gap:16px;align-items:center}
+  .contact-icons{gap:24px}
+  .contact-icons .icon-link{width:44px;height:44px;display:inline-flex;justify-content:center;align-items:center}
+  .contact-icons .icon-link svg{width:28px;height:28px}
+  .contact-copy{text-align:center}
 }
 </style>
 </head>
@@ -766,6 +812,12 @@ img.filmstrip-img{
 
 <div class="frame"></div>
 <div class="grain"></div>
+<button class="mob-burger" id="mobBurger"><span></span><span></span><span></span></button>
+<div class="mob-overlay" id="mobOverlay">
+  <a href="index.html#work">Work</a>
+  <a href="about.html">About</a>
+  <a href="#contact">Contact</a>
+</div>
 
 <!-- Top bar -->
 <nav class="topbar">
@@ -1063,6 +1115,7 @@ img.filmstrip-img{
             <div class="hc-tag"><span class="lb">[</span> Stage 01: The Original <span class="lb">]</span></div>
             <h3 class="kofi-heading">The Original.</h3>
             <p class="kofi-body">The founder's original concept. It worked as a one-off but we needed Kofi in multiple poses across the app.</p>
+            <img class="kofi-mob-img" src="public/images/mealmatch/section-6/kofi-01-original.png" alt="Kofi — original">
           </div>
         </div>
         <div class="kofi-narr-block" data-stage="1">
@@ -1071,6 +1124,11 @@ img.filmstrip-img{
             <div class="hc-tag"><span class="lb">[</span> Stage 02: ChatGPT <span class="lb">]</span></div>
             <h3 class="kofi-heading">ChatGPT.</h3>
             <p class="kofi-body">Another designer tried ChatGPT. The results were too detailed and every version looked like a different character.</p>
+            <div class="kofi-mob-row">
+              <img src="public/images/mealmatch/section-6/kofi-02-gpt-1.png" alt="Kofi — GPT 1">
+              <img src="public/images/mealmatch/section-6/kofi-02-gpt-2.png" alt="Kofi — GPT 2">
+              <img src="public/images/mealmatch/section-6/kofi-02-gpt-3.png" alt="Kofi — GPT 3">
+            </div>
           </div>
         </div>
         <div class="kofi-narr-block" data-stage="2">
@@ -1079,6 +1137,7 @@ img.filmstrip-img{
             <div class="hc-tag"><span class="lb">[</span> Stage 03: Stripped Back <span class="lb">]</span></div>
             <h3 class="kofi-heading">Stripped Back.</h3>
             <p class="kofi-body">I simplified the character. Bold lines, flat colours, no extra detail. This became the version everything else was measured against.</p>
+            <img class="kofi-mob-img" src="public/images/mealmatch/section-6/kofi-03-simplified.png" alt="Kofi — North Star">
           </div>
         </div>
         <div class="kofi-narr-block" data-stage="3">
@@ -1087,6 +1146,9 @@ img.filmstrip-img{
             <div class="hc-tag"><span class="lb">[</span> Stage 04: Midjourney <span class="lb">]</span></div>
             <h3 class="kofi-heading">The Midjourney Grind.</h3>
             <p class="kofi-body">500+ attempts to get the simplified version into different poses. Most of them didn't match. The wall shows the scale of it.</p>
+            <div class="kofi-mob-wall">
+              <img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-1.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-10.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-20.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-30.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-40.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-50.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-60.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-70.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-80.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-90.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-100.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-120.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-140.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-160.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-180.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-200.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-220.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-240.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-260.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-280.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-300.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-320.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-340.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-360.png" alt=""><img src="public/images/mealmatch/section-6/chaos-wall/kofi-iteration-380.png" alt="">
+            </div>
           </div>
         </div>
         <div class="kofi-narr-block" data-stage="4">
@@ -1095,6 +1157,13 @@ img.filmstrip-img{
             <div class="hc-tag"><span class="lb">[</span> Stage 05: Cracked It <span class="lb">]</span></div>
             <h3 class="kofi-heading">Cracked It.</h3>
             <p class="kofi-body">Switched to Google Imagen when it became available. The tool finally made consistency possible. Same proportions, same style, every pose.</p>
+            <div class="kofi-mob-row kofi-mob-row-5">
+              <img src="public/images/mealmatch/section-6/kofi-05-imagen-1.png" alt="Kofi pose 1">
+              <img src="public/images/mealmatch/section-6/kofi-05-imagen-2.png" alt="Kofi pose 2">
+              <img src="public/images/mealmatch/section-6/kofi-05-imagen-3.png" alt="Kofi pose 3">
+              <img src="public/images/mealmatch/section-6/kofi-05-imagen-4.png" alt="Kofi pose 4">
+              <img src="public/images/mealmatch/section-6/kofi-05-imagen-5.png" alt="Kofi pose 5">
+            </div>
           </div>
         </div>
       </div>
@@ -1317,7 +1386,7 @@ img.filmstrip-img{
       <h3>Spacing</h3>
       <p>Everything sits on an 8px grid. Component padding, section gaps, and touch targets are all multiples of 8. Touch targets are minimum 44px for accessibility.</p>
 
-      <img src="public/images/mealmatch/section-7/spacing.png" alt="Spacing system" style="max-width:50%;display:block;margin:32px auto">
+      <img class="spacing-img" src="public/images/mealmatch/section-7/spacing.png" alt="Spacing system" style="max-width:50%;display:block;margin:32px auto">
     </div>
   </div>
 
@@ -1349,7 +1418,7 @@ img.filmstrip-img{
 </div>
 
 <!-- Contact footer -->
-<footer class="contact-footer">
+<footer class="contact-footer" id="contact">
   <div class="contact-label">Get In Touch</div>
   <div class="contact-row">
     <a href="mailto:thisispaultaylor@icloud.com">thisispaultaylor@icloud.com</a>
@@ -1364,6 +1433,11 @@ img.filmstrip-img{
 
 <script>
 (function(){
+  /* MOBILE NAV */
+  var burger=document.getElementById('mobBurger');
+  var overlay=document.getElementById('mobOverlay');
+  burger.addEventListener('click',function(){burger.classList.toggle('active');overlay.classList.toggle('open')});
+  overlay.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){burger.classList.remove('active');overlay.classList.remove('open')})});
   /* ── MENU TOGGLE ── */
   var menuBtn=document.getElementById('menuBtn');
   var dropdown=document.getElementById('dropdown');

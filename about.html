@@ -11,7 +11,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#F9F9F9;--ink:#000;--orange:#FF4F00;--grey:#6B6B6B;
+  --bg:#F9F9F9;--ink:#000;--orange:#FF6B00;--grey:#6B6B6B;
   --sans:'Inter',system-ui,sans-serif;
   --mono:'JetBrains Mono','SF Mono',monospace;
   --frame:12px;
@@ -309,11 +309,58 @@ a{color:inherit}img{display:block;max-width:100%}
   .about-body{grid-template-columns:1fr;gap:48px}
   .about-top{flex-direction:column}
   .about-photo{width:100%;min-width:0;height:auto;aspect-ratio:3/4;max-width:280px}
-  .strip-wrap{height:200px}
+  .strip-wrap{height:auto;max-width:none!important;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;overflow:visible}
+  .strip-wrap a{height:auto}
+  .strip-wrap img{height:auto;width:100%;aspect-ratio:3/4}
+  .film-strip:hover .strip-wrap{max-width:none!important}
+  .strip-clients{opacity:1}
   .contact-row{flex-direction:column;gap:16px}
   .contact-footer{padding:32px calc(var(--frame) + 20px)}
   .topbar{flex-wrap:wrap}
   .topbar-name{font-size:clamp(20px,6vw,36px)}
+}
+
+/* ── Mobile hamburger nav ── */
+.mob-burger{
+  display:none;
+  position:fixed;top:calc(var(--frame) + 16px);right:calc(var(--frame) + 16px);
+  z-index:1000;width:40px;height:40px;
+  background:rgba(255,255,255,.55);backdrop-filter:blur(8px);border:none;border-radius:8px;cursor:pointer;padding:6px;
+}
+.mob-burger span{display:block;width:100%;height:2px;background:var(--ink);margin-bottom:6px;transition:transform .3s,opacity .3s}
+.mob-burger span:last-child{margin-bottom:0}
+.mob-burger.active span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+.mob-burger.active span:nth-child(2){opacity:0}
+.mob-burger.active span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+.mob-burger.active span{background:#fff}
+.mob-overlay{
+  display:none;position:fixed;inset:0;z-index:799;
+  background:var(--ink);flex-direction:column;
+  align-items:center;justify-content:center;gap:32px;
+  opacity:0;transition:opacity .3s;
+}
+.mob-overlay.open{display:flex;opacity:1}
+.mob-overlay a{
+  font:800 clamp(28px,8vw,48px)/1.2 var(--sans);
+  text-transform:uppercase;letter-spacing:-.03em;
+  color:#fff;text-decoration:none;transition:color .2s;
+}
+.mob-overlay a:hover{color:var(--orange)}
+@media(max-width:768px){
+  :root{--frame:6px}
+  .mob-burger{display:block}
+  .topbar-menu,.topbar-btn,.topbar-right{display:none}
+  .topbar{padding:20px calc(var(--frame) + 20px)}
+}
+/* Mobile footer */
+@media(max-width:768px){
+  .contact-footer{padding:32px 20px;text-align:center}
+  .contact-label{text-align:center}
+  .contact-row{flex-direction:column;gap:16px;align-items:center}
+  .contact-icons{gap:24px}
+  .contact-icons .icon-link{width:44px;height:44px;display:inline-flex;justify-content:center;align-items:center}
+  .contact-icons .icon-link svg{width:28px;height:28px}
+  .contact-copy{text-align:center}
 }
 </style>
 </head>
@@ -322,6 +369,14 @@ a{color:inherit}img{display:block;max-width:100%}
 <div class="grain"></div>
 <div class="page-grid"></div>
 <div class="view-cursor" id="viewCur">View</div>
+
+<!-- Mobile nav -->
+<button class="mob-burger" id="mobBurger"><span></span><span></span><span></span></button>
+<div class="mob-overlay" id="mobOverlay">
+  <a href="index.html#work">Work</a>
+  <a href="about.html">About</a>
+  <a href="#contact">Contact</a>
+</div>
 
 <!-- Top bar -->
 <nav class="topbar">
@@ -458,7 +513,7 @@ a{color:inherit}img{display:block;max-width:100%}
 </div>
 
 <!-- Contact footer -->
-<footer class="contact-footer">
+<footer class="contact-footer" id="contact">
   <div class="contact-label">Get In Touch</div>
   <div class="contact-row">
     <a href="mailto:thisispaultaylor@icloud.com">thisispaultaylor@icloud.com</a>
@@ -473,6 +528,20 @@ a{color:inherit}img{display:block;max-width:100%}
 
 <script>
 (function(){
+  /* ── MOBILE NAV ── */
+  var burger=document.getElementById('mobBurger');
+  var overlay=document.getElementById('mobOverlay');
+  burger.addEventListener('click',function(){
+    burger.classList.toggle('active');
+    overlay.classList.toggle('open');
+  });
+  overlay.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){
+      burger.classList.remove('active');
+      overlay.classList.remove('open');
+    });
+  });
+
   var menuBtn=document.getElementById('menuBtn');
   var dropdown=document.getElementById('dropdown');
   var menuOpen=false;
