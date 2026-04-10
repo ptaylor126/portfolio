@@ -117,6 +117,8 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
 .ml-p,.ml-t{color:var(--ink);transition:color .3s}
 /* RODUC — collapses width via max-width; NO overflow:hidden to avoid clipping glyphs */
 .ml-roduc{}
+/* T — pull left to close inline-block gap */
+.ml-t{margin-left:-.03em}
 /* AUL, space, AYLOR start hidden AND zero-width */
 .ml-aul,.ml-space,.ml-aylor{display:none;opacity:0;color:var(--orange);max-width:0;overflow:hidden}
 .ml-aylor{overflow:visible}
@@ -150,7 +152,14 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
 a,.nav-pill,.bento-tile{cursor:pointer}
 
 @media(max-width:900px){
-  .hero-status{white-space:normal;font-size:11px}
+  .morph-row{font-size:clamp(40px,12vw,80px);padding-left:12px}
+  .ms-line{font-size:clamp(40px,12vw,80px)!important}
+  .morph-secondary{padding-left:12px;margin-top:8px;gap:4px}
+  .hero-status{white-space:normal;font-size:10px;padding-left:12px;flex-direction:column;align-items:flex-start;gap:6px}
+  .hero-status .meta-sep{display:none}
+  .hero{padding:calc(var(--frame) + 60px) calc(var(--frame) + 20px) calc(var(--frame) + 60px)}
+  .scroll-sig{bottom:calc(var(--frame) + 20px)}
+  .whos-this{display:none}
 }
 
 /* ── 8px grid — covers hero + bento ── */
