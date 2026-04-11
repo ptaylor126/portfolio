@@ -11,7 +11,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#F9F9F9;--ink:#000;--orange:#FF6B00;--grey:#6B6B6B;--slate:#475569;
+  --bg:#F9F9F9;--ink:#000;--orange:#F76902;--grey:#6B6B6B;--slate:#475569;
   --tight:'Inter',system-ui,sans-serif;
   --mono:'JetBrains Mono','SF Mono',monospace;
   --frame:12px;
@@ -147,7 +147,7 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
   white-space:nowrap;
   opacity:0;animation:fadeIn .5s 1s cubic-bezier(.22,1,.36,1) forwards;
 }
-.meta-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 6px rgba(255,79,0,.3);flex-shrink:0;animation:pulse 2s ease-in-out infinite}
+.meta-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 6px rgba(247,105,2,.3);flex-shrink:0;animation:pulse 2s ease-in-out infinite}
 .meta-label{font-weight:700;letter-spacing:.03em}
 .meta-sep{color:rgba(0,0,0,.15);margin:0 6px}
 .meta-segment{white-space:nowrap;display:inline}
@@ -617,7 +617,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     mlAul.style.display='inline-block';mlAul.style.maxWidth='none';
     aulW=mlAul.scrollWidth;
     mlSpace.style.display='inline-block';mlSpace.style.maxWidth='none';
-    spaceW=mlSpace.scrollWidth;
+    spaceW=parseFloat(getComputedStyle(mlSpace).fontSize)*0.22;
     mlAylor.style.display='inline-block';mlAylor.style.maxWidth='none';
     aylorW=mlAylor.scrollWidth;
     // Reset — hide again
@@ -667,7 +667,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     mlSpace.style.display=show;
     mlAylor.style.display=show;
     mlAul.style.maxWidth=(aulW*k3)+'px';
-    mlSpace.style.maxWidth=(spaceW*k3)+'px';
+    mlSpace.style.width=(spaceW*k3)+'px';
+    mlSpace.style.maxWidth='none';
     mlAylor.style.maxWidth=(aylorW*k3)+'px';
 
     // ── KF4 (55–70%): AUL, AYLOR fade in + P,T turn blue ──
@@ -675,7 +676,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     mlAul.style.opacity=k4;
     mlSpace.style.opacity=k4;
     mlAylor.style.opacity=k4;
-    var nameColor=k4>=1?'#FF6B00':'';
+    var nameColor=k4>=1?'#F76902':'';
     mlP.style.color=nameColor;
     mlT.style.color=nameColor;
 
