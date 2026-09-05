@@ -153,6 +153,8 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
 .meta-label{font-weight:700;letter-spacing:.03em}
 .meta-sep{color:rgba(0,0,0,.15);margin:0 6px}
 .meta-segment{white-space:nowrap;display:inline}
+.hero-status a{color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(0,0,0,.2);transition:text-decoration-color .2s,color .2s}
+.hero-status a:hover{color:var(--orange);text-decoration-color:var(--orange)}
 
 /* Cursor: pointer on all interactive */
 a,.nav-pill,.bento-tile{cursor:pointer}
@@ -166,7 +168,6 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .hero-status .meta-sep{display:none}
   .hero{padding:calc(var(--frame) + 60px) calc(var(--frame) + 20px) calc(var(--frame) + 60px)}
   .scroll-sig{bottom:calc(var(--frame) + 20px)}
-  .whos-this{display:none!important}
 }
 
 /* ── Mobile hamburger nav ── */
@@ -209,6 +210,19 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   transition:color .2s;
 }
 .mob-overlay a:hover{color:var(--orange)}
+
+/* Mobile "Who's this?!" pill — above the headline under 1024px, hidden elsewhere */
+.whos-this-mobile{display:none}
+
+/* Under 1024px: morph auto-plays (no pinned scroll runway), pill sits above the end of the headline */
+@media(max-width:1024px){
+  .hero-runway{height:auto}
+  .hero{position:relative;height:auto;min-height:100vh}
+  #whosThis{display:none!important}
+  /* shrink the headline block to its text so the pill's right edge lands on the last letter */
+  .morph-row{align-self:flex-start;width:-moz-fit-content;width:fit-content}
+  .whos-this-mobile{display:inline-block;position:absolute;right:0;top:auto;bottom:calc(100% + 16px);margin:0}
+}
 
 @media(max-width:768px){
   :root{--frame:6px}
@@ -436,7 +450,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 <div class="hero-runway" id="heroRunway">
   <section class="hero" id="hero">
     <!-- Morph headline: P-RODUC-T → P-AUL T-AYLOR -->
-    <div class="morph-row"><span class="ml ml-p" id="mlP">P</span><span class="ml ml-roduc" id="mlRoduc">roduc</span><span class="ml ml-aul" id="mlAul">aul</span><span class="ml ml-space" id="mlSpace"> </span><span class="ml ml-t" id="mlT">T</span><span class="ml ml-aylor" id="mlAylor">aylor</span><div class="whos-this" id="whosThis"><a href="about.html">Who's this?!</a></div></div>
+    <div class="morph-row"><span class="ml ml-p" id="mlP">P</span><span class="ml ml-roduc" id="mlRoduc">roduc</span><span class="ml ml-aul" id="mlAul">aul</span><span class="ml ml-space" id="mlSpace"> </span><span class="ml ml-t" id="mlT">T</span><span class="ml ml-aylor" id="mlAylor">aylor</span><div class="whos-this" id="whosThis"><a href="about.html">Who's this?!</a></div><div class="whos-this whos-this-mobile" id="whosThisMobile"><a href="about.html">Who's this?!</a></div></div>
 
     <!-- Secondary: DESIGNER + WHO SHIPS → WHO IS PAUL TAYLOR? -->
     <div class="morph-secondary" id="morphSecondary">
@@ -446,9 +460,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
     <div class="hero-status" id="heroStatus">
       <div class="meta-dot"></div>
-      <span><span class="meta-segment"><span class="meta-label">STATUS:</span> Building Level (screen time app)</span> <span class="meta-sep">//</span> <span class="meta-segment"><span class="meta-label">SHIPPED:</span> Ballrs + Beat Block + MealMatch AI</span> <span class="meta-sep">//</span> <span class="meta-segment"><span class="meta-label">BETA:</span> Loupe for Mac</span></span>
+      <span><span class="meta-segment"><span class="meta-label">STATUS:</span> Visual Designer at iCrossing</span> <span class="meta-sep">//</span> <span class="meta-segment"><span class="meta-label">SHIPPED:</span> <a href="https://ballrs.net" target="_blank" rel="noopener">Ballrs</a> + Beat Block + <a href="https://seenrecs.com" target="_blank" rel="noopener">Seen</a></span> <span class="meta-sep">//</span> <span class="meta-segment"><span class="meta-label">BETA:</span> <a href="https://tagwithloupe.com" target="_blank" rel="noopener">Loupe</a> for Mac</span></span>
     </div>
-
     <!-- Scroll signifier -->
     <div class="scroll-sig" id="scrollSig">
       <span>Scroll</span>
@@ -632,11 +645,49 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     mlRoduc.style.width=roducW+'px';
   }
 
-  // Gate: don't run scroll morph until load animations finish
+  // Gate: don't run morph until load animations finish
   var introComplete=false;
-  setTimeout(function(){measure();introComplete=true;onScroll()},1200);
+  var whosThisMobile=document.getElementById('whosThisMobile');
+  var autoMorph=window.matchMedia('(max-width:1024px)'); // auto-play + mobile pill below this width
+  var autoP=0;           // mobile auto-play progress (0 → 1)
+  var autoStarted=false;
+  setTimeout(function(){measure();introComplete=true;render()},1200);
+
+  // Headline morph — shared by the desktop scroll timeline and the mobile auto-play
+  function morphHeadline(p){
+    // ── KF2 (15–30%): RODUC fades out (keeps its width) ──
+    var k2=Math.max(0,Math.min(1,(p-0.15)/0.15));
+    mlRoduc.style.opacity=1-k2;
+
+    // ── KF3 (30–55%): T slides — roduc collapses, aul+space expand ──
+    //     roduc shrinks from full → 0, aul+space grow from 0 → natural
+    //     Net effect: T moves left by (roducW - aulW - spaceW)
+    var k3=Math.max(0,Math.min(1,(p-0.30)/0.25));
+    mlRoduc.style.width=(roducW*(1-k3))+'px';
+    // Show/hide the name spans
+    var show=k3>0?'inline-block':'none';
+    mlAul.style.display=show;
+    mlSpace.style.display=show;
+    mlAylor.style.display=show;
+    mlAul.style.maxWidth=(aulW*k3)+'px';
+    mlSpace.style.width=(spaceW*k3)+'px';
+    mlSpace.style.maxWidth='none';
+    mlAylor.style.maxWidth=(aylorW*k3)+'px';
+
+    // ── KF4 (55–70%): AUL, AYLOR fade in + P,T turn orange ──
+    var k4=Math.max(0,Math.min(1,(p-0.55)/0.15));
+    mlAul.style.opacity=k4;
+    mlSpace.style.opacity=k4;
+    mlAylor.style.opacity=k4;
+    var nameColor=k4>=1?'#F76902':'';
+    mlP.style.color=nameColor;
+    mlT.style.color=nameColor;
+
+    // ── KF5 (70–100%): Hold PAUL TAYLOR ──
+  }
 
   function onScroll(){
+    if(autoMorph.matches) return; // under 1024px the morph is time-driven, see autoPlay()
     var sy=window.scrollY;
     var runwayTop=heroRunway.offsetTop;
     var runwayH=heroRunway.offsetHeight-window.innerHeight;
@@ -657,39 +708,52 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     msWhoShips.style.opacity=1-k1;
     heroStatus.style.opacity=1-k1;
 
-    // ── KF2 (15–30%): RODUC fades out (keeps its width) ──
-    var k2=Math.max(0,Math.min(1,(p-0.15)/0.15));
-    mlRoduc.style.opacity=1-k2;
+    morphHeadline(p);
+  }
 
-    // ── KF3 (30–55%): T slides — roduc collapses, aul+space expand ──
-    //     roduc shrinks from full → 0, aul+space grow from 0 → natural
-    //     Net effect: T moves left by (roducW - aulW - spaceW)
-    var k3=Math.max(0,Math.min(1,(p-0.30)/0.25));
-    mlRoduc.style.width=(roducW*(1-k3))+'px';
-    // Show/hide the name spans
-    var show=k3>0?'inline-block':'none';
-    mlAul.style.display=show;
-    mlSpace.style.display=show;
-    mlAylor.style.display=show;
-    mlAul.style.maxWidth=(aulW*k3)+'px';
-    mlSpace.style.width=(spaceW*k3)+'px';
-    mlSpace.style.maxWidth='none';
-    mlAylor.style.maxWidth=(aylorW*k3)+'px';
+  // ── UNDER 1024px: auto-play the headline morph 1.5s after load, no scroll needed ──
+  //    Secondary lines + status stay put; the pill pops in above the end of the name.
+  function renderMobile(){
+    scrollSig.style.opacity='';
+    msDesigner.style.opacity='';msWhoShips.style.opacity='';heroStatus.style.opacity='';
+    whosThis.classList.remove('visible');
+    morphHeadline(autoP);
+    if(autoP>0.72){whosThisMobile.classList.add('visible')}
+    else{whosThisMobile.classList.remove('visible')}
+  }
+  function autoPlay(){
+    if(autoStarted) return;
+    autoStarted=true;
+    var DUR=1800,P0=0.15,P1=0.85,t0=null;
+    function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+    function frame(ts){
+      if(t0===null) t0=ts;
+      var t=Math.min(1,(ts-t0)/DUR);
+      autoP=P0+(P1-P0)*ease(t);
+      if(t>=1) autoP=1;
+      if(autoMorph.matches) renderMobile();
+      if(t<1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  setTimeout(function(){
+    if(!autoMorph.matches) return;
+    if(!introComplete){measure();introComplete=true}
+    autoPlay();
+  },1500);
 
-    // ── KF4 (55–70%): AUL, AYLOR fade in + P,T turn blue ──
-    var k4=Math.max(0,Math.min(1,(p-0.55)/0.15));
-    mlAul.style.opacity=k4;
-    mlSpace.style.opacity=k4;
-    mlAylor.style.opacity=k4;
-    var nameColor=k4>=1?'#F76902':'';
-    mlP.style.color=nameColor;
-    mlT.style.color=nameColor;
-
-    // ── KF5 (70–100%): Hold PAUL TAYLOR, page un-pins ──
+  function render(){
+    if(autoMorph.matches){renderMobile()}
+    else{onScroll()}
   }
 
   window.addEventListener('scroll',onScroll,{passive:true});
-  window.addEventListener('resize',function(){measure();onScroll()});
+  window.addEventListener('resize',function(){measure();render()});
+  autoMorph.addEventListener('change',function(e){
+    // Switched under 1024px after load: play immediately. Desktop resumes scroll-driven.
+    if(e.matches&&!autoStarted&&introComplete) autoPlay();
+    measure();render();
+  });
 
 })();
 </script>

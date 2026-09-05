@@ -632,6 +632,8 @@ a{color:inherit}img{display:block;max-width:100%}
   font:400 13px/1.7 var(--sans);color:#555;
   max-width:36ch;
 }
+/* Mobile-only accordion parts; the desktop layout shows images in the sticky phone */
+.gd-card-img,.gd-card-chev{display:none}
 
 .gd-review{
   background:#F5F2EB;
@@ -647,11 +649,48 @@ a{color:inherit}img{display:block;max-width:100%}
 .gd-review-src{font:400 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555}
 
 @media(max-width:800px){
-  .gd-rail{grid-template-columns:1fr;margin:40px -20px;padding:0 20px}
+  /* Simple stacked layout: no sticky phone, no scroll runway.
+     min-height:auto + align-content:start stop the grid spreading the
+     1000vh runway across the label + cards rows (which left thousands of
+     px of empty space above and below the cards). */
+  .gd-rail{grid-template-columns:1fr;min-height:auto;align-content:start;margin:40px -20px;padding:0 20px 40px}
   .gd-stage-col{display:none}
-  .gd-narr-col{padding:0}
+  .gd-narr-col{padding:24px 0 0}
   .gd-card{height:auto;min-height:auto}
-  .gd-card-inner{position:relative;top:0;transform:none;opacity:1;border-left-color:var(--accent)}
+  .gd-card-inner{
+    position:relative;top:0;transform:none;opacity:1;
+    padding:20px 20px 20px 18px;
+    background:#fff;
+    border-left:3px solid var(--accent);
+    border-radius:0 8px 8px 0;
+    box-shadow:0 1px 3px rgba(0,0,0,.06);
+  }
+  .gd-card-text{max-width:none;font-size:14px}
+  /* Accordion: closed shows number + quoted headline; tap to reveal body + image */
+  .gd-narr-col{gap:16px}
+  .gd-card-inner{cursor:pointer;padding-right:52px;-webkit-tap-highlight-color:transparent}
+  .gd-card-quote{color:var(--ink);font-weight:600}
+  .gd-card-body{display:none;margin-top:8px}
+  .gd-card.open .gd-card-body{display:block}
+  .gd-card.open .gd-card-img{display:block;margin-top:16px}
+  .gd-card-img img{
+    width:100%;height:auto;display:block;
+    border-radius:16px;
+    box-shadow:0 4px 12px rgba(0,0,0,.08),0 20px 48px rgba(0,0,0,.12);
+  }
+  .gd-card-chev{
+    display:block;position:absolute;top:20px;right:16px;
+    width:24px;height:24px;border-radius:50%;
+    border:1px solid rgba(0,0,0,.15);
+    transition:transform .25s ease,border-color .2s;
+  }
+  .gd-card-chev::before{
+    content:"";position:absolute;left:50%;top:50%;
+    width:7px;height:7px;
+    border-right:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
+    transform:translate(-50%,-65%) rotate(45deg);
+  }
+  .gd-card.open .gd-card-chev{transform:rotate(180deg);border-color:var(--accent)}
   .gd-review{margin:0 -20px;padding:32px 20px}
 }
 
@@ -1649,31 +1688,41 @@ a{color:inherit}img{display:block;max-width:100%}
         <div class="gd-card active" data-gd="1">
           <div class="gd-card-inner">
             <div class="gd-card-num">01</div>
-            <p class="gd-card-text">"Clue Drop scoring: 6 points for 1 clue, down to 1 for 6." Simple and intuitive. Rewards knowledge depth. No complex multipliers, no bonus rounds. You either knew it early or you didn't.</p>
+            <p class="gd-card-text"><span class="gd-card-quote">"Clue Drop scoring: 6 points for 1 clue, down to 1 for 6."</span> <span class="gd-card-body">Simple and intuitive. Rewards knowledge depth. No complex multipliers, no bonus rounds. You either knew it early or you didn't.</span></p>
+            <div class="gd-card-img"><img src="public/images/ballrs/clue-drop-nba.jpeg" alt="Clue Drop gameplay" loading="lazy"></div>
+            <span class="gd-card-chev" aria-hidden="true"></span>
           </div>
         </div>
         <div class="gd-card" data-gd="2">
           <div class="gd-card-inner">
             <div class="gd-card-num">02</div>
-            <p class="gd-card-text">"Feedback form on the 5th play, not the 1st." First play is too early. By the 5th play, users have formed a real opinion. Every new game mode launched with a feedback form built in.</p>
+            <p class="gd-card-text"><span class="gd-card-quote">"Feedback form on the 5th play, not the 1st."</span> <span class="gd-card-body">First play is too early. By the 5th play, users have formed a real opinion. Every new game mode launched with a feedback form built in.</span></p>
+            <div class="gd-card-img"><img src="public/images/ballrs/clue-drop-feedback.png" alt="Feedback modal" loading="lazy"></div>
+            <span class="gd-card-chev" aria-hidden="true"></span>
           </div>
         </div>
         <div class="gd-card" data-gd="3">
           <div class="gd-card-inner">
             <div class="gd-card-num">03</div>
-            <p class="gd-card-text">"Server-side game logic." Originally client-side. Moved everything to Supabase Edge Functions after realising client-side scoring was exploitable. Security is an architecture decision, not a feature.</p>
+            <p class="gd-card-text"><span class="gd-card-quote">"Server-side game logic."</span> <span class="gd-card-body">Originally client-side. Moved everything to Supabase Edge Functions after realising client-side scoring was exploitable. Security is an architecture decision, not a feature.</span></p>
+            <div class="gd-card-img"><img src="public/images/ballrs/client_vs_server_scoring.svg" alt="Client vs Server Scoring Architecture" loading="lazy"></div>
+            <span class="gd-card-chev" aria-hidden="true"></span>
           </div>
         </div>
         <div class="gd-card" data-gd="4">
           <div class="gd-card-inner">
             <div class="gd-card-num">04</div>
-            <p class="gd-card-text">"Over Under: two problems in one game." League position questions were counterintuitive. 43 out of 1,041 questions had users selecting UNDER when the answer was OVER. Added contextual hints like "Lower number = higher finish." Then changed the buttons from red and green to neutral colours. Red for "higher" felt wrong to users.</p>
+            <p class="gd-card-text"><span class="gd-card-quote">"Over Under: two problems in one game."</span> <span class="gd-card-body">League position questions were counterintuitive. 43 out of 1,041 questions had users selecting UNDER when the answer was OVER. Added contextual hints like "Lower number = higher finish." Then changed the buttons from red and green to neutral colours. Red for "higher" felt wrong to users.</span></p>
+            <div class="gd-card-img"><img src="public/images/ballrs/over-under-fix.png" alt="Over Under with contextual hints" loading="lazy"></div>
+            <span class="gd-card-chev" aria-hidden="true"></span>
           </div>
         </div>
         <div class="gd-card" data-gd="5">
           <div class="gd-card-inner">
             <div class="gd-card-num">05</div>
-            <p class="gd-card-text">"Duels: killed live, went async." Real-time meant Player 1 sits waiting if Player 2 doesn't show. A 48-hour async window fixed it. If both players are online, it still feels live.</p>
+            <p class="gd-card-text"><span class="gd-card-quote">"Duels: killed live, went async."</span> <span class="gd-card-body">Real-time meant Player 1 sits waiting if Player 2 doesn't show. A 48-hour async window fixed it. If both players are online, it still feels live.</span></p>
+            <div class="gd-card-img"><img src="public/images/ballrs/challenge.jpeg" alt="Duel Results" loading="lazy"></div>
+            <span class="gd-card-chev" aria-hidden="true"></span>
           </div>
         </div>
       </div>
@@ -2432,6 +2481,41 @@ a{color:inherit}img{display:block;max-width:100%}
 
   window.addEventListener('scroll',onGdScroll,{passive:true});
   onGdScroll();
+
+  /* ── MOBILE: decision cards as accordions (one open at a time) ── */
+  var gdMobile=window.matchMedia('(max-width:800px)');
+  function gdSetOpen(card,open){
+    card.classList.toggle('open',open);
+    card.querySelector('.gd-card-inner').setAttribute('aria-expanded',open?'true':'false');
+  }
+  function gdApplyMode(){
+    gdCards.forEach(function(card){
+      var inner=card.querySelector('.gd-card-inner');
+      if(gdMobile.matches){
+        inner.setAttribute('role','button');
+        inner.setAttribute('tabindex','0');
+        inner.setAttribute('aria-expanded',card.classList.contains('open')?'true':'false');
+      }else{
+        card.classList.remove('open');
+        inner.removeAttribute('role');inner.removeAttribute('tabindex');inner.removeAttribute('aria-expanded');
+      }
+    });
+  }
+  gdApplyMode();
+  gdMobile.addEventListener('change',gdApplyMode);
+  gdCards.forEach(function(card){
+    var inner=card.querySelector('.gd-card-inner');
+    function toggle(){
+      if(!gdMobile.matches)return;
+      var willOpen=!card.classList.contains('open');
+      gdCards.forEach(function(c){if(c!==card)gdSetOpen(c,false)});
+      gdSetOpen(card,willOpen);
+    }
+    inner.addEventListener('click',toggle);
+    inner.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}
+    });
+  });
 
 
   /* ── CALLOUT REVEAL ── */
