@@ -13,6 +13,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
+  --accent-on-dark:#38BDF8;
   --bg:#F9F9F9;--ink:#000;--accent:#0369A1;--grey:#6B6B6B;
   --sans:'Figtree',system-ui,sans-serif;
   --mono:'Figtree',system-ui,sans-serif;
@@ -262,11 +263,11 @@ a{color:inherit}img{display:block;max-width:100%}
   padding:8px 12px;
   transition:color .2s;
 }
-.lightbox-close:hover{color:var(--accent)}
+.lightbox-close:hover{color:var(--accent-on-dark)}
 .lightbox-caption{
   position:absolute;bottom:calc(var(--frame) + 24px);left:calc(var(--frame) + 24px);
   font:500 15px/1 var(--mono);letter-spacing:.04em;
-  text-transform:uppercase;color:var(--accent);
+  text-transform:uppercase;color:var(--accent-on-dark);
 }
 
 /* ================================================================
@@ -346,7 +347,7 @@ a{color:inherit}img{display:block;max-width:100%}
   text-transform:uppercase;letter-spacing:-.03em;
   color:#fff;text-decoration:none;transition:color .2s;
 }
-.mob-overlay a:hover{color:var(--accent)}
+.mob-overlay a:hover{color:var(--accent-on-dark)}
 @media(max-width:768px){
   :root{--frame:6px}
   .mob-burger{display:block}
