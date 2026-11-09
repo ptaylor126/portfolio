@@ -87,12 +87,12 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
 .whos-this a:hover{background:var(--accent);transform:rotate(0deg) scale(1.05)}
 /* Hand-drawn arrow: pill → name. Sized in em so it scales with the headline. */
 .wt-arrow{
-  position:absolute;right:calc(100% + .01em);top:.58em;
-  width:.52em;height:.26em;overflow:visible;pointer-events:none;
-  fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
-  vector-effect:non-scaling-stroke;
+  /* tail sits ~12px above the pill's top edge (pill is ~35px tall) at every headline size */
+  position:absolute;left:-.56em;bottom:48px;
+  width:.76em;height:.34em;overflow:visible;pointer-events:none;
+  fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
 }
-.wt-arrow path{stroke-dasharray:1;stroke-dashoffset:1;vector-effect:non-scaling-stroke}
+.wt-arrow path{stroke-dasharray:1;stroke-dashoffset:1}
 .whos-this.visible .wt-arrow path{transition:stroke-dashoffset .3s ease-out .1s;stroke-dashoffset:0}
 .whos-this.visible .wt-arrow path+path{transition-delay:.38s;transition-duration:.1s}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
@@ -230,7 +230,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   /* shrink the headline block to its text so the pill's right edge lands on the last letter */
   .morph-row{align-self:flex-start;width:-moz-fit-content;width:fit-content}
   .whos-this-mobile{display:inline-block;position:absolute;right:0;top:auto;bottom:calc(100% + 16px);margin:0}
-  .whos-this-mobile .wt-arrow{width:40px;height:20px;top:62%;right:calc(100% + 2px);transform:rotate(-32deg);transform-origin:100% 80%}
+  .whos-this-mobile .wt-arrow{left:-34px;bottom:-13px;width:68px;height:82px;stroke-width:2.2}
 }
 
 @media(max-width:768px){
@@ -422,7 +422,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 <!-- Hero -->
 <section class="hero" id="hero">
     <!-- Morph headline: P-RODUC-T → P-AUL T-AYLOR -->
-    <div class="morph-row"><span class="ml ml-p" id="mlP">P</span><span class="ml ml-roduc" id="mlRoduc">roduc</span><span class="ml ml-aul" id="mlAul">aul</span><span class="ml ml-space" id="mlSpace"> </span><span class="ml ml-t" id="mlT">T</span><span class="ml ml-aylor" id="mlAylor">aylor</span><div class="whos-this" id="whosThis"><svg class="wt-arrow" viewBox="0 0 80 40" aria-hidden="true" focusable="false"><path pathLength="1" d="M78 32 C 63 5, 31 1, 7 20"/><path pathLength="1" d="M10.5 10.7 L 7 20 L 16.8 18.4"/></svg><a href="about.html">Who's this?!</a></div><div class="whos-this whos-this-mobile" id="whosThisMobile"><svg class="wt-arrow" viewBox="0 0 80 40" aria-hidden="true" focusable="false"><path pathLength="1" d="M78 32 C 63 5, 31 1, 7 20"/><path pathLength="1" d="M10.5 10.7 L 7 20 L 16.8 18.4"/></svg><a href="about.html">Who's this?!</a></div></div>
+    <div class="morph-row"><span class="ml ml-p" id="mlP">P</span><span class="ml ml-roduc" id="mlRoduc">roduc</span><span class="ml ml-aul" id="mlAul">aul</span><span class="ml ml-space" id="mlSpace"> </span><span class="ml ml-t" id="mlT">T</span><span class="ml ml-aylor" id="mlAylor">aylor</span><div class="whos-this" id="whosThis"><svg class="wt-arrow" viewBox="0 0 76 34" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M73 34 C 72 15, 58 3, 40 3 C 24 3, 11 12, 5 24"/><path pathLength="1" d="M12.5 19 L 5 24 L 4.5 15"/></svg><a href="about.html">Who's this?!</a></div><div class="whos-this whos-this-mobile" id="whosThisMobile"><svg class="wt-arrow" viewBox="0 0 68 82" aria-hidden="true" focusable="false"><path pathLength="1" d="M62 23 C 60 8, 34 0, 15 11 C 4 18, 8 54, 16 78"/><path pathLength="1" d="M17.6 70.2 L 16 78 L 10 72.7"/></svg><a href="about.html">Who's this?!</a></div></div>
 
     <!-- Secondary: DESIGNER + CONCEPT TO LAUNCH. -->
     <div class="morph-secondary" id="morphSecondary">
