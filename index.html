@@ -13,7 +13,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#F9F9F9;--ink:#000;--orange:#F76902;--grey:#6B6B6B;--slate:#475569;
+  --bg:#F9F9F9;--ink:#000;--accent:#0369A1;--grey:#6B6B6B;--slate:#475569;
   --tight:'Inter',system-ui,sans-serif;
   --mono:'JetBrains Mono','SF Mono',monospace;
   --frame:12px;
@@ -23,7 +23,7 @@
 }
 html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hidden;cursor:none}
-::selection{background:var(--orange);color:#fff}
+::selection{background:var(--accent);color:#fff}
 
 /* Frame */
 .frame{position:fixed;inset:0;pointer-events:none;z-index:900;
@@ -50,7 +50,7 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
   left:0;right:0;
   display:flex;flex-direction:column;align-items:center;gap:4px;
   font:600 11px/1 var(--mono);letter-spacing:.06em;
-  text-transform:uppercase;color:var(--orange);
+  text-transform:uppercase;color:var(--accent);
   z-index:600;
   opacity:0;animation:fadeIn .5s 1s ease forwards;
 }
@@ -84,7 +84,7 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
   cursor:pointer;
   transition:background .2s,transform .2s;
 }
-.whos-this a:hover{background:var(--orange);transform:rotate(0deg) scale(1.05)}
+.whos-this a:hover{background:var(--accent);transform:rotate(0deg) scale(1.05)}
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 
 /* ================================================================
@@ -126,7 +126,7 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
 /* T — pull left to close inline-block gap */
 .ml-t{margin-left:-.03em}
 /* AUL, space, AYLOR start hidden AND zero-width */
-.ml-aul,.ml-space,.ml-aylor{display:none;opacity:0;color:var(--orange);max-width:0;overflow:hidden}
+.ml-aul,.ml-space,.ml-aylor{display:none;opacity:0;color:var(--accent);max-width:0;overflow:hidden}
 .ml-aylor{overflow:visible}
 
 /* Secondary lines */
@@ -149,12 +149,12 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
   white-space:nowrap;
   opacity:0;animation:fadeIn .5s 1s cubic-bezier(.22,1,.36,1) forwards;
 }
-.meta-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 6px rgba(247,105,2,.3);flex-shrink:0;animation:pulse 2s ease-in-out infinite}
+.meta-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px rgba(3,105,161,.3);flex-shrink:0;animation:pulse 2s ease-in-out infinite}
 .meta-label{font-weight:700;letter-spacing:.03em}
 .meta-sep{color:rgba(0,0,0,.15);margin:0 6px}
 .meta-segment{white-space:nowrap;display:inline}
 .hero-status a{color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(0,0,0,.2);transition:text-decoration-color .2s,color .2s}
-.hero-status a:hover{color:var(--orange);text-decoration-color:var(--orange)}
+.hero-status a:hover{color:var(--accent);text-decoration-color:var(--accent)}
 
 /* Cursor: pointer on all interactive */
 a,.nav-pill,.bento-tile{cursor:pointer}
@@ -209,7 +209,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   color:#fff;text-decoration:none;
   transition:color .2s;
 }
-.mob-overlay a:hover{color:var(--orange)}
+.mob-overlay a:hover{color:var(--accent)}
 
 /* Mobile "Who's this?!" pill — above the headline under 1024px, hidden elsewhere */
 .whos-this-mobile{display:none}
@@ -331,8 +331,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   transition:background .3s,color .3s,border-color .3s;
 }
 .bento-tile:hover .bt-tags span{
-  background:var(--orange);
-  border-color:var(--orange);
+  background:var(--accent);
+  border-color:var(--accent);
   color:#fff;
 }
 
@@ -369,7 +369,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 /* ── Touch-active: mirrors hover for mobile scroll trigger ── */
 .bento-tile.touch-active .bt-img{transform:translate(-50%,-50%) scale(1.05)!important}
 .bento-tile.touch-active .bt-badges span{color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.25)}
-.bento-tile.touch-active .bt-tags span{background:var(--orange);border-color:var(--orange);color:#fff}
+.bento-tile.touch-active .bt-tags span{background:var(--accent);border-color:var(--accent);color:#fff}
 
 /* ── Responsive ── */
 @media(max-width:900px){
@@ -401,12 +401,12 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   color:var(--ink);text-decoration:none;
   transition:color .12s;
 }
-.contact-row a:hover{color:var(--orange)}
+.contact-row a:hover{color:var(--accent)}
 .contact-row a:visited{color:var(--ink)}
 .contact-icons{display:flex;gap:16px;align-items:center}
 .contact-icons .icon-link{display:inline-flex;align-items:center}
 .contact-icons .icon-link svg{width:20px;height:20px;fill:var(--ink);transition:fill .12s}
-.contact-icons .icon-link:hover svg{fill:var(--orange)}
+.contact-icons .icon-link:hover svg{fill:var(--accent)}
 .contact-copy{
   margin-top:32px;
   font:400 10px/1 var(--mono);color:rgba(0,0,0,.3);
@@ -422,7 +422,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 }
 .back-to-top{position:relative;z-index:2;display:flex;justify-content:center;padding:32px 0}
 .back-to-top a{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s;cursor:pointer}
-.back-to-top a:hover{color:var(--orange)}
+.back-to-top a:hover{color:var(--accent)}
 .back-to-top .btt-arrow{transition:transform .25s cubic-bezier(.22,1,.36,1)}
 .back-to-top a:hover .btt-arrow{transform:translateY(-4px)}
 </style>
@@ -679,7 +679,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     mlAul.style.opacity=k4;
     mlSpace.style.opacity=k4;
     mlAylor.style.opacity=k4;
-    var nameColor=k4>=1?'#F76902':'';
+    var nameColor=k4>=1?'#0369A1':'';
     mlP.style.color=nameColor;
     mlT.style.color=nameColor;
 
