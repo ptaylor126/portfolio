@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Loupe — Case Study</title>
+<title>Loupe, Case Study</title>
 <link rel="icon" type="image/png" href="/public/images/favicon-1.png?v=3">
 <link rel="apple-touch-icon" sizes="180x180" href="/public/images/favicon-1.png?v=3">
 <meta name="description" content="Loupe case study. A Mac app that tags your photos using local AI.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#F9F9F9;--ink:#000;--accent:#8FA68A;--grey:#6B6B6B;
-  --sans:'Inter',system-ui,sans-serif;
-  --mono:'JetBrains Mono','SF Mono',monospace;
+  --sans:'Figtree',system-ui,sans-serif;
+  --mono:'Figtree',system-ui,sans-serif;
   --frame:12px;
   --pad:clamp(24px,5vw,64px);
 }
@@ -324,7 +324,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .mob-burger.active{background:transparent;backdrop-filter:none}
 .mob-overlay{display:none;position:fixed;inset:0;z-index:799;background:var(--ink);flex-direction:column;align-items:center;justify-content:center;gap:32px;opacity:0;transition:opacity .3s}
 .mob-overlay.open{display:flex;opacity:1}
-.mob-overlay a{font:800 clamp(28px,8vw,48px)/1.2 'Inter',system-ui,sans-serif;text-transform:uppercase;letter-spacing:-.03em;color:#fff;text-decoration:none;transition:color .2s}
+.mob-overlay a{font:800 clamp(28px,8vw,48px)/1.2 'Figtree',system-ui,sans-serif;text-transform:uppercase;letter-spacing:-.03em;color:#fff;text-decoration:none;transition:color .2s}
 .mob-overlay a:hover{color:#FF6B00}
 @media(max-width:768px){:root{--frame:6px}.mob-burger{display:block}.topbar-menu{display:none}}
 /* Mobile footer */
@@ -340,6 +340,9 @@ a{color:inherit}img{display:block;max-width:100%}
 .back-to-top{position:relative;z-index:2;display:flex;justify-content:center;padding:32px 0}
 .back-to-top a{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s}
 .back-to-top a:hover{color:var(--ink)}
+
+/* Line up digits in stats and charts */
+.stat-bar-num{font-variant-numeric:tabular-nums}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>

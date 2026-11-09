@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paul Taylor — Product Designer Who Ships.</title>
+<title>Paul Taylor, Product Designer</title>
 <link rel="icon" type="image/png" href="/public/images/favicon-1.png?v=3">
 <link rel="apple-touch-icon" sizes="180x180" href="/public/images/favicon-1.png?v=3">
 <meta name="description" content="Lead Product Designer. Three apps shipped to the App Store. Brooklyn, NY.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#F9F9F9;--ink:#000;--accent:#0369A1;--grey:#6B6B6B;--slate:#475569;
-  --tight:'Inter',system-ui,sans-serif;
-  --mono:'JetBrains Mono','SF Mono',monospace;
+  --tight:'Figtree',system-ui,sans-serif;
+  --mono:'Figtree',system-ui,sans-serif;
   --frame:12px;
   --pad:clamp(24px,5vw,64px);
   --snap:cubic-bezier(.16,1,.3,1);
@@ -137,7 +137,7 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
   line-height:.85;letter-spacing:-.06em;
   text-transform:uppercase;color:var(--ink);
 }
-.ms-line.outline{-webkit-text-stroke:2px var(--ink);color:transparent}
+.ms-line.muted{color:#6B6B6B;font-size:clamp(34px,6vw,96px)}
 .ms-line:nth-child(1){transform:translate3d(-80px,0,0);opacity:0;animation:slideIn .5s .2s cubic-bezier(.22,1,.36,1) forwards}
 .ms-line:nth-child(2){opacity:0;animation:fadeIn .5s .7s cubic-bezier(.22,1,.36,1) forwards}
 
@@ -452,10 +452,10 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     <!-- Morph headline: P-RODUC-T → P-AUL T-AYLOR -->
     <div class="morph-row"><span class="ml ml-p" id="mlP">P</span><span class="ml ml-roduc" id="mlRoduc">roduc</span><span class="ml ml-aul" id="mlAul">aul</span><span class="ml ml-space" id="mlSpace"> </span><span class="ml ml-t" id="mlT">T</span><span class="ml ml-aylor" id="mlAylor">aylor</span><div class="whos-this" id="whosThis"><a href="about.html">Who's this?!</a></div><div class="whos-this whos-this-mobile" id="whosThisMobile"><a href="about.html">Who's this?!</a></div></div>
 
-    <!-- Secondary: DESIGNER + WHO SHIPS → WHO IS PAUL TAYLOR? -->
+    <!-- Secondary: DESIGNER + CONCEPT TO LAUNCH. -->
     <div class="morph-secondary" id="morphSecondary">
       <div class="ms-line" id="msDesigner">Designer</div>
-      <div class="ms-line outline" id="msWhoShips">Who Ships.</div>
+      <div class="ms-line muted" id="msWhoShips">Concept to launch.</div>
     </div>
 
     <div class="hero-status" id="heroStatus">
@@ -702,7 +702,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
     if(!introComplete) return;
 
-    // ── KF1 (0–15%): DESIGNER, WHO SHIPS, STATUS fade out ──
+    // ── KF1 (0–15%): DESIGNER, CONCEPT TO LAUNCH, STATUS fade out ──
     var k1=Math.min(1,p/0.15);
     msDesigner.style.opacity=1-k1;
     msWhoShips.style.opacity=1-k1;
