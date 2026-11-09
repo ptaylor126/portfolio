@@ -6,7 +6,7 @@
 <title>JetSweat, Case Study</title>
 <link rel="icon" type="image/png" href="/public/images/favicon-1.png?v=3">
 <link rel="apple-touch-icon" sizes="180x180" href="/public/images/favicon-1.png?v=3">
-<meta name="description" content="JetSweat case study. B2B fitness platform redesign.">
+<meta name="description" content="JetSweat case study. Freelance redesign of a B2B fitness studio dashboard.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..900&display=swap" rel="stylesheet">
@@ -466,10 +466,10 @@ a{color:inherit}img{display:block;max-width:100%}
 <section class="case-hero" id="hero">
   <h1>JetSweat</h1>
   <div class="case-hero-meta">
+    <span>Freelance</span>
     <span>Product Design</span>
-    <span>UX Research</span>
     <span>B2B SaaS</span>
-    <span>3-Month Engagement</span>
+    <span>3 Months, Part-Time</span>
   </div>
 </section>
 
@@ -479,11 +479,14 @@ a{color:inherit}img{display:block;max-width:100%}
 <!-- Floating minimap -->
 <nav class="minimap" id="minimap" aria-label="Table of Contents">
   <a href="#s01" data-idx="0">01 Overview</a>
-  <a href="#s02" data-idx="1">02 The Challenge</a>
+  <a href="#s02" data-idx="1">02 Old Dashboard</a>
   <a href="#s03" data-idx="2">03 Research</a>
-  <a href="#s04" data-idx="3">04 Solutions</a>
-  <a href="#s05" data-idx="4">05 Results</a>
-  <a href="#s06" data-idx="5">06 Reflection</a>
+  <a href="#s04" data-idx="3">04 Redesign</a>
+  <a href="#s05" data-idx="4">05 Free Trial</a>
+  <a href="#s06" data-idx="5">06 Site Builder</a>
+  <a href="#s07" data-idx="6">07 Feedback</a>
+  <a href="#s08" data-idx="7">08 What I'd Change</a>
+  <a href="#s09" data-idx="8">09 Reflection</a>
 </nav>
 
 <!-- ════════════════════════════════════════════════════════════════
@@ -495,47 +498,16 @@ a{color:inherit}img{display:block;max-width:100%}
   <div class="case-section" id="s01" style="padding-top:96px">
     <div class="case-label highlight">01 Overview</div>
     <div class="case-content">
-      <h2 class="problem-headline">A B2B fitness platform redesign. Dashboard, onboarding, and CMS in 3 months.</h2>
-
-      <div class="stat-bar">
-        <div class="stat-bar-item">
-          <div class="stat-bar-num" data-final="75%">--</div>
-          <div class="stat-bar-label">Setup Time Reduction</div>
-        </div>
-        <div class="stat-bar-item">
-          <div class="stat-bar-num" data-final="25%">--</div>
-          <div class="stat-bar-label">Sign-Up Increase</div>
-        </div>
-        <div class="stat-bar-item">
-          <div class="stat-bar-num" data-final="9">--</div>
-          <div class="stat-bar-label">Competitors Analysed</div>
-        </div>
-        <div class="stat-bar-item">
-          <div class="stat-bar-num" data-final="3 Mo">--</div>
-          <div class="stat-bar-label">Timeline</div>
-        </div>
-      </div>
+      <h2 class="problem-headline">Redesigning a fitness studio dashboard.</h2>
+      <p>JetSweat is a B2B SaaS platform for fitness studios. I worked on it as a freelance product designer, part-time over about 3 months. The main piece of work was a redesign of the studio dashboard. I also designed a free trial onboarding flow and a self-serve website builder. The designs were not built.</p>
     </div>
   </div>
-
-  <!-- ── 02 THE CHALLENGE ── -->
+  <!-- ── 02 THE OLD DASHBOARD ── -->
   <div class="case-section" id="s02" style="padding-top:96px">
-    <div class="case-label highlight">02 The Challenge</div>
+    <div class="case-label highlight">02 The Old Dashboard</div>
     <div class="case-content">
-      <h2 class="problem-headline">Two problems blocking growth.</h2>
-      <p>JetSweat is a B2B SaaS platform for fitness studios. Studios couldn't try the platform before buying. And every new customer required 3 hours of manual website setup by the ops team. One problem slowed acquisition, the other slowed scaling. I had 3 months to fix both.</p>
-    </div>
-  </div>
-
-  <!-- ── 03 RESEARCH ── -->
-  <div class="case-section" id="s03" style="padding-top:96px">
-    <div class="case-label highlight">03 Research</div>
-    <div class="case-content">
-      <h2 class="problem-headline">No users to interview. So I studied the competition.</h2>
-      <p>No existing user base to pull from and no research budget. I analysed 9 established fitness platforms to understand how they handle product-led growth, onboarding, and self-serve tools. Then I ran a heuristic evaluation of JetSweat's existing dashboard to identify where it was failing.</p>
-
-      <img src="public/images/jetsweat/competitors.png" alt="Competitor Analysis" style="width:100%;display:block;margin:32px 0">
-
+      <h2 class="problem-headline">The old dashboard was hard to scan.</h2>
+      <p>I started with a heuristic review of the existing dashboard. Three problems stood out. The menu had too many items and no grouping. Nothing on the page told you where to look first. And revenue was split across separate cards, with no trend or context.</p>
       <div class="dash-annotated" style="position:relative;margin:48px 0">
         <img src="public/images/jetsweat/original-dashboard-clean.png" alt="Original Dashboard" style="width:100%;display:block">
 
@@ -562,7 +534,7 @@ a{color:inherit}img{display:block;max-width:100%}
         <!-- Annotation: Revenue data fragmented -->
         <div class="cms-ann dash-ann" style="top:35%;right:1%">
           <div class="cms-ann-card">
-            <strong>Revenue data fragmented</strong>
+            <strong>Revenue data split up</strong>
             <span>Numbers without context or trends</span>
           </div>
           <div class="cms-ann-line" style="width:50px;top:50%;right:100%;transform:translateY(-50%)"></div>
@@ -571,17 +543,23 @@ a{color:inherit}img{display:block;max-width:100%}
       </div>
     </div>
   </div>
-
-  <!-- ── 04 SOLUTIONS ── -->
-  <div class="case-section" id="s04" style="padding-top:96px">
-    <div class="case-label highlight">04 Solutions</div>
+  <!-- ── 03 RESEARCH ── -->
+  <div class="case-section" id="s03" style="padding-top:96px">
+    <div class="case-label highlight">03 Research</div>
     <div class="case-content">
-      <h2 class="problem-headline">What I designed.</h2>
-
-      <!-- Dashboard -->
-      <h3 class="sub-heading">Dashboard redesign</h3>
-      <p>The original dashboard had poor visual hierarchy. Key metrics were buried and the navigation was cluttered, so it was hard to scan. I redesigned it around how people scan a page. Key metrics went top-left, where people look first. Revenue moved into one place, with charts. Navigation was reordered by how often each item is used.</p>
-
+      <h2 class="problem-headline">No users to interview, so I studied 9 competitors.</h2>
+      <p>There was no existing user base to talk to and no research budget. So I looked at how 9 established fitness platforms handle product-led growth, onboarding and self-serve tools.</p>
+      <img src="public/images/jetsweat/competitors.png" alt="Competitor Analysis" style="width:100%;display:block;margin:32px 0">
+    </div>
+  </div>
+  <!-- ── 04 DASHBOARD REDESIGN ── -->
+  <div class="case-section" id="s04" style="padding-top:96px">
+    <div class="case-label highlight">04 Dashboard Redesign</div>
+    <div class="case-content">
+      <h2 class="problem-headline">The redesigned dashboard.</h2>
+      <p>I grouped the navigation so there are fewer top-level items. The four key numbers now sit in one row at the top: users, subscribers, cancellations and one-time purchases. Each one has a badge showing how much it changed.</p>
+      <p>Total revenue and non-subscription revenue share one trend chart, instead of sitting in two separate cards. A date-range filter at the top switches between 1 day, 7 days, 14 days and 1 month.</p>
+      <p>I also put common actions on the page itself. Studios can create a video or a livestream from the top bar, and start a class from the upcoming livestreams card.</p>
       <div style="display:flex;flex-direction:column;gap:40px;margin:32px 0">
         <div>
           <div class="ba-label" style="text-align:left">Dashboard Before</div>
@@ -592,30 +570,34 @@ a{color:inherit}img{display:block;max-width:100%}
           <img src="public/images/jetsweat/new-dashboard.png" alt="Dashboard After" style="width:100%;display:block">
         </div>
       </div>
-
       <div class="callout-box" style="margin-top:32px">
         <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"Key metrics top-left." Eye-tracking research shows users scan in an F-pattern. Revenue, active users, and class completion rates move to the top-left quadrant. Everything else follows in order of importance.</p>
+        <p class="callout-text">"Key numbers in one row." The most important numbers sit together at the top, each with its change badge. Revenue and upcoming livestreams come next, with the more detailed charts below.</p>
       </div>
-
-      <!-- Onboarding -->
-      <h3 class="sub-heading">Free trial onboarding</h3>
-      <p>I designed a 5-step onboarding flow from scratch. Easy questions first to build confidence, personal and business details later. Studios could try the platform on their own, without the sales team.</p>
-
+    </div>
+  </div>
+  <!-- ── 05 FREE TRIAL ── -->
+  <div class="case-section" id="s05" style="padding-top:96px">
+    <div class="case-label highlight">05 Free Trial</div>
+    <div class="case-content">
+      <h2 class="problem-headline">A free trial studios can start on their own.</h2>
+      <p>Studios couldn't try the platform before buying. I designed a 5-step onboarding flow from scratch. Easy questions come first to build confidence, with personal and business details later. Studios could try the platform on their own, without the sales team.</p>
       <div style="display:flex;flex-direction:column;gap:24px;margin:32px auto;max-width:600px">
         <img src="public/images/jetsweat/step-1.png" alt="Onboarding step 1" style="width:100%;display:block">
         <img src="public/images/jetsweat/step-4.png" alt="Onboarding step 4" style="width:100%;display:block">
       </div>
-
       <div class="callout-box" style="margin-top:32px">
         <div class="callout-tag">Design Decision</div>
         <p class="callout-text">"Easy questions first." Name and studio name come before business details. This builds momentum before the flow asks for anything sensitive. By step 3, the user is already invested.</p>
       </div>
-
-      <!-- CMS -->
-      <h3 class="sub-heading">Self-serve CMS</h3>
-      <p>Studios needed their own websites. The ops team was building each one manually. I designed a self-serve website builder with form fields and drag-and-drop uploads. A visual preview showed how content would look on the final site.</p>
-
+    </div>
+  </div>
+  <!-- ── 06 SITE BUILDER ── -->
+  <div class="case-section" id="s06" style="padding-top:96px">
+    <div class="case-label highlight">06 Site Builder</div>
+    <div class="case-content">
+      <h2 class="problem-headline">A website builder studios can use themselves.</h2>
+      <p>Every new customer needed 3 hours of website setup by the ops team, done by hand. I designed a self-serve website builder with form fields and drag-and-drop uploads. A visual preview showed how content would look on the final site.</p>
       <div class="cms-annotated" style="position:relative;margin:32px 0">
         <img src="public/images/jetsweat/cms.png" alt="CMS Screens" style="width:100%;display:block">
 
@@ -669,58 +651,48 @@ a{color:inherit}img{display:block;max-width:100%}
           <div class="cms-ann-dot" style="bottom:calc(100% + 40px);left:50%;transform:translate(-50%,-50%)"></div>
         </div>
       </div>
-
       <div class="callout-box" style="margin-top:64px">
         <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"Live preview." Studios see their content on the page as they build, so they don't have to guess how the site will look. That cuts down on revisions and support tickets.</p>
+        <p class="callout-text">"Live preview." Studios see their content on the page as they build, so they don't have to guess how the site will look. The aim was fewer revisions and support tickets.</p>
       </div>
     </div>
   </div>
-
-  <!-- ── 05 RESULTS ── -->
-  <div class="case-section" id="s05" style="padding-top:96px">
-    <div class="case-label highlight">05 Results</div>
+  <!-- ── 07 FEEDBACK ── -->
+  <div class="case-section" id="s07" style="padding-top:96px">
+    <div class="case-label highlight">07 Feedback</div>
     <div class="case-content">
-      <h2 class="problem-headline">What changed.</h2>
-
-      <div class="stat-bar" style="grid-template-columns:1fr 1fr">
-        <div class="stat-bar-item">
-          <div class="stat-bar-num">75%</div>
-          <div class="stat-bar-label">Setup Time Reduction</div>
-        </div>
-        <div class="stat-bar-item">
-          <div class="stat-bar-num">25%</div>
-          <div class="stat-bar-label">Sign-Up Increase</div>
-        </div>
-      </div>
-
+      <h2 class="problem-headline">What the JetSweat team said.</h2>
       <div style="margin:40px 0;display:flex;flex-direction:column;gap:32px">
         <div style="border-left:3px solid var(--accent);padding-left:16px">
           <p style="font:400 15px/1.8 var(--sans);color:#555;max-width:58ch;margin-bottom:8px">"The new dashboard is so much cleaner and easier to scan. Users can see important metrics at a glance instead of hunting through menus."</p>
           <div style="font:400 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555">Operations Manager, JetSweat</div>
         </div>
-        <div style="border-left:3px solid var(--accent);padding-left:16px">
-          <p style="font:400 15px/1.8 var(--sans);color:#555;max-width:58ch;margin-bottom:8px">"The CMS solution was exactly what we needed. Studios can now build professional sites themselves, which frees up our team to focus on growth."</p>
-          <div style="font:400 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555">Founder/CEO, JetSweat</div>
-        </div>
       </div>
     </div>
   </div>
-
-  <!-- ── 06 REFLECTION ── -->
-  <div class="case-section" id="s06" style="padding-top:96px">
-    <div class="case-label highlight">06 Reflection</div>
+  <!-- ── 08 WHAT I'D CHANGE ── -->
+  <div class="case-section" id="s08" style="padding-top:96px">
+    <div class="case-label highlight">08 What I'd Change</div>
     <div class="case-content">
-      <h2 class="problem-headline">What I'd do differently.</h2>
+      <h2 class="problem-headline">What I'd change now.</h2>
+      <h3 class="sub-heading">Colour should follow good or bad.</h3>
+      <p>Cancellations fell 24%, but the badge is red. Fewer cancellations is good news, so it should be green. Badge colour should show whether a change is good or bad, whichever way the number moves. The Views chart has the same problem. It uses red as the colour for the Livestream category, which reads like a warning.</p>
+      <h3 class="sub-heading">Use a stacked bar for the user breakdown.</h3>
+      <p>The User breakdown gauge would be clearer as a stacked bar. A bar makes the three groups easier to compare: once subscribed, never subscribed and subscribed.</p>
+    </div>
+  </div>
+  <!-- ── 09 REFLECTION ── -->
+  <div class="case-section" id="s09" style="padding-top:96px">
+    <div class="case-label highlight">09 Reflection</div>
+    <div class="case-content">
+      <h2 class="problem-headline">Next time, I'd talk to users.</h2>
       <p>Competitive research and a heuristic review got me to good solutions without any user research. But I'd push harder for even a few user interviews. The dashboard and CMS followed sound UX principles. Without testing them with real users, though, you can't be sure what works.</p>
-
       <div class="callout-box" style="margin-top:32px">
         <div class="callout-tag">Takeaway</div>
         <p class="callout-text">Competitive analysis shows you what the market does. It doesn't show you what your users need. Next time I'd get in front of real users earlier, even informally.</p>
       </div>
     </div>
   </div>
-
 </div><!-- /case-body -->
 
 <!-- Contact footer -->
