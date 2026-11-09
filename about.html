@@ -48,7 +48,7 @@ a{color:inherit}img{display:block;max-width:100%}
   display:inline-flex;align-items:center;
   padding:8px 16px;
   background:var(--ink);color:#fff;
-  font:700 10px/1 var(--mono);letter-spacing:.04em;
+  font:700 13px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;text-decoration:none;
   border-radius:6px;white-space:nowrap;
   transition:background .2s;
@@ -58,7 +58,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .topbar-btn:hover{background:var(--accent)}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:16px;position:relative}
 .topbar-menu{
-  font:600 12px/1 var(--mono);color:var(--ink);letter-spacing:.03em;
+  font:600 13px/1 var(--mono);color:var(--ink);letter-spacing:.03em;
   cursor:pointer;background:none;border:none;
   outline:none;-webkit-appearance:none;appearance:none;
   padding:0;transition:color .12s;
@@ -84,7 +84,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .dd-link:hover{color:var(--grey)}
 .dd-sep{height:1px;background:var(--ink);margin:16px 0}
-.dd-label{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555;margin-bottom:12px}
+.dd-label{font:600 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555;margin-bottom:12px}
 .dd-case{
   display:block;font:600 13px/1 var(--mono);text-decoration:none;color:var(--ink);
   padding:6px 8px;margin-bottom:4px;transition:color .12s;
@@ -112,7 +112,7 @@ a{color:inherit}img{display:block;max-width:100%}
   object-fit:cover;border-radius:8px;
 }
 .about-story p{
-  font:400 16px/1.8 var(--sans);color:#555;
+  font:400 18px/1.6 var(--sans);color:#555;
   margin-bottom:20px;max-width:65ch;
 }
 .about-story .lead{
@@ -126,8 +126,8 @@ a{color:inherit}img{display:block;max-width:100%}
 .about-sidebar{}
 .timeline{position:relative;padding-left:24px;border-left:2px solid rgba(0,0,0,.1)}
 .timeline-label{
-  font:700 10px/1 var(--mono);letter-spacing:.06em;
-  text-transform:uppercase;color:rgba(0,0,0,.3);
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#6B6B6B;
   margin-bottom:32px;
 }
 .tl-item{position:relative;margin-bottom:32px}
@@ -139,16 +139,16 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .tl-item.active::before{background:var(--accent);border-color:var(--accent)}
 .tl-date{
-  font:600 10px/1 var(--mono);letter-spacing:.05em;
+  font:600 13px/1 var(--mono);letter-spacing:.05em;
   text-transform:uppercase;color:var(--grey);
   margin-bottom:6px;
 }
 .tl-role{
-  font:700 13px/1.3 var(--sans);color:var(--ink);
+  font:700 15px/1.3 var(--sans);color:var(--ink);
   margin-bottom:4px;
 }
 .tl-place{
-  font:400 11px/1.4 var(--mono);color:var(--grey);
+  font:400 15px/1.4 var(--mono);color:var(--grey);
 }
 
 /* ================================================================
@@ -160,8 +160,8 @@ a{color:inherit}img{display:block;max-width:100%}
   position:relative;z-index:1;
 }
 .archive-label{
-  font:700 10px/1 var(--mono);letter-spacing:.06em;
-  text-transform:uppercase;color:rgba(0,0,0,.3);
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#6B6B6B;
   margin-bottom:32px;
 }
 .archive-grid{
@@ -170,8 +170,8 @@ a{color:inherit}img{display:block;max-width:100%}
 /* Film strip container */
 .film-strip{cursor:none}
 .film-strip .strip-label{
-  font:600 9px/1 var(--mono);letter-spacing:.05em;
-  text-transform:uppercase;color:rgba(0,0,0,.35);
+  font:600 13px/1 var(--mono);letter-spacing:.05em;
+  text-transform:uppercase;color:#6B6B6B;
   margin-bottom:8px;
 }
 /* The expanding wrapper */
@@ -200,7 +200,7 @@ a{color:inherit}img{display:block;max-width:100%}
 /* Client tags: horizontal row under expanded strip */
 .strip-clients{
   display:flex;gap:16px;
-  font:500 8px/1 var(--mono);letter-spacing:.04em;
+  font:500 13px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;color:var(--accent);
   margin-top:10px;
   opacity:0;
@@ -215,7 +215,7 @@ a{color:inherit}img{display:block;max-width:100%}
   z-index:10001;
   padding:8px 18px;
   background:var(--ink);color:#fff;
-  font:700 10px/1 var(--mono);letter-spacing:.1em;
+  font:700 13px/1 var(--mono);letter-spacing:.1em;
   text-transform:uppercase;
   border-radius:9999px;
   opacity:0;
@@ -228,7 +228,7 @@ a{color:inherit}img{display:block;max-width:100%}
 /* Archive CTA */
 .archive-cta{margin-top:64px}
 .archive-cta a{
-  font:600 11px/1 var(--mono);letter-spacing:.04em;
+  font:600 13px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;color:var(--accent);
   text-decoration:none;cursor:pointer;
   padding-bottom:2px;
@@ -256,7 +256,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .lightbox.open .lightbox-img{transform:scale(1)}
 .lightbox-close{
   position:absolute;top:calc(var(--frame) + 20px);right:calc(var(--frame) + 24px);
-  font:700 11px/1 var(--mono);letter-spacing:.06em;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:#fff;
   background:none;border:none;cursor:pointer;
   padding:8px 12px;
@@ -265,7 +265,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .lightbox-close:hover{color:var(--accent)}
 .lightbox-caption{
   position:absolute;bottom:calc(var(--frame) + 24px);left:calc(var(--frame) + 24px);
-  font:500 10px/1 var(--mono);letter-spacing:.04em;
+  font:500 15px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;color:var(--accent);
 }
 
@@ -280,15 +280,15 @@ a{color:inherit}img{display:block;max-width:100%}
   background:var(--bg);
 }
 .contact-label{
-  font:700 10px/1 var(--mono);letter-spacing:.06em;
-  text-transform:uppercase;color:#999;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#6B6B6B;
   margin-bottom:20px;
 }
 .contact-row{
   display:flex;gap:48px;flex-wrap:wrap;align-items:center;
 }
 .contact-row a,.contact-row span{
-  font:500 14px/1.4 var(--sans);
+  font:500 15px/1.4 var(--sans);
   color:var(--ink);text-decoration:none;
   transition:color .12s;
 }
@@ -300,7 +300,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .contact-icons .icon-link:hover svg{fill:var(--accent)}
 .contact-copy{
   margin-top:32px;
-  font:400 10px/1 var(--mono);color:rgba(0,0,0,.3);
+  font:400 13px/1 var(--mono);color:#6B6B6B;
 }
 
 /* ================================================================
@@ -364,8 +364,12 @@ a{color:inherit}img{display:block;max-width:100%}
   .contact-copy{text-align:center}
 }
 .back-to-top{position:relative;z-index:2;display:flex;justify-content:center;padding:32px 0}
-.back-to-top a{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s}
+.back-to-top a{font:600 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s}
 .back-to-top a:hover{color:var(--ink)}
+
+/* ── Readability: minimum text sizes, line length ── */
+.about-story p{max-width:50ch}
+@media(max-width:768px){.about-story p{font-size:17px}}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -387,13 +391,13 @@ a{color:inherit}img{display:block;max-width:100%}
 <nav class="topbar">
   <a class="topbar-name" href="index.html">Paul Taylor</a>
   <div class="topbar-right">
-    <button class="topbar-menu" id="menuBtn">[ MENU ]</button>
+    <button class="topbar-menu" id="menuBtn">MENU</button>
     <!-- Dropdown menu -->
     <div class="dropdown" id="dropdown">
       <a class="dd-link" href="index.html">Home</a>
       <a class="dd-link active" href="about.html">About</a>
       <div class="dd-sep"></div>
-      <div class="dd-label">[ Case Studies ]</div>
+      <div class="dd-label">Case Studies</div>
       <a class="dd-case" href="mealmatch.html">MealMatch AI</a>
       <a class="dd-case" href="ballrs.html">Ballrs</a>
       <a class="dd-case" href="jetsweat.html">JetSweat</a>
@@ -424,7 +428,7 @@ a{color:inherit}img{display:block;max-width:100%}
 
   <!-- Right Column: Timeline -->
   <aside class="about-sidebar">
-    <div class="timeline-label">[ Career Timeline ]</div>
+    <div class="timeline-label">Career Timeline</div>
     <div class="timeline">
       <div class="tl-item">
         <div class="tl-date">Jul 2026 to Oct 2026</div>
@@ -518,13 +522,13 @@ a{color:inherit}img{display:block;max-width:100%}
   </div>
 
   <div class="archive-cta">
-    <a href="https://www.thisispaultaylor.com" target="_blank" rel="noopener">[ View Full Photography Archive &nearr; ]</a>
+    <a href="https://www.thisispaultaylor.com" target="_blank" rel="noopener">View Full Photography Archive &nearr;</a>
   </div>
 </section>
 
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox">
-  <button class="lightbox-close" id="lbClose">[ Close ]</button>
+  <button class="lightbox-close" id="lbClose">Close</button>
   <img class="lightbox-img" id="lbImg" src="" alt="">
   <div class="lightbox-caption" id="lbCap"></div>
 </div>
@@ -566,12 +570,12 @@ a{color:inherit}img{display:block;max-width:100%}
   menuBtn.addEventListener('click',function(){
     menuOpen=!menuOpen;
     dropdown.classList.toggle('open',menuOpen);
-    menuBtn.textContent=menuOpen?'[ CLOSE ]':'[ MENU ]';
+    menuBtn.textContent=menuOpen?'CLOSE':'MENU';
   });
   document.addEventListener('click',function(e){
     if(menuOpen&&!dropdown.contains(e.target)&&e.target!==menuBtn){
       menuOpen=false;dropdown.classList.remove('open');
-      menuBtn.textContent='[ MENU ]';
+      menuBtn.textContent='MENU';
     }
   });
   /* ── VIEW CURSOR ── */

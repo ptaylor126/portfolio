@@ -13,6 +13,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
+  --accent-text:#61715E;
   --bg:#F9F9F9;--ink:#000;--accent:#8FA68A;--grey:#6B6B6B;
   --sans:'Figtree',system-ui,sans-serif;
   --mono:'Figtree',system-ui,sans-serif;
@@ -39,12 +40,12 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .topbar-name{font:700 16px/1 var(--mono);color:var(--ink);text-decoration:none}
 .topbar-menu{
-  font:600 12px/1 var(--mono);color:var(--ink);letter-spacing:.03em;
+  font:600 13px/1 var(--mono);color:var(--ink);letter-spacing:.03em;
   cursor:pointer;background:none;border:none;border-radius:0;
   outline:none;-webkit-appearance:none;appearance:none;
   padding:0;transition:color .12s;
 }
-.topbar-menu:hover{color:var(--accent)}
+.topbar-menu:hover{color:var(--accent-text)}
 
 /* Dropdown */
 .dropdown{
@@ -66,15 +67,15 @@ a{color:inherit}img{display:block;max-width:100%}
   letter-spacing:-.02em;text-decoration:none;color:var(--ink);
   padding:8px 0;transition:color .12s;
 }
-.dd-link:hover{color:var(--accent)}
+.dd-link:hover{color:var(--accent-text)}
 .dd-sep{height:1px;background:var(--ink);margin:16px 0}
-.dd-label{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555;margin-bottom:12px}
+.dd-label{font:600 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555;margin-bottom:12px}
 .dd-case{
   display:block;font:600 13px/1 var(--mono);text-decoration:none;color:var(--ink);
   padding:6px 8px;margin-bottom:4px;transition:background .12s,color .12s;
 }
-.dd-case:hover{color:var(--accent)}
-.dd-case.active{background:var(--accent);color:#fff}
+.dd-case:hover{color:var(--accent-text)}
+.dd-case.active{background:var(--accent);color:var(--ink)}
 
 /* ================================================================
    HERO
@@ -89,13 +90,13 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .case-hero-meta{
   display:flex;flex-wrap:wrap;gap:12px;
-  font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.03em;
+  font:500 13px/1 var(--mono);text-transform:uppercase;letter-spacing:.03em;
 }
 .case-hero-meta span{
   padding:6px 14px;border:2px solid var(--ink);
   transition:background .15s,color .15s;cursor:default;
 }
-.case-hero-meta span:hover{background:var(--accent);color:#fff}
+.case-hero-meta span:hover{background:var(--accent);color:var(--ink)}
 
 /* ================================================================
    PROGRESS BAR
@@ -125,7 +126,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .minimap.on{opacity:1;pointer-events:auto}
 .minimap a{
   display:block;padding:5px 10px;
-  font:600 9px/1 var(--mono);letter-spacing:.04em;
+  font:600 13px/1 var(--mono);letter-spacing:.04em;
   color:#555;text-decoration:none;
   text-transform:uppercase;white-space:nowrap;
   transition:color .12s,background .12s;
@@ -145,14 +146,12 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .case-section{padding-top:64px}
 .case-label{
-  font:700 12px/1.3 var(--mono);
+  font:700 13px/1.3 var(--mono);
   text-transform:uppercase;letter-spacing:.03em;
   color:var(--ink);margin-bottom:24px;
   padding:6px 8px;display:inline-block;
 }
-.case-label .lb{color:rgba(0,0,0,.2)}
-.case-label.highlight{background:var(--accent);color:#fff}
-.case-label.highlight .lb{color:rgba(255,255,255,.4)}
+.case-label.highlight{background:var(--accent);color:var(--ink)}
 
 .case-content{padding:0 0 80px}
 .case-content h2{
@@ -160,7 +159,7 @@ a{color:inherit}img{display:block;max-width:100%}
   letter-spacing:-.03em;margin-bottom:20px;
 }
 .case-content p{
-  font:400 15px/1.8 var(--sans);color:#555;
+  font:400 18px/1.6 var(--sans);color:#555;
   max-width:58ch;margin-bottom:16px;
 }
 
@@ -182,7 +181,7 @@ a{color:inherit}img{display:block;max-width:100%}
   letter-spacing:-.03em;margin-bottom:8px;
 }
 .stat-bar-label{
-  font:400 10px/1.3 var(--mono);letter-spacing:.06em;
+  font:400 15px/1.3 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:#555;
 }
 @media(max-width:600px){
@@ -191,7 +190,7 @@ a{color:inherit}img{display:block;max-width:100%}
 
 /* Built-with row */
 .built-with{
-  font:400 11px/1 var(--mono);color:#555;
+  font:400 13px/1 var(--mono);color:#555;
   margin:8px 0 32px;letter-spacing:.02em;
 }
 .built-with strong{font-weight:700;color:var(--ink)}
@@ -233,13 +232,12 @@ a{color:inherit}img{display:block;max-width:100%}
 .callout-box.reveal .callout-tag,
 .callout-box.reveal .callout-text{opacity:1}
 .callout-tag{
-  font:700 11px/1 var(--mono);letter-spacing:.04em;
+  font:700 13px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;color:var(--ink);
   margin-bottom:12px;
 }
-.callout-tag .lb{color:rgba(0,0,0,.2)}
 .callout-text{
-  font:400 15px/1.8 var(--sans);color:#555;
+  font:400 18px/1.6 var(--sans);color:#555;
   max-width:58ch;
 }
 .callout-title{
@@ -265,7 +263,7 @@ a{color:inherit}img{display:block;max-width:100%}
   margin-bottom:8px;
 }
 .decision-item-text{
-  font:400 14px/1.7 var(--sans);color:#555;
+  font:400 18px/1.6 var(--sans);color:#555;
   max-width:54ch;
 }
 
@@ -277,19 +275,19 @@ a{color:inherit}img{display:block;max-width:100%}
   border-top:2px solid var(--ink);
 }
 .contact-label{
-  font:700 10px/1 var(--mono);letter-spacing:.06em;
-  text-transform:uppercase;color:#999;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#6B6B6B;
   margin-bottom:20px;
 }
 .contact-row{
   display:flex;gap:48px;flex-wrap:wrap;align-items:center;
 }
 .contact-row a,.contact-row span{
-  font:500 14px/1.4 var(--sans);
+  font:500 15px/1.4 var(--sans);
   color:var(--ink);text-decoration:none;
   transition:color .12s;
 }
-.contact-row a:hover{color:var(--accent)}
+.contact-row a:hover{color:var(--accent-text)}
 .contact-row a:visited{color:var(--ink)}
 .contact-icons{display:flex;gap:16px;align-items:center}
 .contact-icons .icon-link{display:inline-flex;align-items:center}
@@ -297,7 +295,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .contact-icons .icon-link:hover svg{fill:var(--accent)}
 .contact-copy{
   margin-top:32px;
-  font:400 10px/1 var(--mono);color:rgba(0,0,0,.3);
+  font:400 13px/1 var(--mono);color:#6B6B6B;
 }
 
 /* ================================================================
@@ -338,11 +336,16 @@ a{color:inherit}img{display:block;max-width:100%}
   .contact-copy{text-align:center}
 }
 .back-to-top{position:relative;z-index:2;display:flex;justify-content:center;padding:32px 0}
-.back-to-top a{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s}
+.back-to-top a{font:600 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s}
 .back-to-top a:hover{color:var(--ink)}
 
 /* Line up digits in stats and charts */
 .stat-bar-num{font-variant-numeric:tabular-nums}
+
+/* ── Readability: minimum text sizes, line length ── */
+@media(max-width:1199px){.minimap{display:none}}
+.case-content p,.callout-text,.decision-item-text{max-width:50ch}
+@media(max-width:768px){.case-content p,.callout-text,.decision-item-text{font-size:17px}}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -360,7 +363,7 @@ a{color:inherit}img{display:block;max-width:100%}
 <!-- Top bar -->
 <nav class="topbar">
   <a class="topbar-name" href="index.html">PAUL TAYLOR</a>
-  <button class="topbar-menu" id="menuBtn">[ MENU ]</button>
+  <button class="topbar-menu" id="menuBtn">MENU</button>
 </nav>
 
 <!-- Dropdown menu -->
@@ -368,7 +371,7 @@ a{color:inherit}img{display:block;max-width:100%}
   <a class="dd-link" href="index.html">Home</a>
   <a class="dd-link" href="about.html">About</a>
   <div class="dd-sep"></div>
-  <div class="dd-label">[ Case Studies ]</div>
+  <div class="dd-label">Case Studies</div>
   <a class="dd-case" href="mealmatch.html">MealMatch AI</a>
   <a class="dd-case" href="ballrs.html">Ballrs</a>
   <a class="dd-case" href="jetsweat.html">JetSweat</a>
@@ -404,7 +407,7 @@ a{color:inherit}img{display:block;max-width:100%}
 
   <!-- ── 01 WHAT IS LOUPE ── -->
   <div class="case-section" id="s01" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 01 What Is Loupe <span class="lb">]</span></div>
+    <div class="case-label highlight">01 What Is Loupe</div>
     <div class="case-content">
       <h2 class="problem-headline">A Mac app that tags your photos using local AI.</h2>
       <p>Loupe uses a local vision model to analyse photos and write searchable metadata directly into the image files. No cloud. No subscription. Your photos never leave your machine.</p>
@@ -437,7 +440,7 @@ a{color:inherit}img{display:block;max-width:100%}
 
   <!-- ── 02 DESIGN DECISIONS ── -->
   <div class="case-section" id="s02" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 02 Design Decisions <span class="lb">]</span></div>
+    <div class="case-label highlight">02 Design Decisions</div>
     <div class="case-content">
       <h2 class="problem-headline">Why it works the way it does.</h2>
 
@@ -472,7 +475,7 @@ a{color:inherit}img{display:block;max-width:100%}
 
   <!-- ── 03 HOW IT WORKS ── -->
   <div class="case-section" id="s03" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 03 How It Works <span class="lb">]</span></div>
+    <div class="case-label highlight">03 How It Works</div>
     <div class="case-content">
       <h2 class="problem-headline">Drop a folder. Review the tags. Done.</h2>
       <p>User drops a folder of photos onto the app. Images are sent to the local vision model one at a time. The model returns a short description and 5-8 keywords per image. Post-processing cleans the keywords — splits multi-word tags, strips stopwords, deduplicates, caps at 8.</p>
@@ -487,14 +490,14 @@ a{color:inherit}img{display:block;max-width:100%}
 
   <!-- ── 04 STATUS ── -->
   <div class="case-section" id="s04" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 04 Status <span class="lb">]</span></div>
+    <div class="case-label highlight">04 Status</div>
     <div class="case-content">
       <h2 class="problem-headline">In beta. Almost there.</h2>
-      <p>Loupe is live on TestFlight with early beta testers. The website is at <a href="https://tagwithloupe.com" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline">tagwithloupe.com</a>. App Store submission is in progress.</p>
+      <p>Loupe is live on TestFlight with early beta testers. The website is at <a href="https://tagwithloupe.com" target="_blank" rel="noopener" style="color:var(--accent-text);text-decoration:underline">tagwithloupe.com</a>. App Store submission is in progress.</p>
       <p>Still needed before launch: RAW file support, session persistence, error handling for edge cases, and a final UI polish pass.</p>
 
       <div class="callout-box" style="margin-top:32px">
-        <div class="callout-tag"><span class="lb">[</span> Beta Feedback <span class="lb">]</span></div>
+        <div class="callout-tag">Beta Feedback</div>
         <div class="callout-title">What beta testers said.</div>
         <p class="callout-text">Custom vocabulary was called out as the standout feature. Bulk review confirmed as the right workflow. One-time purchase model noted as refreshing compared to subscription apps everywhere else. Speed benchmarks requested — the answer is about 14 seconds per image on M1.</p>
       </div>
@@ -533,12 +536,12 @@ a{color:inherit}img{display:block;max-width:100%}
   menuBtn.addEventListener('click',function(){
     menuOpen=!menuOpen;
     dropdown.classList.toggle('open',menuOpen);
-    menuBtn.textContent=menuOpen?'[ CLOSE ]':'[ MENU ]';
+    menuBtn.textContent=menuOpen?'CLOSE':'MENU';
   });
   document.addEventListener('click',function(e){
     if(menuOpen&&!dropdown.contains(e.target)&&e.target!==menuBtn){
       menuOpen=false;dropdown.classList.remove('open');
-      menuBtn.textContent='[ MENU ]';
+      menuBtn.textContent='MENU';
     }
   });
 

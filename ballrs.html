@@ -13,6 +13,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
+  --accent-text:#117A65;
   --bg:#F9F9F9;--ink:#000;--accent:#1ABC9C;--grey:#6B6B6B;
   --sans:'Figtree',system-ui,sans-serif;
   --mono:'Figtree',system-ui,sans-serif;
@@ -39,12 +40,12 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .topbar-name{font:700 16px/1 var(--mono);color:var(--ink);text-decoration:none}
 .topbar-menu{
-  font:600 12px/1 var(--mono);color:var(--ink);letter-spacing:.03em;
+  font:600 13px/1 var(--mono);color:var(--ink);letter-spacing:.03em;
   cursor:pointer;background:none;border:none;border-radius:0;
   outline:none;-webkit-appearance:none;appearance:none;
   padding:0;transition:color .12s;
 }
-.topbar-menu:hover{color:var(--accent)}
+.topbar-menu:hover{color:var(--accent-text)}
 .topbar-menu:focus{outline:none}
 
 /* Dropdown menu */
@@ -67,14 +68,14 @@ a{color:inherit}img{display:block;max-width:100%}
   letter-spacing:-.02em;text-decoration:none;color:var(--ink);
   padding:8px 0;transition:color .12s;
 }
-.dd-link:hover{color:var(--accent)}
+.dd-link:hover{color:var(--accent-text)}
 .dd-sep{height:1px;background:var(--ink);margin:16px 0}
-.dd-label{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555;margin-bottom:12px}
+.dd-label{font:600 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555;margin-bottom:12px}
 .dd-case{
   display:block;font:600 13px/1 var(--mono);text-decoration:none;color:var(--ink);
   padding:6px 8px;margin-bottom:4px;transition:background .12s,color .12s;
 }
-.dd-case:hover{color:var(--accent)}
+.dd-case:hover{color:var(--accent-text)}
 .dd-case.active{background:var(--accent);color:var(--ink)}
 
 /* ================================================================
@@ -90,7 +91,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .case-hero-meta{
   display:flex;flex-wrap:wrap;gap:12px;
-  font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.03em;
+  font:500 13px/1 var(--mono);text-transform:uppercase;letter-spacing:.03em;
 }
 .case-hero-meta span{
   padding:6px 14px;border:2px solid var(--ink);
@@ -127,7 +128,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .minimap.on{opacity:1;pointer-events:auto}
 .minimap a{
   display:block;padding:5px 10px;
-  font:600 9px/1 var(--mono);letter-spacing:.04em;
+  font:600 13px/1 var(--mono);letter-spacing:.04em;
   color:#555;text-decoration:none;
   text-transform:uppercase;white-space:nowrap;
   transition:color .12s,background .12s;
@@ -147,14 +148,12 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .case-section{padding-top:64px}
 .case-label{
-  font:700 12px/1.3 var(--mono);
+  font:700 13px/1.3 var(--mono);
   text-transform:uppercase;letter-spacing:.03em;
   color:var(--ink);margin-bottom:24px;
   padding:6px 8px;display:inline-block;
 }
-.case-label .lb{color:rgba(0,0,0,.2)}
 .case-label.highlight{background:var(--accent);color:var(--ink)}
-.case-label.highlight .lb{color:rgba(0,0,0,.35)}
 
 .case-content{padding:0 0 80px}
 .case-content h2{
@@ -162,7 +161,7 @@ a{color:inherit}img{display:block;max-width:100%}
   letter-spacing:-.03em;margin-bottom:20px;
 }
 .case-content p{
-  font:400 15px/1.8 var(--sans);color:#555;
+  font:400 18px/1.6 var(--sans);color:#555;
   max-width:58ch;margin-bottom:16px;
 }
 
@@ -229,7 +228,7 @@ a{color:inherit}img{display:block;max-width:100%}
   color:var(--ink);
 }
 .s1-stat-label{
-  font:400 10px/1 var(--mono);letter-spacing:.06em;
+  font:400 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:#555;
   margin-top:6px;
 }
@@ -238,7 +237,7 @@ a{color:inherit}img{display:block;max-width:100%}
   margin-top:24px;grid-column:1/-1;
 }
 .s1-pill{
-  font:600 10px/1 var(--mono);letter-spacing:.03em;
+  font:600 13px/1 var(--mono);letter-spacing:.03em;
   text-transform:uppercase;
   background:var(--accent);color:var(--ink);
   padding:6px 12px;
@@ -248,15 +247,15 @@ a{color:inherit}img{display:block;max-width:100%}
   border-left:2px solid var(--accent);
 }
 .s1-ai-text{
-  font:400 14px/1.7 var(--sans);color:#555;
+  font:400 15px/1.7 var(--sans);color:#555;
   max-width:58ch;margin-bottom:16px;
 }
 .s1-tech-row{
   display:flex;gap:20px;align-items:center;
 }
 .s1-tech-logo{
-  font:500 9px/1 var(--mono);letter-spacing:.04em;
-  text-transform:uppercase;color:#aaa;
+  font:500 13px/1 var(--mono);letter-spacing:.04em;
+  text-transform:uppercase;color:#6B6B6B;
 }
 
 @media(max-width:600px){
@@ -274,7 +273,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .ba-col{display:flex;flex-direction:column;align-items:center}
 .ba-label{
-  font:700 10px/1 var(--mono);letter-spacing:.08em;
+  font:700 13px/1 var(--mono);letter-spacing:.08em;
   text-transform:uppercase;color:#555;
   margin-bottom:16px;
 }
@@ -294,7 +293,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 
 .ba-caption{
-  font:400 11px/1.5 var(--mono);color:#999;
+  font:400 15px/1.5 var(--mono);color:#6B6B6B;
   margin-top:12px;text-align:center;max-width:260px;
 }
 .soft-frame{
@@ -319,12 +318,12 @@ a{color:inherit}img{display:block;max-width:100%}
   border-top:6px solid #F2C94C;
 }
 .ba-pivot-label{
-  font:700 10px/1 var(--mono);letter-spacing:.04em;
-  text-transform:uppercase;color:#F2C94C;
+  font:700 13px/1 var(--mono);letter-spacing:.04em;
+  text-transform:uppercase;color:#806B28;
   white-space:nowrap;
 }
 .ba-pivot-sub{
-  font:400 9px/1.3 var(--mono);color:#999;
+  font:400 15px/1.3 var(--mono);color:#6B6B6B;
   text-align:center;white-space:nowrap;
 }
 .ba-video-wrap{
@@ -384,19 +383,19 @@ a{color:inherit}img{display:block;max-width:100%}
   display:flex;flex-direction:column;align-items:center;
 }
 .timeline-version{
-  font:800 11px/1 var(--mono);
+  font:800 13px/1 var(--mono);
   text-transform:uppercase;letter-spacing:.04em;
   color:var(--ink);
   margin-bottom:4px;
 }
 .timeline-games{
-  font:600 11px/1.4 var(--mono);color:var(--accent);
+  font:600 13px/1.4 var(--mono);color:var(--accent-text);
   text-transform:uppercase;letter-spacing:.02em;
   margin-bottom:10px;
   text-align:center;
 }
 .timeline-note{
-  font:400 11px/1.5 var(--sans);color:#555;text-align:center;
+  font:400 15px/1.5 var(--sans);color:#555;text-align:center;
   margin-top:20px;
 }
 .timeline-vid-wrap{
@@ -423,12 +422,12 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .hs-card[data-delay].visible{opacity:1;transform:translateY(0)}
 .hs-label{
-  font:800 11px/1 var(--mono);
+  font:800 13px/1 var(--mono);
   text-transform:uppercase;letter-spacing:.04em;
   color:var(--ink);margin-bottom:10px;padding-bottom:4px;
   text-align:center;
 }
-.hs-label span{color:var(--accent)}
+.hs-label span{color:var(--accent-text)}
 .timeline-img{
   width:100%;
   margin-bottom:0;
@@ -453,11 +452,11 @@ a{color:inherit}img{display:block;max-width:100%}
   border-top:1px solid var(--ink);
 }
 .hs-dot-num{
-  width:18px;height:18px;
+  width:22px;height:22px;
   border-radius:50%;
   background:var(--accent);
   color:var(--ink);
-  font:700 10px/18px var(--mono);
+  font:700 13px/22px var(--mono);
   text-align:center;
   flex-shrink:0;
   margin-left:4px;
@@ -486,14 +485,14 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .quote-stars{
   font-size:16px;margin-bottom:8px;
-  color:var(--accent);
+  color:var(--accent-text);
 }
 .quote-card-text{
-  font:500 14px/1.6 var(--sans);color:var(--ink);
+  font:500 15px/1.6 var(--sans);color:var(--ink);
   margin-bottom:10px;max-width:56ch;
 }
 .quote-card-src{
-  font:400 9px/1 var(--mono);letter-spacing:.06em;
+  font:400 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:#555;
 }
 
@@ -511,25 +510,25 @@ a{color:inherit}img{display:block;max-width:100%}
   table-layout:fixed;
 }
 .gap-matrix th{
-  font:700 10px/1 var(--mono);letter-spacing:.06em;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:var(--ink);
   padding:12px 16px;text-align:left;
   border-bottom:2px solid var(--ink);
   background:var(--bg);
 }
 .gap-matrix td{
-  font:400 13px/1 var(--sans);color:#555;
+  font:400 15px/1 var(--sans);color:#555;
   padding:12px 16px;height:44px;
   vertical-align:middle;
   border-bottom:1px solid rgba(0,0,0,.08);
 }
 .gap-matrix tr:last-child td{border-bottom:none}
 .gap-matrix td:first-child{
-  font:600 11px/1 var(--mono);letter-spacing:.03em;
+  font:600 15px/1 var(--mono);letter-spacing:.03em;
   text-transform:uppercase;color:var(--ink);
 }
-.gap-check{color:var(--accent);font-weight:700}
-.gap-x{color:#ccc;font-weight:700}
+.gap-check{color:var(--accent-text);font-weight:700}
+.gap-x{color:#6B6B6B;font-weight:700}
 .gap-matrix td:last-child,.gap-matrix th:last-child{
   background:rgba(242,201,76,.1);
   border-left:2px solid #F2C94C;
@@ -546,7 +545,7 @@ a{color:inherit}img{display:block;max-width:100%}
   text-transform:uppercase;
 }
 .wordle-tile.empty{background:#fff;border:2px solid #d3d6da;color:transparent}
-.wordle-tile.correct{background:#6aaa64;border:none;color:#fff}
+.wordle-tile.correct{background:#50804B;border:none;color:#fff}
 
 /* ================================================================
    GAME DESIGN — STICKY SPLIT
@@ -625,11 +624,11 @@ a{color:inherit}img{display:block;max-width:100%}
   border-left-color:var(--accent);
 }
 .gd-card-num{
-  font:800 11px/1 var(--mono);letter-spacing:.04em;
-  color:var(--accent);margin-bottom:8px;
+  font:800 13px/1 var(--mono);letter-spacing:.04em;
+  color:var(--accent-text);margin-bottom:8px;
 }
 .gd-card-text{
-  font:400 13px/1.7 var(--sans);color:#555;
+  font:400 16px/1.7 var(--sans);color:#555;
   max-width:36ch;
 }
 /* Mobile-only accordion parts; the desktop layout shows images in the sticky phone */
@@ -644,9 +643,9 @@ a{color:inherit}img{display:block;max-width:100%}
 .gd-review-inner{
   max-width:58ch;
 }
-.gd-review-stars{font-size:20px;color:var(--accent);margin-bottom:12px}
+.gd-review-stars{font-size:20px;color:var(--accent-text);margin-bottom:12px}
 .gd-review-text{font:500 16px/1.6 var(--sans);color:var(--ink);margin-bottom:12px}
-.gd-review-src{font:400 9px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555}
+.gd-review-src{font:400 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555}
 
 @media(max-width:800px){
   /* Simple stacked layout: no sticky phone, no scroll runway.
@@ -665,7 +664,7 @@ a{color:inherit}img{display:block;max-width:100%}
     border-radius:0 8px 8px 0;
     box-shadow:0 1px 3px rgba(0,0,0,.06);
   }
-  .gd-card-text{max-width:none;font-size:14px}
+  .gd-card-text{max-width:none;font-size:16px}
   /* Accordion: closed shows number + quoted headline; tap to reveal body + image */
   .gd-narr-col{gap:16px}
   .gd-card-inner{cursor:pointer;padding-right:52px;-webkit-tap-highlight-color:transparent}
@@ -725,7 +724,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .dd-mockup.dim{opacity:.4}
 
 .dd-grid-label{
-  font:700 11px/1 var(--mono);letter-spacing:.06em;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:var(--ink);
   margin-bottom:16px;
 }
@@ -752,7 +751,7 @@ a{color:inherit}img{display:block;max-width:100%}
   pointer-events:none;
 }
 .dd-card-text{
-  font:400 13px/1.7 var(--sans);color:#999;
+  font:400 16px/1.7 var(--sans);color:#6B6B6B;
   max-width:40ch;
 }
 
@@ -770,12 +769,12 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .system-block{}
 .system-label{
-  font:700 11px/1 var(--mono);letter-spacing:.06em;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:var(--ink);
   margin-bottom:8px;
 }
 .system-desc{
-  font:400 15px/1.7 var(--sans);color:#555;
+  font:400 16px/1.7 var(--sans);color:#555;
   max-width:58ch;
 }
 .stat-headline{
@@ -784,12 +783,12 @@ a{color:inherit}img{display:block;max-width:100%}
   color:var(--ink);
 }
 .stat-headline-label{
-  font:400 11px/1 var(--mono);letter-spacing:.06em;
+  font:400 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:#555;
   margin-bottom:8px;
 }
 .stat-headline-sub{
-  font:400 13px/1.6 var(--sans);color:#888;
+  font:400 15px/1.6 var(--sans);color:#6B6B6B;
   margin-bottom:28px;
 }
 .screenshot-row{
@@ -818,7 +817,7 @@ a{color:inherit}img{display:block;max-width:100%}
   width:85%;height:auto;
 }
 .screenshot-col-label{
-  font:700 9px/1 var(--mono);
+  font:700 13px/1 var(--mono);
   text-transform:uppercase;letter-spacing:.06em;
   color:var(--ink);
   margin-top:12px;
@@ -836,7 +835,7 @@ a{color:inherit}img{display:block;max-width:100%}
   align-items:center;flex-wrap:wrap;
 }
 .sport-btn{
-  font:700 11px/1 var(--mono);letter-spacing:.04em;
+  font:700 13px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;
   padding:8px 14px;
   border:2px solid var(--ink);border-radius:16px;
@@ -848,7 +847,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .sport-btn img{width:16px;height:16px;object-fit:contain}
 .sport-btn:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
-.sport-btn.active{color:#fff;box-shadow:0 0 0 var(--ink);transform:translate(3px,3px)}
+.sport-btn.active{color:var(--ink);box-shadow:0 0 0 var(--ink);transform:translate(3px,3px)}
 
 /* Live component grid */
 .comp-grid{
@@ -864,7 +863,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .comp-col{display:flex;flex-direction:column}
 .comp-label{
-  font:700 10px/1 var(--mono);letter-spacing:.06em;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:#555;
   margin-top:12px;
 }
@@ -886,7 +885,7 @@ a{color:inherit}img{display:block;max-width:100%}
   text-align:center;
 }
 .demo-stat-num{font:900 28px/1 var(--sans);letter-spacing:-.02em}
-.demo-stat-label{font:400 9px/1 var(--mono);text-transform:uppercase;color:#555;margin-top:4px}
+.demo-stat-label{font:400 13px/1 var(--mono);text-transform:uppercase;color:#555;margin-top:4px}
 /* Demo tab bar */
 .demo-tabbar{
   display:flex;gap:0;width:100%;
@@ -924,7 +923,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .comp-card .redline-label{
   position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
-  font:500 8px/1.4 var(--mono);color:rgba(255,0,0,.7);
+  font:500 13px/1.4 var(--mono);color:#C80000;
   background:rgba(255,255,255,.9);padding:3px 6px;
   white-space:nowrap;text-align:center;
   transition:color .3s;
@@ -945,7 +944,7 @@ a{color:inherit}img{display:block;max-width:100%}
   border-left:1px dashed var(--accent);
 }
 .comp-annotation-text{
-  font:400 9px/1.5 var(--mono);color:#555;
+  font:400 15px/1.5 var(--mono);color:#555;
   text-align:center;padding:6px 10px;
 }
 .comp-annotation-text strong{color:var(--ink)}
@@ -956,7 +955,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 
 .specs-toggle-btn{
-  font:600 10px/1 var(--mono);letter-spacing:.04em;
+  font:600 13px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;
   padding:6px 12px;border:1px solid var(--ink);
   background:var(--bg);color:var(--ink);cursor:pointer;
@@ -983,7 +982,7 @@ a{color:inherit}img{display:block;max-width:100%}
   display:flex;flex-direction:column;gap:14px;flex:1;max-width:300px;
 }
 .icon-evo-label{
-  font:600 10px/1 var(--mono);letter-spacing:.04em;
+  font:600 13px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;color:#555;
 }
 .icon-evo-range{
@@ -1004,7 +1003,7 @@ a{color:inherit}img{display:block;max-width:100%}
   cursor:grab;
 }
 .icon-evo-version{
-  font:700 11px/1 var(--mono);color:var(--ink);
+  font:700 13px/1 var(--mono);color:var(--ink);
 }
 
 /* Sticker sheet */
@@ -1035,7 +1034,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .sticker-tooltip{
   position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
-  font:500 8px/1 var(--mono);color:#999;
+  font:500 13px/1 var(--mono);color:#6B6B6B;
   text-transform:uppercase;letter-spacing:.04em;
   white-space:nowrap;opacity:0;transition:opacity .2s;
 }
@@ -1048,7 +1047,7 @@ a{color:inherit}img{display:block;max-width:100%}
   width:fit-content;
 }
 .tap-toggle-btn{
-  font:700 10px/1 var(--mono);letter-spacing:.04em;
+  font:700 13px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;
   padding:8px 16px;
   background:var(--bg);color:var(--ink);
@@ -1078,19 +1077,19 @@ a{color:inherit}img{display:block;max-width:100%}
   transform:translateY(-2px);
 }
 .principle-card-tag{
-  font:700 9px/1 var(--mono);letter-spacing:.06em;
-  text-transform:uppercase;color:#999;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#6B6B6B;
   margin-bottom:10px;
 }
 .principle-card-num{
-  font:800 10px/1 var(--mono);letter-spacing:.04em;
-  color:var(--accent);margin-bottom:6px;
+  font:800 13px/1 var(--mono);letter-spacing:.04em;
+  color:var(--accent-text);margin-bottom:6px;
 }
 .principle-card-title{
   font:700 14px/1.3 var(--sans);margin-bottom:8px;
 }
 .principle-card-text{
-  font:400 12px/1.6 var(--sans);color:#777;
+  font:400 15px/1.6 var(--sans);color:#6B6B6B;
 }
 @media(max-width:600px){
   .principle-grid{grid-template-columns:1fr}
@@ -1112,12 +1111,12 @@ a{color:inherit}img{display:block;max-width:100%}
   display:flex;gap:16px;align-items:baseline;
 }
 .spec-label{
-  font:700 10px/1 var(--mono);letter-spacing:.06em;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:var(--ink);
   width:160px;flex-shrink:0;
 }
 .spec-value{
-  font:400 14px/1.5 var(--sans);color:#555;
+  font:400 15px/1.5 var(--sans);color:#555;
 }
 .spec-swatch{
   display:inline-block;width:12px;height:12px;
@@ -1164,7 +1163,7 @@ a{color:inherit}img{display:block;max-width:100%}
   color:#555;
 }
 .icon-caption{
-  font:400 13px/1.7 var(--sans);color:#999;
+  font:400 15px/1.7 var(--sans);color:#6B6B6B;
   max-width:58ch;
 }
 
@@ -1184,11 +1183,11 @@ a{color:inherit}img{display:block;max-width:100%}
   margin-bottom:8px;
 }
 .problem-card-num{
-  font:800 12px/1 var(--mono);letter-spacing:.04em;
-  color:var(--accent);
+  font:800 13px/1 var(--mono);letter-spacing:.04em;
+  color:var(--accent-text);
 }
 .problem-badge{
-  font:700 9px/1 var(--mono);letter-spacing:.06em;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;
   background:#F2C94C;color:var(--ink);
   padding:4px 8px;
@@ -1198,19 +1197,19 @@ a{color:inherit}img{display:block;max-width:100%}
   font:700 18px/1.2 var(--sans);margin-bottom:10px;
 }
 .problem-card-text{
-  font:400 14px/1.7 var(--sans);color:#555;
+  font:400 16px/1.7 var(--sans);color:#555;
   max-width:58ch;
 }
 .problem-code{
   background:#1a1a2e;color:#e0e0e0;
-  font:400 11px/1.6 'Figtree',system-ui,sans-serif;
+  font:400 14px/1.6 'Figtree',system-ui,sans-serif;
   padding:16px 20px;
   border-radius:8px;
   margin-top:12px;
   max-width:480px;
   overflow-x:auto;
 }
-.problem-code .comment{color:#6a6a8a}
+.problem-code .comment{color:#8E8EAA}
 .problem-code .keyword{color:#7ecfcf}
 .problem-code .string{color:#f0c674}
 .s08-keynote{
@@ -1220,7 +1219,7 @@ a{color:inherit}img{display:block;max-width:100%}
   margin-top:64px;
 }
 .s08-keynote-tag{
-  font:700 10px/1 var(--mono);letter-spacing:.06em;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:var(--accent);
   margin-bottom:16px;
 }
@@ -1230,7 +1229,7 @@ a{color:inherit}img{display:block;max-width:100%}
   max-width:48ch;
 }
 .s08-keynote-sub{
-  font:400 14px/1.7 var(--sans);color:#aaa;
+  font:400 16px/1.7 var(--sans);color:#aaa;
   margin-top:12px;max-width:54ch;
 }
 
@@ -1243,12 +1242,12 @@ a{color:inherit}img{display:block;max-width:100%}
   border:2px solid var(--ink);padding:20px;
 }
 .tool-card-title{
-  font:700 12px/1 var(--mono);letter-spacing:.04em;
+  font:700 15px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;color:var(--ink);
   margin-bottom:10px;
 }
 .tool-card-text{
-  font:400 13px/1.6 var(--sans);color:#555;
+  font:400 16px/1.6 var(--sans);color:#555;
 }
 .tool-placeholder{
   width:100%;aspect-ratio:16/9;
@@ -1280,7 +1279,7 @@ a{color:inherit}img{display:block;max-width:100%}
   letter-spacing:-.03em;margin-bottom:8px;
 }
 .stat-bar-label{
-  font:400 11px/1 var(--mono);letter-spacing:.06em;
+  font:400 15px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:#555;
 }
 @media(max-width:600px){
@@ -1311,11 +1310,10 @@ a{color:inherit}img{display:block;max-width:100%}
 .callout-box.reveal .callout-tag,
 .callout-box.reveal .callout-text{opacity:1}
 .callout-tag{
-  font:700 11px/1 var(--mono);letter-spacing:.04em;
+  font:700 13px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;color:var(--ink);
   margin-bottom:12px;
 }
-.callout-tag .lb{color:rgba(0,0,0,.2)}
 .callout-box--business{
   background:#F2C94C;
   border:2px solid var(--ink);
@@ -1326,7 +1324,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .callout-box--business.reveal .callout-tag,
 .callout-box--business.reveal .callout-text{opacity:1}
 .callout-text{
-  font:400 13px/1.7 var(--sans);color:#999;
+  font:400 18px/1.6 var(--sans);color:#555;
   max-width:65ch;margin:0;
 }
 
@@ -1338,19 +1336,19 @@ a{color:inherit}img{display:block;max-width:100%}
   border-top:2px solid var(--ink);
 }
 .contact-label{
-  font:700 10px/1 var(--mono);letter-spacing:.06em;
-  text-transform:uppercase;color:#999;
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#6B6B6B;
   margin-bottom:20px;
 }
 .contact-row{
   display:flex;gap:48px;flex-wrap:wrap;align-items:center;
 }
 .contact-row a,.contact-row span{
-  font:500 14px/1.4 var(--sans);
+  font:500 15px/1.4 var(--sans);
   color:var(--ink);text-decoration:none;
   transition:color .12s;
 }
-.contact-row a:hover{color:var(--accent)}
+.contact-row a:hover{color:var(--accent-text)}
 .contact-row a:visited{color:var(--ink)}
 .contact-icons{display:flex;gap:16px;align-items:center}
 .contact-icons .icon-link{display:inline-flex;align-items:center}
@@ -1358,7 +1356,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .contact-icons .icon-link:hover svg{fill:var(--accent)}
 .contact-copy{
   margin-top:32px;
-  font:400 10px/1 var(--mono);color:rgba(0,0,0,.3);
+  font:400 13px/1 var(--mono);color:#6B6B6B;
 }
 
 /* ================================================================
@@ -1376,7 +1374,7 @@ a{color:inherit}img{display:block;max-width:100%}
   .stat-bar{grid-template-columns:1fr;gap:24px}
   .timeline{flex-direction:column;gap:32px;align-items:center}
   .timeline-card{max-width:260px;width:100%}
-  .specs-toggle-btn{order:1;margin-left:0!important;width:100%;padding:14px!important;font-size:12px!important;margin-top:8px}
+  .specs-toggle-btn{order:1;margin-left:0!important;width:100%;padding:14px!important;font-size:13px!important;margin-top:8px}
   .icon-evo-range{height:6px}
   .icon-evo-range::-webkit-slider-thumb{width:32px;height:32px}
   .icon-evo-range::-moz-range-thumb{width:32px;height:32px}
@@ -1398,7 +1396,7 @@ a{color:inherit}img{display:block;max-width:100%}
 /* ── Store links ── */
 .store-links{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
 .store-pill{
-  font:600 10px/1 var(--mono);letter-spacing:.04em;
+  font:600 13px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;text-decoration:none;
   padding:8px 16px;border:1.5px solid var(--ink);border-radius:6px;
   color:var(--ink);transition:background .2s,color .2s;
@@ -1411,7 +1409,7 @@ a{color:inherit}img{display:block;max-width:100%}
   position:relative;z-index:2;
 }
 .back-to-top a{
-  font:600 10px/1 var(--mono);letter-spacing:.06em;
+  font:600 13px/1 var(--mono);letter-spacing:.06em;
   text-transform:uppercase;color:var(--grey);
   text-decoration:none;
   display:inline-flex;align-items:center;gap:6px;
@@ -1445,6 +1443,14 @@ a{color:inherit}img{display:block;max-width:100%}
 
 /* Line up digits in stats and charts */
 .s1-stat-num,.demo-stat-num,.stat-headline,.stat-bar-num{font-variant-numeric:tabular-nums}
+
+/* ── Readability: minimum text sizes, line length ── */
+@media(max-width:1199px){.minimap{display:none}}
+.case-content p,.callout-text{max-width:50ch}
+@media(max-width:768px){.case-content p,.callout-text{font-size:17px}}
+.case-content .s1-ai-text,.case-content .icon-caption{font-size:15px}
+.case-content .problem-card-text,.case-content .tool-card-text{font-size:16px}
+.comp-card .redline-label{white-space:normal;max-width:calc(100% - 16px);width:max-content}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -1464,7 +1470,7 @@ a{color:inherit}img{display:block;max-width:100%}
 <!-- Top bar -->
 <nav class="topbar">
   <a class="topbar-name" href="index.html">PAUL TAYLOR</a>
-  <button class="topbar-menu" id="menuBtn">[ MENU ]</button>
+  <button class="topbar-menu" id="menuBtn">MENU</button>
 </nav>
 
 <!-- Dropdown menu -->
@@ -1472,7 +1478,7 @@ a{color:inherit}img{display:block;max-width:100%}
   <a class="dd-link" href="index.html">Home</a>
   <a class="dd-link" href="about.html">About</a>
   <div class="dd-sep"></div>
-  <div class="dd-label">[ Case Studies ]</div>
+  <div class="dd-label">Case Studies</div>
   <a class="dd-case" href="mealmatch.html">MealMatch AI</a>
   <a class="dd-case active" href="ballrs.html">Ballrs</a>
   <a class="dd-case" href="jetsweat.html">JetSweat</a>
@@ -1510,7 +1516,7 @@ a{color:inherit}img{display:block;max-width:100%}
 <div class="case-body">
 
   <div class="case-section" id="s01">
-    <div class="case-label highlight"><span class="lb">[</span> 01 Overview <span class="lb">]</span></div>
+    <div class="case-label highlight">01 Overview</div>
     <div class="case-content">
       <h2 class="problem-headline">A daily sports trivia app I designed, built, and shipped.</h2>
       <p>Ballrs is a multi-sport player guessing game live on iOS and Android. Seven game modes, four sports, twenty-eight daily puzzles.</p>
@@ -1578,7 +1584,7 @@ a{color:inherit}img{display:block;max-width:100%}
   </div>
 
   <div class="case-section" id="s02" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 02 The Opportunity <span class="lb">]</span></div>
+    <div class="case-label highlight">02 The Opportunity</div>
     <div class="case-content">
       <h2 class="problem-headline">The gap between Poeltl and NYT Games.</h2>
       <p>Poeltl proved sports fans love daily puzzle games. NYT Games proved the multi-game collection model works on mobile. I hadn't seen anyone combine the two. The daily puzzle space was scattered. Single sport, single game, mostly web-only. Ballrs puts it all in one app.</p>
@@ -1616,7 +1622,7 @@ a{color:inherit}img{display:block;max-width:100%}
       </div>
 
       <div class="callout-box">
-        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <div class="callout-tag">Design Decision</div>
         <div class="wordle-tiles">
           <div class="wordle-tile empty"></div>
           <div class="wordle-tile correct">R</div>
@@ -1630,7 +1636,7 @@ a{color:inherit}img{display:block;max-width:100%}
   </div>
 
   <div class="case-section" id="s03" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 03 Game Design <span class="lb">]</span></div>
+    <div class="case-label highlight">03 Game Design</div>
     <div class="case-content" style="padding-bottom:0">
       <h2 class="problem-headline">Seven modes. Shipped one at a time.</h2>
       <p>Launched with the core game, validated it, then added new modes every few weeks. Each release included a feedback form. Users told me what worked and what didn't, and I shipped fixes the same day.</p>
@@ -1673,7 +1679,7 @@ a{color:inherit}img{display:block;max-width:100%}
 
     <!-- Sticky split: phone + decisions -->
     <div class="gd-rail" id="gdRail">
-      <div style="grid-column:1/-1;padding:48px 0 0"><div class="case-label" style="font-size:14px;letter-spacing:.04em"><span class="lb">[</span> Design Decisions <span class="lb">]</span></div></div>
+      <div style="grid-column:1/-1;padding:48px 0 0"><div class="case-label" style="font-size:14px;letter-spacing:.04em">Design Decisions</div></div>
       <div class="gd-stage-col">
         <div class="gd-stage">
           <div class="gd-device">
@@ -1747,7 +1753,7 @@ a{color:inherit}img{display:block;max-width:100%}
   </div>
 
   <div class="case-section" id="s04" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 04 Home Screen <span class="lb">]</span></div>
+    <div class="case-label highlight">04 Home Screen</div>
     <div class="case-content">
       <h2 class="problem-headline">The home screen grew up.</h2>
       <p>The home screen changed three times. Not because it was broken, but because the product outgrew it. One game mode became seven. A simple grid wasn't enough anymore.</p>
@@ -1777,20 +1783,20 @@ a{color:inherit}img{display:block;max-width:100%}
       </div>
 
       <div class="callout-box" style="margin-top:96px">
-        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <div class="callout-tag">Design Decision</div>
         <p class="callout-text">"The dashboard was the right call for one game. It gave each sport its own space with leaderboards, streaks, and duels. But it couldn't hold seven game modes per sport. The vertical list solved that. Every game mode is visible immediately. Sport tabs filter if you want, but the default shows everything. The layout scales to any number of games without redesigning the screen."</p>
-        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;font:500 10px/1.5 var(--mono);color:#555">
-          <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:18px;height:18px;font:700 10px/18px var(--mono);flex-shrink:0">1</span>Profile name and icon visible without opening settings.</div>
-          <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:18px;height:18px;font:700 10px/18px var(--mono);flex-shrink:0">2</span>Date reinforces the daily puzzle habit.</div>
-          <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:18px;height:18px;font:700 10px/18px var(--mono);flex-shrink:0">3</span>Duel section breaks up the list and drives social play.</div>
-          <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:18px;height:18px;font:700 10px/18px var(--mono);flex-shrink:0">4</span>Ad slot built in from launch so adding monetisation later won't disrupt the layout.</div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;font:500 15px/1.5 var(--mono);color:#555">
+          <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:22px;height:22px;font:700 13px/22px var(--mono);flex-shrink:0">1</span>Profile name and icon visible without opening settings.</div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:22px;height:22px;font:700 13px/22px var(--mono);flex-shrink:0">2</span>Date reinforces the daily puzzle habit.</div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:22px;height:22px;font:700 13px/22px var(--mono);flex-shrink:0">3</span>Duel section breaks up the list and drives social play.</div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:22px;height:22px;font:700 13px/22px var(--mono);flex-shrink:0">4</span>Ad slot built in from launch so adding monetisation later won't disrupt the layout.</div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="case-section" id="s05" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 05 Onboarding <span class="lb">]</span></div>
+    <div class="case-label highlight">05 Onboarding</div>
     <div class="case-content">
       <h2 class="problem-headline">Show, don't explain.</h2>
       <p>The first version of onboarding was static instruction cards. Text explaining how each game mode worked. Nobody reads instructions for a trivia game. Replaced them with animated demonstrations that simulate actual gameplay.</p>
@@ -1817,19 +1823,19 @@ a{color:inherit}img{display:block;max-width:100%}
       </div>
 
       <div class="callout-box" style="margin-top:8px">
-        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <div class="callout-tag">Design Decision</div>
         <p class="callout-text">"No email, no friction." Account creation asks for a username (with a random generator if you can't think of one), a flag to represent where you're from, and nothing else. No email required. At level 5, the app asks if you want to link an email to protect your progress. By then you've got streaks, XP, and unlocks worth keeping. Users link their email because they want to, not because they had to.</p>
       </div>
 
       <div class="callout-box" style="margin-top:40px">
-        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <div class="callout-tag">Design Decision</div>
         <p class="callout-text">"Profanity filter from day one." Random name generator and custom usernames both run through a profanity filter. Learned this the hard way when a leaderboard username had to be manually corrected in the database.</p>
       </div>
     </div>
   </div>
 
   <div class="case-section" id="s06" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 06 Design System <span class="lb">]</span></div>
+    <div class="case-label highlight">06 Design System</div>
     <div class="case-content">
       <h2 class="problem-headline">Neubrutalist. On purpose.</h2>
       <p>Bold, tactile, high contrast. Thick black borders, offset shadows, and sport-specific accent colours. Every element follows one rule: if it's filled with colour, you can tap it. If it's white, it's information.</p>
@@ -1867,10 +1873,10 @@ a{color:inherit}img{display:block;max-width:100%}
 
       <!-- Sport Switcher + Specs Toggle -->
       <div class="sport-switcher" id="sportSwitcher">
-        <button class="sport-btn active" data-sport="nba" data-color="#E07A3D"><img src="public/images/ballrs/icon-basketball.png" alt="">NBA</button>
-        <button class="sport-btn" data-sport="epl" data-color="#A17AFB"><img src="public/images/ballrs/icon-soccer.png" alt="">EPL</button>
-        <button class="sport-btn" data-sport="nfl" data-color="#3BA978"><img src="public/images/ballrs/icon-football.png" alt="">NFL</button>
-        <button class="sport-btn" data-sport="mlb" data-color="#7A93D2"><img src="public/images/ballrs/icon-baseball.png" alt="">MLB</button>
+        <button class="sport-btn active" data-sport="nba" data-color="#E07A3D" data-large="#DC783C" data-text="#AF5F30"><img src="public/images/ballrs/icon-basketball.png" alt="">NBA</button>
+        <button class="sport-btn" data-sport="epl" data-color="#A17AFB" data-large="#A17AFB" data-text="#8162C9"><img src="public/images/ballrs/icon-soccer.png" alt="">EPL</button>
+        <button class="sport-btn" data-sport="nfl" data-color="#3BA978" data-large="#39A474" data-text="#2D825C"><img src="public/images/ballrs/icon-football.png" alt="">NFL</button>
+        <button class="sport-btn" data-sport="mlb" data-color="#7A93D2" data-large="#7890CE" data-text="#6074A6"><img src="public/images/ballrs/icon-baseball.png" alt="">MLB</button>
         <button class="specs-toggle-btn" id="specsToggle" style="margin-left:auto">Dev Mode</button>
       </div>
 
@@ -1890,7 +1896,7 @@ a{color:inherit}img{display:block;max-width:100%}
         <div class="comp-col">
           <div class="comp-card">
             <div class="demo-stat">
-              <div class="demo-stat-num" id="demoStatNum" style="color:#E07A3D">7.44</div>
+              <div class="demo-stat-num" id="demoStatNum" style="color:#DC783C">7.44</div>
               <div class="demo-stat-label">Sessions</div>
             </div>
             <div class="comp-label">Stat Card</div>
@@ -1957,7 +1963,7 @@ a{color:inherit}img{display:block;max-width:100%}
   </div>
 
   <div class="case-section" id="s07" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 07 Engagement Design <span class="lb">]</span></div>
+    <div class="case-label highlight">07 Engagement Design</div>
     <div class="case-content">
       <h2 class="problem-headline">Twenty-eight reasons to come back tomorrow.</h2>
       <div class="stat-headline">7.44</div>
@@ -1999,22 +2005,22 @@ a{color:inherit}img{display:block;max-width:100%}
       </div>
 
       <div class="callout-box" style="margin-top:48px">
-        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <div class="callout-tag">Design Decision</div>
         <p class="callout-text">"The level-up moment is intentionally dramatic." Full-screen modal, confetti animation, spring bounce, haptic feedback. In an app with no sound effects and minimal animation elsewhere, this moment stands out on purpose. It tells the player: this matters.</p>
       </div>
 
       <div class="callout-box" style="margin-top:40px">
-        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <div class="callout-tag">Design Decision</div>
         <p class="callout-text">"Review prompt on the 5th win, not the 5th play." Asking happy players, not frustrated ones. Limited to 3 prompts total (games 5, 25, 50) with 60-day cooldowns.</p>
       </div>
 
       <div class="callout-box callout-box--business" style="margin-top:40px">
-        <div class="callout-tag"><span class="lb">[</span> Business Decision <span class="lb">]</span></div>
+        <div class="callout-tag">Business Decision</div>
         <p class="callout-text">"Ad slots from day one, not day one hundred." The app ships with Ballrs-branded banners in every ad slot — home screen, leaderboard, leagues, profile, duel results. No paid ads yet. But when a sponsor fills the slot, nothing changes for the user. The experience stays the same. "I want to start with ads because I don't want the experience to suddenly change for people."</p>
       </div>
 
       <div class="callout-box" style="margin-top:40px">
-        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <div class="callout-tag">Design Decision</div>
         <p class="callout-text">"Archive replay exploit." Users could give up on a puzzle and replay it later for full first-completion rewards. Failed attempts weren't creating completion records, so the system treated every retry as the first attempt. Fix: a completion record is created the moment a user finishes a puzzle — win, lose, or give up. First finish counts. After that, it's a replay. Full XP on the first replay, nothing after that.</p>
       </div>
 
@@ -2022,7 +2028,7 @@ a{color:inherit}img{display:block;max-width:100%}
   </div>
 
   <div class="case-section" id="s08" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 08 Everything That Went Wrong <span class="lb">]</span></div>
+    <div class="case-label highlight">08 Everything That Went Wrong</div>
     <div class="case-content">
       <h2 class="problem-headline">Everything that went wrong.</h2>
       <p>Shipping a live product means things break. These are the biggest problems I hit and how I fixed them.</p>
@@ -2082,7 +2088,7 @@ a{color:inherit}img{display:block;max-width:100%}
   </div>
 
   <div class="case-section" id="s09" style="padding-top:96px">
-    <div class="case-label highlight"><span class="lb">[</span> 09 Growth <span class="lb">]</span></div>
+    <div class="case-label highlight">09 Growth</div>
     <div class="case-content">
       <h2 class="problem-headline">Discovery is the bottleneck.</h2>
 
@@ -2104,18 +2110,18 @@ a{color:inherit}img{display:block;max-width:100%}
 
       <div style="display:flex;gap:24px;margin:32px 0;flex-wrap:wrap">
         <div style="flex:1;min-width:200px;border:2px solid var(--ink);padding:20px">
-          <div style="font:700 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);margin-bottom:16px">Apple Search Ads</div>
+          <div style="font:700 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);margin-bottom:16px">Apple Search Ads</div>
           <div style="font:900 clamp(24px,3vw,36px)/1 var(--sans);letter-spacing:-.03em;margin-bottom:4px">40%</div>
-          <div style="font:400 10px/1 var(--mono);color:#555;text-transform:uppercase;letter-spacing:.04em;margin-bottom:16px">Tap-to-Install</div>
+          <div style="font:400 13px/1 var(--mono);color:#555;text-transform:uppercase;letter-spacing:.04em;margin-bottom:16px">Tap-to-Install</div>
           <div style="font:900 clamp(24px,3vw,36px)/1 var(--sans);letter-spacing:-.03em;margin-bottom:4px">$2.84</div>
-          <div style="font:400 10px/1 var(--mono);color:#555;text-transform:uppercase;letter-spacing:.04em">Cost Per Install</div>
+          <div style="font:400 13px/1 var(--mono);color:#555;text-transform:uppercase;letter-spacing:.04em">Cost Per Install</div>
         </div>
         <div style="flex:1;min-width:200px;border:2px solid var(--ink);padding:20px;opacity:.5">
-          <div style="font:700 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);margin-bottom:16px">Meta Ads</div>
+          <div style="font:700 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);margin-bottom:16px">Meta Ads</div>
           <div style="font:900 clamp(24px,3vw,36px)/1 var(--sans);letter-spacing:-.03em;margin-bottom:4px">107</div>
-          <div style="font:400 10px/1 var(--mono);color:#555;text-transform:uppercase;letter-spacing:.04em;margin-bottom:16px">Clicks</div>
+          <div style="font:400 13px/1 var(--mono);color:#555;text-transform:uppercase;letter-spacing:.04em;margin-bottom:16px">Clicks</div>
           <div style="font:900 clamp(24px,3vw,36px)/1 var(--sans);letter-spacing:-.03em;margin-bottom:4px">0</div>
-          <div style="font:400 10px/1 var(--mono);color:#555;text-transform:uppercase;letter-spacing:.04em">Attributed Installs</div>
+          <div style="font:400 13px/1 var(--mono);color:#555;text-transform:uppercase;letter-spacing:.04em">Attributed Installs</div>
         </div>
       </div>
 
@@ -2142,7 +2148,7 @@ a{color:inherit}img{display:block;max-width:100%}
       </div>
 
       <div class="callout-box" style="margin-top:8px">
-        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <div class="callout-tag">Design Decision</div>
         <p class="callout-text">"The ads set the expectation for the habit." These aren't just install drivers. They show the daily loop — puzzles resetting, streaks building, duels firing. Users who download after watching already understand the rhythm.</p>
       </div>
 
@@ -2159,7 +2165,7 @@ a{color:inherit}img{display:block;max-width:100%}
           <source src="public/images/ballrs/website.mp4" type="video/mp4">
         </video>
       </div>
-      <div style="margin-top:12px"><a href="https://ballrs.net" target="_blank" rel="noopener" style="font:500 12px/1 var(--mono);color:var(--accent);text-decoration:underline;letter-spacing:.02em">ballrs.net</a></div>
+      <div style="margin-top:12px"><a href="https://ballrs.net" target="_blank" rel="noopener" style="font:500 15px/1 var(--mono);color:var(--accent-text);text-decoration:underline;letter-spacing:.02em">ballrs.net</a></div>
 
       <h3 class="sub-heading">I built the tools to make the content.</h3>
       <p>Two tools I built to produce marketing content faster:</p>
@@ -2178,7 +2184,7 @@ a{color:inherit}img{display:block;max-width:100%}
       </div>
 
       <div class="callout-box" style="margin-top:48px">
-        <div class="callout-tag"><span class="lb">[</span> Design Decision <span class="lb">]</span></div>
+        <div class="callout-tag">Design Decision</div>
         <p class="callout-text">"The product converts. The problem is getting people to the listing." 44% of everyone who sees the App Store page downloads the app. Discovery, not conversion, is the bottleneck. Everything in this section — ads, stickers, content tools, the website — is about solving that one problem.</p>
       </div>
     </div>
@@ -2230,12 +2236,12 @@ a{color:inherit}img{display:block;max-width:100%}
   menuBtn.addEventListener('click',function(){
     menuOpen=!menuOpen;
     dropdown.classList.toggle('open',menuOpen);
-    menuBtn.textContent=menuOpen?'[ CLOSE ]':'[ MENU ]';
+    menuBtn.textContent=menuOpen?'CLOSE':'MENU';
   });
   document.addEventListener('click',function(e){
     if(menuOpen&&!dropdown.contains(e.target)&&e.target!==menuBtn){
       menuOpen=false;dropdown.classList.remove('open');
-      menuBtn.textContent='[ MENU ]';
+      menuBtn.textContent='MENU';
     }
   });
 
@@ -2351,15 +2357,15 @@ a{color:inherit}img{display:block;max-width:100%}
       var color=btn.getAttribute('data-color');
       sportBtns.forEach(function(b){b.classList.remove('active');b.style.background='';b.style.color=''});
       btn.classList.add('active');
-      btn.style.background=color;btn.style.color='#fff';
+      btn.style.background=color;btn.style.color='var(--ink)';
       demoPill.style.background=color;
-      demoStatNum.style.color=color;
+      demoStatNum.style.color=btn.getAttribute('data-large');
       demoTabbar.style.borderTopColor=color;
-      redlineLabels.forEach(function(r){r.style.color=color});
+      redlineLabels.forEach(function(r){r.style.color=btn.getAttribute('data-text')});
     });
     if(btn.classList.contains('active')){
       btn.style.background=btn.getAttribute('data-color');
-      btn.style.color='#fff';
+      btn.style.color='var(--ink)';
     }
   });
 
