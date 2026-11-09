@@ -88,12 +88,11 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
 @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
 
 /* ================================================================
-   HERO — pinned scroll runway
+   HERO — headline morph plays once on load
    ================================================================ */
-.hero-runway{position:relative;z-index:2;height:400vh}
 .hero{
-  position:sticky;top:0;
-  height:100vh;
+  position:relative;z-index:2;
+  min-height:100vh;
   display:flex;flex-direction:column;justify-content:center;
   padding:calc(var(--frame) + 80px) calc(var(--frame) + var(--pad)) calc(var(--frame) + 80px);
   max-width:1400px;margin:0 auto;
@@ -162,6 +161,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 @media(max-width:900px){
   .morph-row{font-size:clamp(40px,12vw,80px);padding-left:12px}
   .ms-line{font-size:clamp(40px,12vw,80px)!important}
+  .ms-line.muted{font-size:clamp(24px,7.2vw,48px)!important}
   .morph-secondary{padding-left:12px;margin-top:4px;gap:2px}
   .hero-status{white-space:normal;font-size:10px;padding-left:12px;margin-top:16px;flex-wrap:wrap;gap:4px}
   .hero-status .meta-dot{display:none}
@@ -214,10 +214,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 /* Mobile "Who's this?!" pill — above the headline under 1024px, hidden elsewhere */
 .whos-this-mobile{display:none}
 
-/* Under 1024px: morph auto-plays (no pinned scroll runway), pill sits above the end of the headline */
+/* Under 1024px: the pill sits above the end of the headline */
 @media(max-width:1024px){
-  .hero-runway{height:auto}
-  .hero{position:relative;height:auto;min-height:100vh}
   #whosThis{display:none!important}
   /* shrink the headline block to its text so the pill's right edge lands on the last letter */
   .morph-row{align-self:flex-start;width:-moz-fit-content;width:fit-content}
@@ -229,126 +227,78 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .mob-burger{display:block}
 }
 
-/* ── 8px grid — covers hero + bento ── */
-.page-grid{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:
-    linear-gradient(#F0F0F0 1px,transparent 1px),
-    linear-gradient(90deg,#F0F0F0 1px,transparent 1px);
-  background-size:8px 8px;
-}
-
 /* ================================================================
-   BENTO GRID — 2x2
+   PROJECT GRID — 2x2: image on top, text below on the page background
    ================================================================ */
 .bento{
   position:relative;z-index:1;
-  padding:80px calc(var(--frame) + var(--pad) + 16px) 80px;
+  padding:80px calc(var(--frame) + var(--pad) + 16px) 96px;
   max-width:1400px;margin:0 auto;
   display:grid;
   grid-template-columns:1fr 1fr;
-  grid-auto-rows:1fr;
-  gap:24px;
+  gap:64px 24px;
 }
 .bento-tile{
-  position:relative;
-  border-radius:24px;overflow:hidden;
-  text-decoration:none;color:#fff;
-  cursor:none;
   display:flex;flex-direction:column;
-  justify-content:flex-end;
-  padding:48px;
-  min-height:440px;
-  box-shadow:0 10px 30px rgba(0,0,0,.04);
+  text-decoration:none;color:var(--ink);
+  cursor:none;
   opacity:0;transform:translateY(40px);
-  transition:opacity .6s ease-out,transform .6s ease-out,box-shadow .25s;
+  transition:opacity .6s ease-out,transform .6s ease-out;
 }
 .bento-tile.visible{opacity:1;transform:translateY(0)}
 .bento-tile:nth-child(1){transition-delay:0s}
 .bento-tile:nth-child(2){transition-delay:.1s}
 .bento-tile:nth-child(3){transition-delay:.2s}
 .bento-tile:nth-child(4){transition-delay:.3s}
+.bento-tile:focus-visible{outline:2px solid var(--accent);outline-offset:8px;border-radius:24px}
 
-/* Tile image — centered at 75% height, dimmed 15%, scales on hover */
+/* Image panel — brand colour block with the screenshot centred */
+.bt-media{
+  position:relative;overflow:hidden;
+  aspect-ratio:4/3;border-radius:24px;
+  box-shadow:0 10px 30px rgba(0,0,0,.04);
+  transition:box-shadow .25s;
+}
 .bt-img{
-  position:absolute;
-  top:50%;left:50%;
+  position:absolute;top:50%;left:50%;
   transform:translate(-50%,-50%);
-  width:auto;height:75%;
-  max-width:85%;
-  object-fit:contain;
-  border-radius:10px;
-  filter:brightness(.88);
+  width:auto;height:80%;max-width:85%;
+  object-fit:contain;border-radius:10px;
   transition:transform .5s cubic-bezier(.22,1,.36,1);
 }
-.bento-tile:hover .bt-img{transform:translate(-50%,-50%) scale(1.05)}
+.bt-img--wide{width:85%;height:auto;max-height:80%}
 
-/* Safety gradient — bottom 40% */
-.bt-overlay{
-  position:absolute;inset:0;z-index:1;
-  background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.3) 45%,transparent 65%);
-}
-
-/* Content — bottom-left, static above overlay */
-.bt-content{position:relative;z-index:2}
-
-/* Spec badges — pinned to top-left of card */
-.bt-badges{
-  position:absolute;top:20px;right:20px;z-index:5;
-  display:flex;gap:8px;flex-wrap:wrap;
-}
-.bt-badges span{
-  font:500 9px/1 var(--mono);letter-spacing:.05em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.45);
-  padding:4px 10px;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:3px;
-  background:transparent;
-  transition:color .3s,border-color .3s;
-}
-.bento-tile:hover .bt-badges span{
-  color:rgba(255,255,255,.75);
-  border-color:rgba(255,255,255,.25);
-}
-
-/* ── Standardized typography ── */
+/* Text — below the image, on the page background (all AA on #F9F9F9) */
+.bt-content{padding:24px 4px 0}
 .bt-title{
   font:900 clamp(24px,3vw,40px)/1.05 var(--tight);
   text-transform:uppercase;letter-spacing:-.04em;
-  margin-bottom:8px;color:#fff;
+  margin-bottom:8px;color:var(--ink);
+  transition:color .2s;
 }
 .bt-desc{
-  font:400 14px/1.6 var(--tight);color:rgba(255,255,255,.7);
-  margin-bottom:16px;max-width:38ch;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  font:400 16px/1.5 var(--tight);color:#4A4A4A;
+  margin-bottom:16px;max-width:52ch;
 }
 .bt-tags{display:flex;flex-wrap:wrap;gap:6px}
 .bt-tags span{
-  padding:4px 10px;border:1px solid rgba(255,255,255,.25);
-  font:500 9px/1 var(--mono);letter-spacing:.06em;
-  text-transform:uppercase;color:rgba(255,255,255,.55);border-radius:3px;
-  transition:background .3s,color .3s,border-color .3s;
+  padding:5px 10px;border:1px solid rgba(0,0,0,.18);border-radius:3px;
+  font:600 10px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#4A4A4A;
+  transition:background .2s,color .2s,border-color .2s;
 }
-.bento-tile:hover .bt-tags span{
-  background:var(--accent);
-  border-color:var(--accent);
-  color:#fff;
-}
+
+/* Hover — image lifts slightly, title and tags take the accent */
+.bento-tile:hover .bt-media,.bento-tile.touch-active .bt-media{box-shadow:0 14px 40px rgba(0,0,0,.10)}
+.bento-tile:hover .bt-img,.bento-tile.touch-active .bt-img{transform:translate(-50%,-50%) scale(1.04)}
+.bento-tile:hover .bt-title,.bento-tile.touch-active .bt-title{color:var(--accent)}
+.bento-tile:hover .bt-tags span,.bento-tile.touch-active .bt-tags span{background:var(--accent);border-color:var(--accent);color:#fff}
 
 /* ── Tile colors ── */
 .bt-mint{background:#2D6A4F}
 .bt-navy{background:#1E3A8A}
 .bt-purple{background:#3D2C5E}
-.bt-purple .bt-img{filter:brightness(1)}
 .bt-burnt{background:#C45A2D}
-
-
-/* ── Bottom row images — fixed matching height ── */
-.bento-tile:nth-child(3) .bt-img,
-.bento-tile:nth-child(4) .bt-img{
-  height:65%;
-}
 
 /* ── VIEW cursor pill — follows mouse on card hover ── */
 .view-cursor{
@@ -366,16 +316,19 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 }
 .view-cursor.active{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
-/* ── Touch-active: mirrors hover for mobile scroll trigger ── */
-.bento-tile.touch-active .bt-img{transform:translate(-50%,-50%) scale(1.05)!important}
-.bento-tile.touch-active .bt-badges span{color:rgba(255,255,255,.75);border-color:rgba(255,255,255,.25)}
-.bento-tile.touch-active .bt-tags span{background:var(--accent);border-color:var(--accent);color:#fff}
-
 /* ── Responsive ── */
 @media(max-width:900px){
-  .bento{grid-template-columns:1fr;gap:20px;padding:48px calc(var(--frame) + 20px)}
-  .bt-img{height:60%}
-  .bento-tile{min-height:360px;padding:32px}
+  .bento{grid-template-columns:1fr;gap:48px;padding:48px calc(var(--frame) + 20px) 64px}
+  .bt-content{padding-top:20px}
+}
+
+/* ── Reduced motion: final hero state, no animation ── */
+@media(prefers-reduced-motion:reduce){
+  .morph-row,.ms-line,.hero-status,.scroll-sig{animation:none!important;opacity:1!important;transform:none!important}
+  .meta-dot,.scroll-sig .ss-arrow{animation:none}
+  .whos-this{transition:none}
+  .bento-tile{opacity:1;transform:none;transition:none}
+  .bt-media,.bt-img,.bt-title,.bt-tags span{transition:none}
 }
 
 /* ================================================================
@@ -432,7 +385,6 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
 <div class="frame"></div>
 <div class="grain"></div>
-<div class="page-grid"></div>
 <div class="cur" id="cur"></div>
 <div class="view-cursor" id="viewCur">View</div>
 
@@ -446,9 +398,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 </div>
 
 
-<!-- Hero runway (200vh scroll zone, hero stays pinned) -->
-<div class="hero-runway" id="heroRunway">
-  <section class="hero" id="hero">
+<!-- Hero -->
+<section class="hero" id="hero">
     <!-- Morph headline: P-RODUC-T → P-AUL T-AYLOR -->
     <div class="morph-row"><span class="ml ml-p" id="mlP">P</span><span class="ml ml-roduc" id="mlRoduc">roduc</span><span class="ml ml-aul" id="mlAul">aul</span><span class="ml ml-space" id="mlSpace"> </span><span class="ml ml-t" id="mlT">T</span><span class="ml ml-aylor" id="mlAylor">aylor</span><div class="whos-this" id="whosThis"><a href="about.html">Who's this?!</a></div><div class="whos-this whos-this-mobile" id="whosThisMobile"><a href="about.html">Who's this?!</a></div></div>
 
@@ -467,50 +418,30 @@ a,.nav-pill,.bento-tile{cursor:pointer}
       <span>Scroll</span>
       <span class="ss-arrow">&#8595;</span>
     </div>
-  </section>
-</div>
+</section>
 
-<!-- Bento Grid — 2x2 -->
+<!-- Project grid — 2x2 -->
 <section class="bento" id="work">
 
-  <!-- 01 Ballrs — Navy -->
-  <a class="bento-tile bt-navy" href="ballrs.html">
-    <img class="bt-img" src="public/images/ballrs/S4-P3.PNG" alt="Ballrs">
-    <div class="bt-overlay"></div>
+  <!-- 01 JetSweat — Orange -->
+  <a class="bento-tile" href="jetsweat.html">
+    <div class="bt-media bt-burnt"><img class="bt-img bt-img--wide" src="public/images/jetsweat/new-dashboard.png" alt="JetSweat Dashboard"></div>
     <div class="bt-content">
-      <div class="bt-title">Ballrs</div>
-      <p class="bt-desc">Designed, built, and shipped a multi-sport trivia app solo.</p>
-      <div class="bt-tags">
-        <span>Product Design</span>
-        <span>Game Design</span>
-        <span>Brand</span>
-        <span>Growth</span>
-      </div>
-    </div>
-  </a>
-
-  <!-- 02 MealMatch AI — Mint -->
-  <a class="bento-tile bt-mint" href="mealmatch.html">
-    <img class="bt-img" src="public/images/mealmatch/section-1/mealmatch-hero-screen.png" alt="MealMatch AI">
-    <div class="bt-overlay"></div>
-    <div class="bt-content">
-      <div class="bt-title">MealMatch AI</div>
-      <p class="bt-desc">Led design on an AI meal planning app from research to App Store launch.</p>
+      <h2 class="bt-title">JetSweat</h2>
+      <p class="bt-desc">Redesigned a B2B fitness platform. Dashboard, onboarding, and CMS in 3 months.</p>
       <div class="bt-tags">
         <span>Product Design</span>
         <span>UX Research</span>
-        <span>Design System</span>
-        <span>AI</span>
+        <span>B2B SaaS</span>
       </div>
     </div>
   </a>
 
-  <!-- 03 Loupe — Purple -->
-  <a class="bento-tile bt-purple" href="loupe.html">
-    <img class="bt-img" src="public/images/loupe/tag-editor.png" alt="Loupe Tag Editor">
-    <div class="bt-overlay"></div>
+  <!-- 02 Loupe — Purple -->
+  <a class="bento-tile" href="loupe.html">
+    <div class="bt-media bt-purple"><img class="bt-img bt-img--wide" src="public/images/loupe/tag-editor.png" alt="Loupe Tag Editor"></div>
     <div class="bt-content">
-      <div class="bt-title">Loupe</div>
+      <h2 class="bt-title">Loupe</h2>
       <p class="bt-desc">A Mac app that tags photos using local AI. Built with SwiftUI and Claude Code.</p>
       <div class="bt-tags">
         <span>Product Design</span>
@@ -521,17 +452,32 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     </div>
   </a>
 
-  <!-- 04 JetSweat — Orange -->
-  <a class="bento-tile bt-burnt" href="jetsweat.html">
-    <img class="bt-img" src="public/images/jetsweat/new-dashboard.png" alt="JetSweat Dashboard">
-    <div class="bt-overlay"></div>
+  <!-- 03 MealMatch AI — Mint -->
+  <a class="bento-tile" href="mealmatch.html">
+    <div class="bt-media bt-mint"><img class="bt-img" src="public/images/mealmatch/section-1/mealmatch-hero-screen.png" alt="MealMatch AI"></div>
     <div class="bt-content">
-      <div class="bt-title">JetSweat</div>
-      <p class="bt-desc">Redesigned a B2B fitness platform. Dashboard, onboarding, and CMS in 3 months.</p>
+      <h2 class="bt-title">MealMatch AI</h2>
+      <p class="bt-desc">Led design on an AI meal planning app from research to App Store launch.</p>
       <div class="bt-tags">
         <span>Product Design</span>
         <span>UX Research</span>
-        <span>B2B SaaS</span>
+        <span>Design System</span>
+        <span>AI</span>
+      </div>
+    </div>
+  </a>
+
+  <!-- 04 Ballrs — Navy -->
+  <a class="bento-tile" href="ballrs.html">
+    <div class="bt-media bt-navy"><img class="bt-img" src="public/images/ballrs/S4-P3.PNG" alt="Ballrs"></div>
+    <div class="bt-content">
+      <h2 class="bt-title">Ballrs</h2>
+      <p class="bt-desc">Designed, built, and shipped a multi-sport trivia app solo.</p>
+      <div class="bt-tags">
+        <span>Product Design</span>
+        <span>Game Design</span>
+        <span>Brand</span>
+        <span>Growth</span>
       </div>
     </div>
   </a>
@@ -611,60 +557,43 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY});
   (function t(){c.style.transform='translate3d('+mx+'px,'+my+'px,0)';requestAnimationFrame(t)})();
 
-  /* ── SCROLL-MORPH TIMELINE ── */
-  var heroRunway=document.getElementById('heroRunway');
-  var scrollSig=document.getElementById('scrollSig');
+  /* ── HERO MORPH — plays once on load: PRODUCT → PAUL TAYLOR ── */
   var whosThis=document.getElementById('whosThis');
+  var whosThisMobile=document.getElementById('whosThisMobile');
   var mlP=document.getElementById('mlP');
   var mlRoduc=document.getElementById('mlRoduc');
   var mlAul=document.getElementById('mlAul');
   var mlSpace=document.getElementById('mlSpace');
   var mlT=document.getElementById('mlT');
   var mlAylor=document.getElementById('mlAylor');
-  var msDesigner=document.getElementById('msDesigner');
-  var msWhoShips=document.getElementById('msWhoShips');
-  var heroStatus=document.getElementById('heroStatus');
+  var NAME_COLOR='#0369A1';
 
   // Measure natural widths for smooth interpolation
   var roducW=0,aulW=0,spaceW=0,aylorW=0;
   function measure(){
-    // Temporarily show and reveal spans to measure natural width
     mlRoduc.style.width='auto';
     roducW=mlRoduc.scrollWidth;
-    // Show hidden spans briefly to measure
     mlAul.style.display='inline-block';mlAul.style.maxWidth='none';
     aulW=mlAul.scrollWidth;
     mlSpace.style.display='inline-block';mlSpace.style.maxWidth='none';
     spaceW=parseFloat(getComputedStyle(mlSpace).fontSize)*0.22;
     mlAylor.style.display='inline-block';mlAylor.style.maxWidth='none';
     aylorW=mlAylor.scrollWidth;
-    // Reset — hide again
     mlAul.style.display='none';mlAul.style.maxWidth='0';
     mlSpace.style.display='none';mlSpace.style.maxWidth='0';
     mlAylor.style.display='none';mlAylor.style.maxWidth='0';
     mlRoduc.style.width=roducW+'px';
   }
 
-  // Gate: don't run morph until load animations finish
-  var introComplete=false;
-  var whosThisMobile=document.getElementById('whosThisMobile');
-  var autoMorph=window.matchMedia('(max-width:1024px)'); // auto-play + mobile pill below this width
-  var autoP=0;           // mobile auto-play progress (0 → 1)
-  var autoStarted=false;
-  setTimeout(function(){measure();introComplete=true;render()},1200);
-
-  // Headline morph — shared by the desktop scroll timeline and the mobile auto-play
+  // Same keyframes as the old scroll timeline (p runs 0 → 1)
   function morphHeadline(p){
-    // ── KF2 (15–30%): RODUC fades out (keeps its width) ──
+    // KF2 (15–30%): RODUC fades out (keeps its width)
     var k2=Math.max(0,Math.min(1,(p-0.15)/0.15));
     mlRoduc.style.opacity=1-k2;
 
-    // ── KF3 (30–55%): T slides — roduc collapses, aul+space expand ──
-    //     roduc shrinks from full → 0, aul+space grow from 0 → natural
-    //     Net effect: T moves left by (roducW - aulW - spaceW)
+    // KF3 (30–55%): T slides — roduc collapses, aul+space expand
     var k3=Math.max(0,Math.min(1,(p-0.30)/0.25));
     mlRoduc.style.width=(roducW*(1-k3))+'px';
-    // Show/hide the name spans
     var show=k3>0?'inline-block':'none';
     mlAul.style.display=show;
     mlSpace.style.display=show;
@@ -674,86 +603,54 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     mlSpace.style.maxWidth='none';
     mlAylor.style.maxWidth=(aylorW*k3)+'px';
 
-    // ── KF4 (55–70%): AUL, AYLOR fade in + P,T turn orange ──
+    // KF4 (55–70%): AUL, AYLOR fade in + P,T take the accent
     var k4=Math.max(0,Math.min(1,(p-0.55)/0.15));
     mlAul.style.opacity=k4;
     mlSpace.style.opacity=k4;
     mlAylor.style.opacity=k4;
-    var nameColor=k4>=1?'#0369A1':'';
+    var nameColor=k4>=1?NAME_COLOR:'';
     mlP.style.color=nameColor;
     mlT.style.color=nameColor;
 
-    // ── KF5 (70–100%): Hold PAUL TAYLOR ──
+    // "Who's this?!" pill pops in once the name is revealed
+    var pill=p>0.72;
+    whosThis.classList.toggle('visible',pill);
+    whosThisMobile.classList.toggle('visible',pill);
   }
 
-  function onScroll(){
-    if(autoMorph.matches) return; // under 1024px the morph is time-driven, see autoPlay()
-    var sy=window.scrollY;
-    var runwayTop=heroRunway.offsetTop;
-    var runwayH=heroRunway.offsetHeight-window.innerHeight;
-    var p=Math.max(0,Math.min(1,(sy-runwayTop)/Math.max(1,runwayH)));
-
-    // Scroll signifier — fade out as animation starts
-    scrollSig.style.opacity=Math.max(0,1-p/0.15);
-
-    // "Who's this?!" badge — pop in after name is revealed
-    if(p>0.72){whosThis.classList.add('visible')}
-    else{whosThis.classList.remove('visible')}
-
-    if(!introComplete) return;
-
-    // ── KF1 (0–15%): DESIGNER, CONCEPT TO LAUNCH, STATUS fade out ──
-    var k1=Math.min(1,p/0.15);
-    msDesigner.style.opacity=1-k1;
-    msWhoShips.style.opacity=1-k1;
-    heroStatus.style.opacity=1-k1;
-
-    morphHeadline(p);
+  // Final state in font-relative units, so it survives resizes and font swaps
+  function showFinal(){
+    mlRoduc.style.display='none';
+    [mlAul,mlSpace,mlAylor].forEach(function(el){
+      el.style.display='inline-block';el.style.maxWidth='none';el.style.opacity=1;
+    });
+    mlSpace.style.width='.22em';
+    mlP.style.color=NAME_COLOR;mlT.style.color=NAME_COLOR;
+    whosThis.classList.add('visible');
+    whosThisMobile.classList.add('visible');
   }
 
-  // ── UNDER 1024px: auto-play the headline morph 1.5s after load, no scroll needed ──
-  //    Secondary lines + status stay put; the pill pops in above the end of the name.
-  function renderMobile(){
-    scrollSig.style.opacity='';
-    msDesigner.style.opacity='';msWhoShips.style.opacity='';heroStatus.style.opacity='';
-    whosThis.classList.remove('visible');
-    morphHeadline(autoP);
-    if(autoP>0.72){whosThisMobile.classList.add('visible')}
-    else{whosThisMobile.classList.remove('visible')}
-  }
-  function autoPlay(){
-    if(autoStarted) return;
-    autoStarted=true;
-    var DUR=1800,P0=0.15,P1=0.85,t0=null;
+  function play(){
+    var DUR=1500,P0=0.15,P1=0.72,t0=null;
     function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+    measure();
     function frame(ts){
       if(t0===null) t0=ts;
       var t=Math.min(1,(ts-t0)/DUR);
-      autoP=P0+(P1-P0)*ease(t);
-      if(t>=1) autoP=1;
-      if(autoMorph.matches) renderMobile();
-      if(t<1) requestAnimationFrame(frame);
+      if(t<1){morphHeadline(P0+(P1-P0)*ease(t));requestAnimationFrame(frame)}
+      else showFinal();
     }
     requestAnimationFrame(frame);
   }
-  setTimeout(function(){
-    if(!autoMorph.matches) return;
-    if(!introComplete){measure();introComplete=true}
-    autoPlay();
-  },1500);
 
-  function render(){
-    if(autoMorph.matches){renderMobile()}
-    else{onScroll()}
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    showFinal();
+  }else{
+    // Intro lines finish at ~1.2s; hold the full "PRODUCT / DESIGNER / CONCEPT TO LAUNCH." about a second, then morph
+    var HOLD=2200;
+    var fontsReady=document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve();
+    Promise.all([fontsReady,new Promise(function(r){setTimeout(r,HOLD)})]).then(play);
   }
-
-  window.addEventListener('scroll',onScroll,{passive:true});
-  window.addEventListener('resize',function(){measure();render()});
-  autoMorph.addEventListener('change',function(e){
-    // Switched under 1024px after load: play immediately. Desktop resumes scroll-driven.
-    if(e.matches&&!autoStarted&&introComplete) autoPlay();
-    measure();render();
-  });
 
 })();
 </script>
