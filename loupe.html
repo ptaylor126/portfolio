@@ -411,7 +411,7 @@ a{color:inherit}img{display:block;max-width:100%}
     <div class="case-label highlight">01 What Is Loupe</div>
     <div class="case-content">
       <h2 class="problem-headline">A Mac app that tags your photos using local AI.</h2>
-      <p>Loupe uses a local vision model to analyse photos and write searchable metadata directly into the image files. No cloud. No subscription. Your photos never leave your machine.</p>
+      <p>Loupe uses a local vision model to analyse photos and write searchable metadata directly into the image files. It all runs on your machine, with no cloud and no subscription. Your photos never leave it.</p>
       <p>I had thousands of street photos across folders and drives with no consistent tagging. Finding a specific shot meant scrolling through everything. The tools that exist are either cloud-based subscriptions or complex and expensive. So I built my own.</p>
 
       <div class="stat-bar">
@@ -447,16 +447,16 @@ a{color:inherit}img{display:block;max-width:100%}
 
       <div class="decision-stack">
         <div class="decision-item">
-          <div class="decision-item-title">Native Mac app, not web or iOS.</div>
+          <div class="decision-item-title">Why a native Mac app.</div>
           <p class="decision-item-text">The vision model needs a desktop machine with enough RAM and Apple Silicon for reasonable speed. A web app would mean a server, which means cloud and costs. iOS doesn't have the compute. A native Mac app was the only option that fit fully local processing.</p>
         </div>
         <div class="decision-item">
-          <div class="decision-item-title">Local AI, not cloud.</div>
+          <div class="decision-item-title">Why local AI.</div>
           <p class="decision-item-text">Two reasons: privacy and cost. Photographers are sensitive about their photos leaving their machine, especially client work. Running locally means images go nowhere. It also means no per-image API costs and no subscription.</p>
         </div>
         <div class="decision-item">
-          <div class="decision-item-title">IPTC/XMP metadata, not a proprietary system.</div>
-          <p class="decision-item-text">If Loupe writes to a proprietary database, the user is locked in. IPTC/XMP is the industry standard. Tags written by Loupe work in Lightroom, Capture One, Finder, Photo Mechanic. And it never overwrites existing metadata — only appends.</p>
+          <div class="decision-item-title">Why standard IPTC/XMP metadata.</div>
+          <p class="decision-item-text">If Loupe writes to a proprietary database, the user is locked in. IPTC/XMP is the industry standard. Tags written by Loupe work in Lightroom, Capture One, Finder, Photo Mechanic. It also never overwrites existing metadata. It only adds to it.</p>
         </div>
         <div class="decision-item">
           <div class="decision-item-title">Custom vocabulary.</div>
@@ -464,11 +464,11 @@ a{color:inherit}img{display:block;max-width:100%}
         </div>
         <div class="decision-item">
           <div class="decision-item-title">Multiple prompt iterations to get clean output.</div>
-          <p class="decision-item-text">The vision model kept merging descriptions and keywords, producing multi-word phrases, or hallucinating instruction text into the output. Multiple iterations to fix. The key insight: minicpm-v responds better to shown examples than to rules.</p>
+          <p class="decision-item-text">The vision model kept merging descriptions and keywords, producing multi-word phrases, or hallucinating instruction text into the output. It took several rounds to fix. In the end, showing minicpm-v examples worked better than giving it rules.</p>
         </div>
         <div class="decision-item">
-          <div class="decision-item-title">Confidence without clutter.</div>
-          <p class="decision-item-text">Confidence is computed from 5 signals. But the UI shows nothing for medium or high confidence — only flags low confidence with a small amber dot. The absence of an indicator means it looks good.</p>
+          <div class="decision-item-title">Only low confidence gets a flag.</div>
+          <p class="decision-item-text">Confidence is computed from 5 signals. But the UI shows nothing for medium or high confidence. It only flags low confidence, with a small amber dot. No dot means the tags look good.</p>
         </div>
       </div>
     </div>
@@ -478,10 +478,10 @@ a{color:inherit}img{display:block;max-width:100%}
   <div class="case-section" id="s03" style="padding-top:96px">
     <div class="case-label highlight">03 How It Works</div>
     <div class="case-content">
-      <h2 class="problem-headline">Drop a folder. Review the tags. Done.</h2>
-      <p>User drops a folder of photos onto the app. Images are sent to the local vision model one at a time. The model returns a short description and 5-8 keywords per image. Post-processing cleans the keywords — splits multi-word tags, strips stopwords, deduplicates, caps at 8.</p>
-      <p>Processed images appear in a review grid. Low confidence images are flagged and sorted first. The user opens each image into a tag editor — large photo on the left, description and keyword pills on the right. Approve, edit, or reject tags. On approve, metadata is written directly into the file via exiftool.</p>
-      <p>Solid sage pill means active tag. Dashed outline means suggestion. Vocabulary suggestions appear first, then AI suggestions. The ordering does the work without needing visual distinction.</p>
+      <h2 class="problem-headline">Drop in a folder, then review the tags.</h2>
+      <p>The user drops a folder of photos onto the app. Images are sent to the local vision model one at a time. The model returns a short description and 5-8 keywords per image. Post-processing then cleans the keywords. It splits multi-word tags, strips stopwords, removes duplicates and caps the list at 8.</p>
+      <p>Processed images appear in a review grid. Low confidence images are flagged and sorted first. The user opens each image in a tag editor, with a large photo on the left and the description and keyword pills on the right. Approve, edit, or reject tags. On approve, metadata is written directly into the file via exiftool.</p>
+      <p>Solid sage pill means active tag. Dashed outline means suggestion. Vocabulary suggestions appear first, then AI suggestions. The order tells them apart, so they don't need different styling.</p>
 
       <img src="public/images/loupe/processing.png" alt="Processing Screen" style="width:100%;display:block;margin:32px 0">
 
@@ -493,14 +493,14 @@ a{color:inherit}img{display:block;max-width:100%}
   <div class="case-section" id="s04" style="padding-top:96px">
     <div class="case-label highlight">04 Status</div>
     <div class="case-content">
-      <h2 class="problem-headline">In beta. Almost there.</h2>
+      <h2 class="problem-headline">In beta, close to launch.</h2>
       <p>Loupe is live on TestFlight with early beta testers. The website is at <a href="https://tagwithloupe.com" target="_blank" rel="noopener" style="color:var(--accent-text);text-decoration:underline">tagwithloupe.com</a>. App Store submission is in progress.</p>
       <p>Still needed before launch: RAW file support, session persistence, error handling for edge cases, and a final UI polish pass.</p>
 
       <div class="callout-box" style="margin-top:32px">
         <div class="callout-tag">Beta Feedback</div>
         <div class="callout-title">What beta testers said.</div>
-        <p class="callout-text">Custom vocabulary was called out as the standout feature. Bulk review confirmed as the right workflow. One-time purchase model noted as refreshing compared to subscription apps everywhere else. Speed benchmarks requested — the answer is about 14 seconds per image on M1.</p>
+        <p class="callout-text">Testers singled out custom vocabulary as the best feature. They confirmed bulk review was the right workflow. They liked the one-time price, compared with the subscriptions everywhere else. Some asked about speed: it's about 14 seconds per image on an M1.</p>
       </div>
     </div>
   </div>
