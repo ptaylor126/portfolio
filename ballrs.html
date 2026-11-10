@@ -1455,6 +1455,19 @@ a{color:inherit}img{display:block;max-width:100%}
 .case-content .s1-ai-text,.case-content .icon-caption{font-size:15px}
 .case-content .problem-card-text,.case-content .tool-card-text{font-size:16px}
 .comp-card .redline-label{white-space:normal;max-width:calc(100% - 16px);width:max-content}
+
+/* ── Summary under the hero ── */
+.case-summary{padding:0 clamp(32px,8vw,96px) 64px}
+.cs-rows{display:grid;grid-template-columns:120px minmax(0,62ch);gap:14px 24px}
+.cs-rows dt{font:700 13px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink);padding-top:4px}
+.cs-rows dd{font:400 18px/1.55 var(--sans);color:var(--ink)}
+.cs-skills{margin-top:28px;padding-left:144px;font:600 15px/1.5 var(--sans);color:#4A4A4A}
+@media(max-width:800px){
+  .case-summary{padding:0 calc(var(--frame) + 20px) 40px}
+  .cs-rows{grid-template-columns:1fr;gap:4px}
+  .cs-rows dd{font-size:17px;margin-bottom:14px}
+  .cs-skills{padding-left:0;margin-top:12px}
+}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -1499,6 +1512,17 @@ a{color:inherit}img{display:block;max-width:100%}
     <span>Dec 2025 to now</span>
   </div>
 </section>
+
+<!-- Summary -->
+<section class="case-summary" aria-label="Summary">
+  <dl class="cs-rows">
+    <dt>Problem</dt><dd>Most daily sports puzzle games covered one sport, had one game and ran mainly on the web.</dd>
+    <dt>What I did</dt><dd>I designed, built and shipped a daily sports trivia app for iOS and Android, with 7 game modes across 4 sports. I also designed the ads, QR code stickers and the landing page.</dd>
+    <dt>Outcome</dt><dd>Live on the App Store and Google Play. People who found it kept playing, at 7.44 sessions per device, so the data showed the limit was getting found. 44% of people who see the App Store page download it.</dd>
+  </dl>
+  <p class="cs-skills">Game design · Mobile app design · Design systems · React Native · App marketing</p>
+</section>
+
 
 <!-- Progress bar -->
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>

@@ -819,6 +819,19 @@ img.filmstrip-img{
 .case-content p,.case-content ul,.callout-text,.hc-body,.kofi-body,.redline-body{max-width:50ch}
 @media(max-width:768px){.case-content p,.case-content ul,.callout-text,.hc-body,.kofi-body,.redline-body{font-size:17px}}
 .case-content .ba-legend p{font-size:15px}
+
+/* ── Summary under the hero ── */
+.case-summary{padding:0 clamp(32px,8vw,96px) 64px}
+.cs-rows{display:grid;grid-template-columns:120px minmax(0,62ch);gap:14px 24px}
+.cs-rows dt{font:700 13px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink);padding-top:4px}
+.cs-rows dd{font:400 18px/1.55 var(--sans);color:var(--ink)}
+.cs-skills{margin-top:28px;padding-left:144px;font:600 15px/1.5 var(--sans);color:#4A4A4A}
+@media(max-width:800px){
+  .case-summary{padding:0 calc(var(--frame) + 20px) 40px}
+  .cs-rows{grid-template-columns:1fr;gap:4px}
+  .cs-rows dd{font-size:17px;margin-bottom:14px}
+  .cs-skills{padding-left:0;margin-top:12px}
+}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -862,6 +875,17 @@ img.filmstrip-img{
     <span>Dec 2024 to Apr 2026</span>
   </div>
 </section>
+
+<!-- Summary -->
+<section class="case-summary" aria-label="Summary">
+  <dl class="cs-rows">
+    <dt>Problem</dt><dd>In a survey of 46 people, decision fatigue was the top meal planning pain point. 35% don't plan meals at all.</dd>
+    <dt>What I did</dt><dd>As Lead Designer, I pushed for research before building. I led the onboarding design and 5 usability tests, built the design system and made Kofi, the AI character, consistent across poses. I led the other 2 designers.</dd>
+    <dt>Outcome</dt><dd>Live on the App Store. Usability testing led to 23 changes. Launch data showed where onboarding lost people.</dd>
+  </dl>
+  <p class="cs-skills">User research · Usability testing · Onboarding design · Design systems · Character design</p>
+</section>
+
 
 <!-- Progress bar -->
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>

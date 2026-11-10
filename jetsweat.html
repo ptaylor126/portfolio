@@ -431,6 +431,19 @@ a{color:inherit}img{display:block;max-width:100%}
 .case-content p,.callout-text{max-width:50ch}
 @media(max-width:768px){.case-content p,.callout-text{font-size:17px}}
 .cms-ann-card{max-width:240px}
+
+/* ── Summary under the hero ── */
+.case-summary{padding:0 clamp(32px,8vw,96px) 64px}
+.cs-rows{display:grid;grid-template-columns:120px minmax(0,62ch);gap:14px 24px}
+.cs-rows dt{font:700 13px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink);padding-top:4px}
+.cs-rows dd{font:400 18px/1.55 var(--sans);color:var(--ink)}
+.cs-skills{margin-top:28px;padding-left:144px;font:600 15px/1.5 var(--sans);color:#4A4A4A}
+@media(max-width:800px){
+  .case-summary{padding:0 calc(var(--frame) + 20px) 40px}
+  .cs-rows{grid-template-columns:1fr;gap:4px}
+  .cs-rows dd{font-size:17px;margin-bottom:14px}
+  .cs-skills{padding-left:0;margin-top:12px}
+}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -474,6 +487,17 @@ a{color:inherit}img{display:block;max-width:100%}
   </div>
 </section>
 
+<!-- Summary -->
+<section class="case-summary" aria-label="Summary">
+  <dl class="cs-rows">
+    <dt>Problem</dt><dd>The studio dashboard didn't show the important numbers at a glance. Studios also couldn't try the platform before buying, and every new customer needed 3 hours of website setup by the ops team.</dd>
+    <dt>What I did</dt><dd>I redesigned the dashboard as a freelance product designer, over about 3 months. I also designed a free trial onboarding flow and a self-serve website builder.</dd>
+    <dt>Outcome</dt><dd>The designs were delivered but not built.</dd>
+  </dl>
+  <p class="cs-skills">Dashboard design · Data visualisation · Heuristic review · Competitive analysis · Onboarding design</p>
+</section>
+
+
 <!-- Progress bar -->
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
 
@@ -481,8 +505,8 @@ a{color:inherit}img{display:block;max-width:100%}
 <nav class="minimap" id="minimap" aria-label="Table of Contents">
   <a href="#s01" data-idx="0">01 Overview</a>
   <a href="#s02" data-idx="1">02 Old Dashboard</a>
-  <a href="#s03" data-idx="2">03 Research</a>
-  <a href="#s04" data-idx="3">04 Redesign</a>
+  <a href="#s03" data-idx="2">03 Redesign</a>
+  <a href="#s04" data-idx="3">04 How It Works</a>
   <a href="#s05" data-idx="4">05 Free Trial</a>
   <a href="#s06" data-idx="5">06 Site Builder</a>
   <a href="#s07" data-idx="6">07 Feedback</a>
@@ -508,7 +532,7 @@ a{color:inherit}img{display:block;max-width:100%}
     <div class="case-label highlight">02 The Old Dashboard</div>
     <div class="case-content">
       <h2 class="problem-headline">The old dashboard was hard to scan.</h2>
-      <p>I started with a heuristic review of the existing dashboard. Three problems stood out. The menu had too many items and no grouping. Nothing on the page told you where to look first. And revenue was split across separate cards, with no trend or context.</p>
+      <p>JetSweat already had an operational dashboard, but it didn't show the important numbers at a glance. I started with a heuristic review. Three problems stood out. The menu had too many items and no grouping. Nothing on the page told you where to look first. And revenue was split across separate cards, with no trend or context.</p>
       <div class="dash-annotated" style="position:relative;margin:48px 0">
         <img src="public/images/jetsweat/original-dashboard-clean.png" alt="Original Dashboard" style="width:100%;display:block">
 
@@ -544,23 +568,12 @@ a{color:inherit}img{display:block;max-width:100%}
       </div>
     </div>
   </div>
-  <!-- ── 03 RESEARCH ── -->
+  <!-- ── 03 DASHBOARD REDESIGN ── -->
   <div class="case-section" id="s03" style="padding-top:96px">
-    <div class="case-label highlight">03 Research</div>
-    <div class="case-content">
-      <h2 class="problem-headline">No users to interview, so I studied 9 competitors.</h2>
-      <p>There was no existing user base to talk to and no research budget. So I looked at how 9 established fitness platforms handle product-led growth, onboarding and self-serve tools.</p>
-      <img src="public/images/jetsweat/competitors.png" alt="Competitor Analysis" style="width:100%;display:block;margin:32px 0">
-    </div>
-  </div>
-  <!-- ── 04 DASHBOARD REDESIGN ── -->
-  <div class="case-section" id="s04" style="padding-top:96px">
-    <div class="case-label highlight">04 Dashboard Redesign</div>
+    <div class="case-label highlight">03 Dashboard Redesign</div>
     <div class="case-content">
       <h2 class="problem-headline">The redesigned dashboard.</h2>
-      <p>I grouped the navigation so there are fewer top-level items. The four key numbers now sit in one row at the top: users, subscribers, cancellations and one-time purchases. Each one has a badge showing how much it changed.</p>
-      <p>Total revenue and non-subscription revenue share one trend chart, instead of sitting in two separate cards. A date-range filter at the top switches between 1 day, 7 days, 14 days and 1 month.</p>
-      <p>I also put common actions on the page itself. Studios can create a video or a livestream from the top bar, and start a class from the upcoming livestreams card.</p>
+      <p>I redesigned it so studio owners could see what matters first and act on it from the same screen. I also grouped the navigation so there are fewer top-level items.</p>
       <div style="display:flex;flex-direction:column;gap:40px;margin:32px 0">
         <div>
           <div class="ba-label" style="text-align:left">Dashboard Before</div>
@@ -571,10 +584,23 @@ a{color:inherit}img{display:block;max-width:100%}
           <img src="public/images/jetsweat/new-dashboard.png" alt="Dashboard After" style="width:100%;display:block">
         </div>
       </div>
-      <div class="callout-box" style="margin-top:32px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"Key numbers in one row." The most important numbers sit together at the top, each with its change badge. Revenue and upcoming livestreams come next, with the more detailed charts below.</p>
-      </div>
+    </div>
+  </div>
+  <!-- ── 04 HOW THE DASHBOARD WORKS ── -->
+  <div class="case-section" id="s04" style="padding-top:96px">
+    <div class="case-label highlight">04 How the Dashboard Works</div>
+    <div class="case-content">
+      <h2 class="problem-headline">How the dashboard works.</h2>
+      <h3 class="sub-heading">Key numbers in one row.</h3>
+      <p>The four numbers studio owners check first sit in one row at the top: users, subscribers, cancellations and one-time purchases. You read them left to right before anything else.</p>
+      <h3 class="sub-heading">Change badges.</h3>
+      <p>Each number has a badge that shows which way it moved and by how much. You don't need to open a chart to see it.</p>
+      <h3 class="sub-heading">Revenue in one chart.</h3>
+      <p>Total revenue and non-subscription revenue sit on the same trend chart. You compare them in one place, instead of across separate cards.</p>
+      <h3 class="sub-heading">Date filter.</h3>
+      <p>One control switches every number between 1 day, 7 days, 14 days and 1 month.</p>
+      <h3 class="sub-heading">Actions next to the data.</h3>
+      <p>Studio owners can start a class from the upcoming livestreams card. They can create a video or a livestream from the top bar.</p>
     </div>
   </div>
   <!-- ── 05 FREE TRIAL ── -->
@@ -582,7 +608,9 @@ a{color:inherit}img{display:block;max-width:100%}
     <div class="case-label highlight">05 Free Trial</div>
     <div class="case-content">
       <h2 class="problem-headline">A free trial studios can start on their own.</h2>
-      <p>Studios couldn't try the platform before buying. I designed a 5-step onboarding flow from scratch. Easy questions come first to build confidence, with personal and business details later. Studios could try the platform on their own, without the sales team.</p>
+      <p>Studios couldn't try the platform before buying. JetSweat wanted to become a product-led growth company. So I studied 9 platforms to see how they handle product-led growth, onboarding and self-serve tools.</p>
+      <img src="public/images/jetsweat/competitors.png" alt="Competitor Analysis" style="width:100%;display:block;margin:32px 0">
+      <p>Then I designed a 5-step onboarding flow from scratch. Easy questions come first to build confidence, with personal and business details later. Studios could try the platform on their own, without the sales team.</p>
       <div style="display:flex;flex-direction:column;gap:24px;margin:32px auto;max-width:600px">
         <img src="public/images/jetsweat/step-1.png" alt="Onboarding step 1" style="width:100%;display:block">
         <img src="public/images/jetsweat/step-4.png" alt="Onboarding step 4" style="width:100%;display:block">
@@ -687,11 +715,7 @@ a{color:inherit}img{display:block;max-width:100%}
     <div class="case-label highlight">09 Reflection</div>
     <div class="case-content">
       <h2 class="problem-headline">Next time, I'd talk to users.</h2>
-      <p>Competitive research and a heuristic review got me to good solutions without any user research. But I'd push harder for even a few user interviews. The dashboard and CMS followed sound UX principles. Without testing them with real users, though, you can't be sure what works.</p>
-      <div class="callout-box" style="margin-top:32px">
-        <div class="callout-tag">Takeaway</div>
-        <p class="callout-text">Competitive analysis shows you what the market does. It doesn't show you what your users need. Next time I'd get in front of real users earlier, even informally.</p>
-      </div>
+      <p>There was no way to reach studio owners on this project. Next time I'd ask for even two or three, for half an hour each, before the designs were final.</p>
     </div>
   </div>
 </div><!-- /case-body -->
