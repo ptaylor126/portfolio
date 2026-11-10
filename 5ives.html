@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5ives, Case Study</title>
+<link rel="icon" type="image/png" href="/public/images/favicon-1.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/favicon-1.png?v=3">
+<meta name="description" content="5ives case study. A free weekly Premier League card game, from design system to live match data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --rule:1px solid rgba(0,0,0,.12);
+  --accent-on-dark:#38BDF8;
+  --accent-text:#0369A1;
+  --bg:#F9F9F9;--ink:#000;--accent:#8DC2E7;--grey:#6B6B6B;
+  --sans:'Figtree',system-ui,sans-serif;
+  --mono:'Figtree',system-ui,sans-serif;
+  --frame:12px;
+  --pad:clamp(24px,5vw,64px);
+}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);overflow-x:hidden;line-height:1.6}
+a{color:inherit}img{display:block;max-width:100%}
+::selection{background:var(--accent);color:#000}
+
+.frame{position:fixed;inset:0;border:var(--frame) solid var(--ink);pointer-events:none;z-index:900}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+
+/* ================================================================
+   TOP BAR
+   ================================================================ */
+.topbar{
+  position:sticky;top:var(--frame);z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:48px clamp(32px,8vw,96px);
+  background:var(--bg);
+}
+.topbar-name{font:700 16px/1 var(--mono);color:var(--ink);text-decoration:none}
+.topbar-menu{
+  font:600 13px/1 var(--mono);color:var(--ink);letter-spacing:.03em;
+  cursor:pointer;background:none;border:none;border-radius:0;
+  outline:none;-webkit-appearance:none;appearance:none;
+  padding:0;transition:color .12s;
+}
+.topbar-menu:hover{color:var(--accent-text)}
+
+/* Dropdown */
+.dropdown{
+  position:fixed;top:calc(var(--frame) + 70px);right:clamp(32px,8vw,96px);
+  z-index:300;
+  background:var(--bg);border:2px solid var(--ink);
+  box-shadow:8px 8px 0 var(--ink);
+  padding:24px 28px;min-width:250px;
+  clip-path:inset(0 0 100% 0);
+  pointer-events:none;
+  transition:clip-path .12s linear;
+}
+.dropdown.open{
+  clip-path:inset(0 0 0 0);
+  pointer-events:auto;
+}
+.dd-link{
+  display:block;font:800 20px/1 var(--sans);text-transform:uppercase;
+  letter-spacing:-.02em;text-decoration:none;color:var(--ink);
+  padding:8px 0;transition:color .12s;
+}
+.dd-link:hover{color:var(--accent-text)}
+.dd-sep{height:1px;background:var(--ink);margin:16px 0}
+.dd-label{font:600 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555;margin-bottom:12px}
+.dd-case{
+  display:block;font:600 13px/1 var(--mono);text-decoration:none;color:var(--ink);
+  padding:6px 8px;margin-bottom:4px;transition:background .12s,color .12s;
+}
+.dd-case:hover{color:var(--accent-text)}
+.dd-case.active{background:var(--accent);color:var(--ink)}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+.case-hero{
+  padding:calc(var(--frame) + 20px) clamp(32px,8vw,96px) 60px;
+}
+.case-hero h1{
+  font:900 clamp(36px,8vw,96px)/0.85 var(--sans);
+  text-transform:uppercase;letter-spacing:-.05em;
+  margin-bottom:16px;
+}
+.case-hero-meta{
+  display:flex;flex-wrap:wrap;gap:12px;
+  font:500 13px/1 var(--mono);text-transform:uppercase;letter-spacing:.03em;
+}
+.case-hero-meta span{
+  padding:6px 14px;border:2px solid var(--ink);
+  transition:background .15s,color .15s;cursor:default;
+}
+.case-hero-meta span:hover{background:var(--accent);color:var(--ink)}
+
+/* ================================================================
+   PROGRESS BAR
+   ================================================================ */
+.progress-track{
+  position:fixed;top:var(--frame);right:var(--frame);bottom:var(--frame);
+  width:3px;z-index:700;background:rgba(0,0,0,.06);
+}
+.progress-fill{
+  width:100%;height:0;background:var(--accent);
+  transition:height .1s linear;
+}
+
+/* ================================================================
+   MINIMAP
+   ================================================================ */
+.minimap{
+  position:fixed;right:calc(var(--frame) + 20px);
+  top:50%;transform:translateY(-50%);
+  z-index:200;
+  display:flex;flex-direction:column;gap:0;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+  background:var(--bg);
+  padding:8px 0;
+}
+.minimap.on{opacity:1;pointer-events:auto}
+.minimap a{
+  display:block;padding:5px 10px;
+  font:600 13px/1 var(--mono);letter-spacing:.04em;
+  color:#555;text-decoration:none;
+  text-transform:uppercase;white-space:nowrap;
+  transition:color .12s,background .12s;
+}
+.minimap a:hover{color:var(--ink)}
+.minimap a.active{
+  background:var(--ink);color:var(--bg);
+}
+
+/* ================================================================
+   CONTENT
+   ================================================================ */
+.case-body{
+  padding:0 clamp(32px,8vw,96px);
+  padding-right:calc(clamp(32px,8vw,96px) + 180px);
+  border-top:var(--rule);
+}
+.case-section{padding-top:64px}
+.case-label{
+  font:700 13px/1.3 var(--mono);
+  text-transform:uppercase;letter-spacing:.03em;
+  color:var(--ink);margin-bottom:24px;
+  padding:6px 8px;display:inline-block;
+}
+.case-label.highlight{background:var(--accent);color:var(--ink)}
+
+.case-content{padding:0 0 80px}
+.case-content h2{
+  font:800 clamp(24px,3vw,36px)/1.1 var(--sans);
+  letter-spacing:-.03em;margin-bottom:20px;
+}
+.case-content p{
+  font:400 18px/1.6 var(--sans);color:#555;
+  max-width:58ch;margin-bottom:16px;
+}
+
+.problem-headline{
+  font:900 clamp(28px,4vw,52px)/1.05 var(--sans);
+  letter-spacing:-.04em;margin-bottom:20px;
+}
+
+/* ================================================================
+   STAT BAR
+   ================================================================ */
+.stat-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:32px;
+  margin:32px 0;
+}
+.stat-bar-item{border-top:2px solid var(--ink);padding-top:20px}
+.stat-bar-num{
+  font:900 clamp(28px,4vw,48px)/1 var(--sans);
+  letter-spacing:-.03em;margin-bottom:8px;
+}
+.stat-bar-label{
+  font:400 15px/1.3 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#555;
+}
+@media(max-width:600px){
+  .stat-bar{grid-template-columns:1fr 1fr}
+}
+
+/* Built-with row */
+.built-with{
+  font:400 13px/1 var(--mono);color:#555;
+  margin:8px 0 32px;letter-spacing:.02em;
+}
+.built-with strong{font-weight:700;color:var(--ink)}
+
+/* ================================================================
+   PLACEHOLDERS
+   ================================================================ */
+.placeholder{
+  width:100%;aspect-ratio:16/9;
+  background:#eee;border:2px dashed #ccc;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font:500 10px/1 var(--mono);color:rgba(0,0,0,.25);
+  text-transform:uppercase;letter-spacing:.06em;
+  margin:32px 0;
+}
+.placeholder--tall{aspect-ratio:4/3}
+
+/* ================================================================
+   CALLOUT BOX
+   ================================================================ */
+.callout-box{
+  border:none;
+  padding:0 0 0 16px;margin:32px 0 0;
+  max-width:fit-content;
+  position:relative;
+}
+.callout-box::before{
+  content:'';position:absolute;left:0;top:0;
+  width:2px;height:0;
+  background:var(--accent);
+  transition:height .6s ease-out;
+}
+.callout-box .callout-tag,
+.callout-box .callout-text{
+  opacity:0;
+  transition:opacity .4s ease-out .3s;
+}
+.callout-box.reveal::before{height:100%}
+.callout-box.reveal .callout-tag,
+.callout-box.reveal .callout-text{opacity:1}
+.callout-tag{
+  font:700 13px/1 var(--mono);letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink);
+  margin-bottom:12px;
+}
+.callout-text{
+  font:400 18px/1.6 var(--sans);color:#555;
+  max-width:58ch;
+}
+.callout-title{
+  font:700 16px/1.3 var(--sans);
+  margin-bottom:8px;
+}
+
+/* ================================================================
+   DECISION STACK
+   ================================================================ */
+.decision-stack{
+  display:flex;flex-direction:column;gap:0;
+  margin:40px 0;
+}
+.decision-item{
+  border-left:2px solid var(--accent);
+  padding:24px 0 24px 20px;
+  border-top:1px solid rgba(0,0,0,.06);
+}
+.decision-item:first-child{border-top:none}
+.decision-item-title{
+  font:700 16px/1.3 var(--sans);
+  margin-bottom:8px;
+}
+.decision-item-text{
+  font:400 18px/1.6 var(--sans);color:#555;
+  max-width:54ch;
+}
+
+/* ================================================================
+   CONTACT FOOTER
+   ================================================================ */
+.contact-footer{
+  padding:48px clamp(32px,8vw,96px);
+  border-top:var(--rule);
+}
+.contact-label{
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#6B6B6B;
+  margin-bottom:20px;
+}
+.contact-row{
+  display:flex;gap:48px;flex-wrap:wrap;align-items:center;
+}
+.contact-row a,.contact-row span{
+  font:500 15px/1.4 var(--sans);
+  color:var(--ink);text-decoration:none;
+  transition:color .12s;
+}
+.contact-row a:hover{color:var(--accent-text)}
+.contact-row a:visited{color:var(--ink)}
+.contact-icons{display:flex;gap:16px;align-items:center}
+.contact-icons .icon-link{display:inline-flex;align-items:center}
+.contact-icons .icon-link svg{width:20px;height:20px;fill:var(--ink);transition:fill .12s}
+.contact-icons .icon-link:hover svg{fill:var(--accent)}
+.contact-copy{
+  margin-top:32px;
+  font:400 13px/1 var(--mono);color:#6B6B6B;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media(max-width:800px){
+  .case-hero{padding:calc(var(--frame) + 12px) calc(var(--frame) + 20px) 32px}
+  .minimap{display:none}
+  .case-body{padding:0 20px;padding-right:20px}
+  .case-section{padding-top:32px!important}
+  .case-content{padding:0 0 24px}
+  .contact-footer{padding:32px calc(var(--frame) + 20px)}
+  .contact-row{flex-direction:column;gap:16px}
+}
+
+/* Mobile hamburger nav */
+.mob-burger{display:none;position:fixed;top:calc(var(--frame) + 16px);right:calc(var(--frame) + 16px);z-index:1000;width:40px;height:40px;background:rgba(255,255,255,.55);backdrop-filter:blur(8px);border:none;border-radius:8px;cursor:pointer;padding:6px}
+.mob-burger span{display:block;width:100%;height:2px;background:var(--ink);margin-bottom:6px;transition:transform .3s,opacity .3s}
+.mob-burger span:last-child{margin-bottom:0}
+.mob-burger.active span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+.mob-burger.active span:nth-child(2){opacity:0}
+.mob-burger.active span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+.mob-burger.active span{background:#fff}
+.mob-burger.active{background:transparent;backdrop-filter:none}
+.mob-overlay{display:none;position:fixed;inset:0;z-index:799;background:var(--ink);flex-direction:column;align-items:center;justify-content:center;gap:32px;opacity:0;transition:opacity .3s}
+.mob-overlay.open{display:flex;opacity:1}
+.mob-overlay a{font:800 clamp(28px,8vw,48px)/1.2 'Figtree',system-ui,sans-serif;text-transform:uppercase;letter-spacing:-.03em;color:#fff;text-decoration:none;transition:color .2s}
+.mob-overlay a:hover{color:var(--accent-on-dark)}
+@media(max-width:768px){:root{--frame:6px}.mob-burger{display:block}.topbar-menu{display:none}}
+/* Mobile footer */
+@media(max-width:768px){
+  .contact-footer{padding:32px 20px;text-align:center}
+  .contact-label{text-align:center}
+  .contact-row{flex-direction:column;gap:16px;align-items:center}
+  .contact-icons{gap:24px}
+  .contact-icons .icon-link{width:44px;height:44px;display:inline-flex;justify-content:center;align-items:center}
+  .contact-icons .icon-link svg{width:28px;height:28px}
+  .contact-copy{text-align:center}
+}
+.back-to-top{position:relative;z-index:2;display:flex;justify-content:center;padding:32px 0}
+.back-to-top a{font:600 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s}
+.back-to-top a:hover{color:var(--ink)}
+
+/* Line up digits in stats and charts */
+.stat-bar-num{font-variant-numeric:tabular-nums}
+
+/* ── Readability: minimum text sizes, line length ── */
+@media(max-width:1199px){.minimap{display:none}}
+.case-content p,.callout-text,.decision-item-text{max-width:50ch}
+@media(max-width:768px){.case-content p,.callout-text,.decision-item-text{font-size:17px}}
+
+/* ── Summary under the hero ── */
+.case-summary{padding:48px clamp(32px,8vw,96px) 104px;max-width:1100px}
+.cs-label{font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:#6B6B6B;margin-bottom:12px}
+.cs-lead{font:600 26px/1.35 var(--sans);letter-spacing:-.015em;color:var(--ink);max-width:44ch}
+.cs-cols{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;max-width:960px}
+.cs-text{font:400 18px/1.6 var(--sans);color:#555}
+.cs-skills{list-style:none;display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:48px;font:600 15px/1.4 var(--sans);color:#4A4A4A}
+@media(max-width:800px){
+  .case-summary{padding:24px calc(var(--frame) + 20px) 64px}
+  .cs-lead{font-size:21px;line-height:1.4}
+  .cs-cols{grid-template-columns:1fr;gap:28px;margin-top:32px}
+  .cs-text{font-size:17px}
+  .cs-skills{margin-top:32px;gap:8px 24px}
+}
+
+/* ── Video ── */
+.case-video{padding:0 clamp(32px,8vw,96px) 96px}
+.cs-video{position:relative;max-width:1248px}
+.cs-video video{display:block;width:100%;height:auto;aspect-ratio:1756/988;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:#1C1C1C}
+@media(max-width:800px){.case-video{padding:0 calc(var(--frame) + 20px) 56px}}
+
+/* ── 5ives page ── */
+.case-hero-line{font:500 20px/1.4 var(--sans);color:#333;margin:0 0 24px;max-width:44ch}
+.case-hero-line a,.case-content p a{color:var(--accent-text);text-decoration:underline}
+.sub-heading{font:800 22px/1.25 var(--sans);letter-spacing:-.02em;margin:56px 0 12px}
+.sub-heading:first-child{margin-top:0}
+.case-content .fact-line{font:400 15px/1.5 var(--sans);color:#555;margin:8px 0 0;max-width:70ch}
+.case-content .fact-line strong{font-weight:700;color:var(--ink)}
+.case-content .fact-line + .fact-line{margin-top:6px}
+.case-content .list-intro{margin-top:32px}
+.plain-list{list-style:none;margin:0 0 16px;max-width:58ch}
+.plain-list li{position:relative;padding:0 0 0 22px;margin-bottom:10px;font:400 18px/1.6 var(--sans);color:#555}
+.plain-list li::before{content:'';position:absolute;left:0;top:.72em;width:10px;height:2px;background:var(--ink)}
+.decision-stack{margin:16px 0 32px}
+.decision-item{padding:20px 0 20px 20px}
+
+/* Figures */
+.fig{margin:40px 0}
+.fig img{width:100%;height:auto;border-radius:8px;border:1px solid rgba(0,0,0,.12)}
+.fig figcaption,.cap{font:400 14px/1.4 var(--sans);color:#555;margin-top:12px}
+.fig-concept{max-width:760px}
+.fig-phone{max-width:320px}
+.fig-small{width:33.333%;min-width:240px}
+.fig-tall{max-width:720px}
+.fig-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.fig-pair figcaption{grid-column:1/-1;margin-top:0}
+.fig-ba{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:720px}
+.fig-ba figure figcaption{font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--ink);margin-top:12px}
+.split{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:48px;align-items:start;margin:24px 0 0}
+.split .fig{margin:0}
+.case-content .split p{margin-bottom:0}
+
+/* Token table */
+.tokens{margin:32px 0 40px;max-width:760px;border-top:2px solid var(--ink);padding-top:24px}
+.case-content .tokens-label{font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:#555;margin-bottom:16px}
+.swatches{list-style:none;display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:40px}
+.swatch-chip{display:block;height:72px;border:1px solid rgba(0,0,0,.12)}
+.swatch-name{display:block;font:700 15px/1.2 var(--sans);margin-top:10px}
+.swatch-hex{display:block;font:400 14px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;color:#555;margin-top:2px}
+.spacing{list-style:none;display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.spacing li{display:flex;flex-direction:column;align-items:center;gap:10px}
+.spacing-box{display:block;background:#10234D}
+.spacing-num{font:600 14px/1 var(--sans);color:#555;font-variant-numeric:tabular-nums}
+
+/* Data flow diagram */
+.flow{margin:24px 0 40px;max-width:760px}
+.flow-sources{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.flow-box{border:2px solid var(--ink);padding:16px 18px;background:#fff}
+.flow-box strong{display:block;font:800 18px/1.2 var(--sans);letter-spacing:-.01em}
+.flow-box span{display:block;font:400 15px/1.4 var(--sans);color:#555;margin-top:4px}
+.flow-arrow{display:flex;justify-content:center;padding:10px 0;font:700 22px/1 var(--sans);color:var(--ink)}
+.flow-app{background:#10234D;border-color:#10234D;text-align:center}
+.flow-app strong{color:#fff}
+.flow-rule{background:var(--accent)}
+.flow-rule span{color:var(--ink);margin-top:0;font-size:16px}
+
+/* Bar chart */
+.chart{margin:32px 0 40px;max-width:640px;border-top:2px solid var(--ink);padding-top:24px}
+.case-content .chart-title{font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:#555;margin-bottom:24px}
+.bars{list-style:none;display:grid;grid-template-columns:repeat(7,1fr);gap:12px;align-items:end;border-bottom:1px solid rgba(0,0,0,.25);height:216px}
+.bars li{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.bar-val{font:700 16px/1 var(--sans);color:var(--ink);margin-bottom:6px;font-variant-numeric:tabular-nums}
+.bar{display:block;width:100%;max-width:56px;background:#0369A1}
+.bar-labels{list-style:none;display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-top:10px}
+.bar-labels li{text-align:center;font:600 14px/1.2 var(--sans);color:#555}
+.bar-mark{display:block;margin-top:8px;padding-top:8px;border-top:2px solid #0369A1;font:700 13px/1.25 var(--sans);color:#0369A1}
+
+@media(max-width:800px){
+  .case-hero-line{font-size:18px}
+  .fig{margin:28px 0}
+  .fig-small{width:60%;min-width:0}
+  .fig-pair{grid-template-columns:1fr;gap:12px}
+  .fig-ba{gap:12px}
+  .split{grid-template-columns:1fr;gap:20px}
+  .split .fig{max-width:300px}
+  .swatches{grid-template-columns:repeat(3,1fr)}
+  .swatch-chip{height:56px}
+  .spacing{gap:16px}
+  .flow-sources{grid-template-columns:1fr}
+  .bars,.bar-labels{gap:6px}
+  .plain-list li{font-size:17px}
+  .sub-heading{font-size:20px;margin-top:40px}
+}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="frame"></div>
+<div class="grain"></div>
+<button class="mob-burger" id="mobBurger"><span></span><span></span><span></span></button>
+<div class="mob-overlay" id="mobOverlay">
+  <a href="index.html">Home</a>
+  <a href="index.html#work">Work</a>
+  <a href="about.html">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- Top bar -->
+<nav class="topbar">
+  <a class="topbar-name" href="index.html">PAUL TAYLOR</a>
+  <button class="topbar-menu" id="menuBtn">MENU</button>
+</nav>
+
+<!-- Dropdown menu -->
+<div class="dropdown" id="dropdown">
+  <a class="dd-link" href="index.html">Home</a>
+  <a class="dd-link" href="about.html">About</a>
+  <div class="dd-sep"></div>
+  <div class="dd-label">Case Studies</div>
+  <a class="dd-case" href="mealmatch.html">MealMatch AI</a>
+  <a class="dd-case" href="ballrs.html">Ballrs</a>
+  <a class="dd-case" href="jetsweat.html">JetSweat</a>
+  <a class="dd-case" href="loupe.html">Loupe</a>
+  <a class="dd-case" href="sunset.html">Sunset</a>
+  <a class="dd-case active" href="5ives.html">5ives</a>
+  <a class="dd-case" href="5ives.html">5ives</a>
+</div>
+
+<!-- Hero -->
+<section class="case-hero" id="hero">
+  <h1>5ives.</h1>
+  <p class="case-hero-line">A free weekly Premier League card game. Live at <a href="https://5ives.org" target="_blank" rel="noopener">5ives.org</a>.</p>
+  <div class="case-hero-meta">
+    <span>Designer and developer</span>
+    <span>Web app</span>
+    <span>Live since Sept 2026</span>
+  </div>
+</section>
+
+<!-- Summary -->
+<section class="case-summary" aria-label="Summary">
+  <p class="cs-label">Problem</p>
+  <p class="cs-lead">Season-long fantasy football is a big commitment. Pick the wrong captain and you can end up far behind, with months still to play.</p>
+  <div class="cs-cols">
+    <div>
+      <p class="cs-label">What I did</p>
+      <p class="cs-text">I designed and built a weekly card game. Each week you open a new pack, pick five players and a captain, and score from real matches. A bad week only ever costs you 3 points. I made the product decisions and directed the build with Claude Code.</p>
+    </div>
+    <div>
+      <p class="cs-label">Outcome</p>
+      <p class="cs-text">Live since 12 September. 35 player accounts, with 15 to 17 players locking a five each week.</p>
+    </div>
+  </div>
+  <ul class="cs-skills"><li>Design systems</li><li>Data-heavy screens</li><li>Live data</li><li>Product data</li></ul>
+</section>
+
+<!-- Progress bar -->
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- Floating minimap -->
+<nav class="minimap" id="minimap" aria-label="Table of Contents">
+  <a href="#s01" data-idx="0">01 How the game works</a>
+  <a href="#s02" data-idx="1">02 The idea</a>
+  <a href="#s03" data-idx="2">03 Finding the look</a>
+  <a href="#s04" data-idx="3">04 The design system</a>
+  <a href="#s05" data-idx="4">05 Live data</a>
+  <a href="#s06" data-idx="5">06 Product data</a>
+  <a href="#s07" data-idx="6">07 What's next</a>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CASE BODY
+     ════════════════════════════════════════════════════════════════ -->
+<div class="case-body">
+
+  <!-- ── 01 HOW THE GAME WORKS ── -->
+  <div class="case-section" id="s01" style="padding-top:96px">
+    <div class="case-label highlight">01</div>
+    <div class="case-content">
+      <h2 class="problem-headline">How the game works</h2>
+      <p>Each week every player gets a sealed pack of 11 player cards and a stadium card. They pick five and a captain before the deadline, and score from the real matches. Leagues rank each week: the top 30% win (3 points), the middle 40% draw (1) and the bottom 30% lose (0).</p>
+      <p>The game idea and rules came from a friend; I designed and built the product.</p>
+      <p class="fact-line"><strong>Timeline:</strong> first commit 4 September, soft launch 12 September, public launch 10 October.</p>
+      <p class="fact-line"><strong>Built with:</strong> Next.js &middot; Supabase &middot; FPL and API-Football data &middot; Claude Code</p>
+    </div>
+  </div>
+
+  <!-- ── 02 THE IDEA ── -->
+  <div class="case-section" id="s02" style="padding-top:96px">
+    <div class="case-label highlight">02</div>
+    <div class="case-content">
+      <h2 class="problem-headline">The idea</h2>
+      <p>In season-long fantasy football, one bad captain choice or the wrong players on the bench can leave you 30 points or more behind, and it can feel like you'll never catch up. 5ives works week by week instead. You get a new pack to open every week, and a bad week only ever costs you 3 points.</p>
+    </div>
+  </div>
+
+  <!-- ── 03 FINDING THE LOOK ── -->
+  <div class="case-section" id="s03" style="padding-top:96px">
+    <div class="case-label highlight">03</div>
+    <div class="case-content">
+      <h2 class="problem-headline">Finding the look</h2>
+      <figure class="fig fig-concept">
+        <img src="public/images/5ives/early-concept.webp" alt="Three early concept screens in dark purple and mint, headed Pick 5: a home screen, a league table and a player stats screen." width="1600" height="1612" loading="lazy">
+        <figcaption>Early concept, made with Google Stitch. Invented data.</figcaption>
+      </figure>
+      <p>The first concept was a dark stats-app look, made with Google Stitch. The first live version used navy and coral with glossy panels.</p>
+      <figure class="fig fig-phone">
+        <img src="public/images/5ives/first-live-home.webp" alt="The first live home screen in navy and coral, with a live score panel, league tiles and a small league table." width="750" height="1318" loading="lazy">
+        <figcaption>The first live version.</figcaption>
+      </figure>
+      <p>For the restyle I looked at 1990s football magazines and sticker albums.</p>
+      <figure class="fig fig-small">
+        <img src="public/images/5ives/inspiration-match-covers.webp" alt="A grid of 1990s Match magazine covers in bright colours with bold capital headlines." width="708" height="376" loading="lazy">
+        <figcaption>Inspiration: Match magazine covers, 1990s.</figcaption>
+      </figure>
+      <p>I built five directions in code and compared them on the same screens. I kept one, Album Blue: sky blue, cream and navy, flat panels, square corners, and capital headlines in boxes.</p>
+      <figure class="fig fig-pair">
+        <img src="public/images/5ives/direction-a.webp" alt="A dropped direction in comic-book blue, red and yellow, shown on four screens: open your pack, final score, your five and cards." width="2000" height="872" loading="lazy">
+        <img src="public/images/5ives/direction-b.webp" alt="A dropped direction in purple, pink and cream, shown on the same four screens." width="2000" height="872" loading="lazy">
+        <figcaption>Two of the four directions I dropped.</figcaption>
+      </figure>
+      <p>I designed Album Blue in Figma, then built it. The built version had to handle long names that the design didn't.</p>
+      <figure class="fig fig-tall">
+        <img src="public/images/5ives/figma-vs-built.webp" alt="The Album Blue home screen twice: the Figma design on the left and the built screen on the right. The built league table fits a much longer player name." width="1570" height="2196" loading="lazy">
+        <figcaption>Figma design (left) and the built screen (right).</figcaption>
+      </figure>
+      <div class="fig fig-ba">
+        <figure>
+          <img src="public/images/5ives/pick-before.webp" alt="The Pick your five screen before the restyle: navy background, glossy shirts and a pink Lock in my five button." width="780" height="1688" loading="lazy">
+          <figcaption>Before</figcaption>
+        </figure>
+        <figure>
+          <img src="public/images/5ives/pick-after.webp" alt="The Pick your five screen after the restyle: sky blue background, flat shirts, capital headline and a red Lock in my five button." width="780" height="1688" loading="lazy">
+          <figcaption>After</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 04 THE DESIGN SYSTEM ── -->
+  <div class="case-section" id="s04" style="padding-top:96px">
+    <div class="case-label highlight">04</div>
+    <div class="case-content">
+      <h2 class="problem-headline">The design system</h2>
+      <p>Album Blue has 13 colour tokens and one spacing scale with 7 steps. Gold only appears on shiny cards, so it always means the same thing. I darkened the red so white text on it passes contrast checks.</p>
+      <div class="tokens">
+        <p class="tokens-label">Colour</p>
+        <ul class="swatches">
+          <li><span class="swatch-chip" style="background:#8dc2e7"></span><span class="swatch-name">Sky</span><span class="swatch-hex">#8dc2e7</span></li>
+          <li><span class="swatch-chip" style="background:#fff9e9"></span><span class="swatch-name">Cream</span><span class="swatch-hex">#fff9e9</span></li>
+          <li><span class="swatch-chip" style="background:#10234d"></span><span class="swatch-name">Navy</span><span class="swatch-hex">#10234d</span></li>
+          <li><span class="swatch-chip" style="background:#e4283b"></span><span class="swatch-name">Red</span><span class="swatch-hex">#e4283b</span></li>
+          <li><span class="swatch-chip" style="background:#ffd52a"></span><span class="swatch-name">Yellow</span><span class="swatch-hex">#ffd52a</span></li>
+        </ul>
+        <p class="tokens-label">Spacing</p>
+        <ul class="spacing" aria-label="Spacing steps in pixels, drawn to scale">
+          <li><span class="spacing-box" style="width:4px;height:4px"></span><span class="spacing-num">4</span></li>
+          <li><span class="spacing-box" style="width:8px;height:8px"></span><span class="spacing-num">8</span></li>
+          <li><span class="spacing-box" style="width:12px;height:12px"></span><span class="spacing-num">12</span></li>
+          <li><span class="spacing-box" style="width:16px;height:16px"></span><span class="spacing-num">16</span></li>
+          <li><span class="spacing-box" style="width:24px;height:24px"></span><span class="spacing-num">24</span></li>
+          <li><span class="spacing-box" style="width:32px;height:32px"></span><span class="spacing-num">32</span></li>
+          <li><span class="spacing-box" style="width:48px;height:48px"></span><span class="spacing-num">48</span></li>
+        </ul>
+      </div>
+      <p>The restyle mostly worked by remapping tokens. The components already took their colours, type and spacing from tokens, so I changed the values and the components followed, rather than redrawing every screen. It wasn't free: eight behaviours were lost in the move, and the tests found each one so it could be put back.</p>
+      <p>Later I moved every spacing value onto the 7-step scale: 228 values, checked across 93 screens before and after.</p>
+      <p>Every component and state can be viewed on its own in 23 preview pages, and 70 browser test files cover the main flows.</p>
+    </div>
+  </div>
+
+  <!-- ── 05 SCREENS BUILT AROUND LIVE DATA ── -->
+  <div class="case-section" id="s05" style="padding-top:96px">
+    <div class="case-label highlight">05</div>
+    <div class="case-content">
+      <h2 class="problem-headline">Screens built around live data</h2>
+      <h3 class="sub-heading">League table</h3>
+      <div class="split">
+      <figure class="fig ">
+        <img src="public/images/5ives/league-table.webp" alt="The league table during live games, with This week and Season tabs, a note that the order is provisional, and players grouped into Win, Draw, Loss and No five bands." width="1124" height="4226" loading="lazy">
+      </figure>
+        <p>The league table has to work while games are still being played. It switches between this week and the season, splits players into Win, Draw and Loss bands, and marks the order as provisional until games finish. If a score is corrected later, the player sees "Updated: FPL corrected a stat".</p>
+      </div>
+
+      <h3 class="sub-heading">The admin console</h3>
+      <div class="split">
+      <figure class="fig ">
+        <img src="public/images/5ives/admin-console.webp" alt="The admin console. Automation is stopped with 1 alert. A red panel says FPL still hasn't confirmed EVE v CHE, 48 hours after kickoff, with a button to acknowledge and continue. Below is the week's progress bar." width="1480" height="2500" loading="lazy">
+      </figure>
+        <p>The week runs itself: create, freeze the player pool, deal the packs, release, lock at the deadline, score, close. The console shows each step and what comes next. When something stops the week, it says what and why in plain words.</p>
+      </div>
+
+      <h3 class="sub-heading">Where the data comes from</h3>
+      <div class="flow" role="img" aria-label="Data flow. FPL, every 5 minutes on match days, and API-Football, a second check on final scores, both feed 5ives. A week is scored only when every game has finished, both sources agree, and 2 hours have passed.">
+        <div class="flow-sources">
+          <div class="flow-box"><strong>FPL</strong><span>every 5 minutes on match days</span></div>
+          <div class="flow-box"><strong>API-Football</strong><span>a second check on final scores</span></div>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">&darr;</div>
+        <div class="flow-box flow-app"><strong>5ives</strong></div>
+        <div class="flow-arrow" aria-hidden="true">&darr;</div>
+        <div class="flow-box flow-rule"><span>A week is scored only when every game has finished, both sources agree, and 2 hours have passed.</span></div>
+      </div>
+      <p class="list-intro">Problems I had to solve:</p>
+      <div class="decision-stack">
+        <div class="decision-item"><p class="decision-item-text">FPL started refusing requests from the app's servers on launch day, during live games. It still answered GitHub's servers, so I set up a relay there. The app rejects any relayed data that is old or for the wrong week.</p></div>
+        <div class="decision-item"><p class="decision-item-text">One week was scored too late to release the next week's packs on time. Weeks are now scored on FPL's provisional finish and corrected automatically for 7 days.</p></div>
+        <div class="decision-item"><p class="decision-item-text">The database returns at most 1,000 rows per request. That put about 109 of roughly 211 players in the wrong pack tier, and later left 27 players out of a week's pool. Both now read every row.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 06 PRODUCT DATA ── -->
+  <div class="case-section" id="s06" style="padding-top:96px">
+    <div class="case-label highlight">06</div>
+    <div class="case-content">
+      <h2 class="problem-headline">Product data</h2>
+      <div class="chart">
+        <p class="chart-title">Fives locked per week</p>
+        <ul class="bars" role="img" aria-label="Bar chart of fives locked per week. MW4 6, MW5 7, MW6 13, MW7 17, MW8 15, MW9 16, MW10 16. MW4 was the soft launch and MW6 the public launch.">
+          <li><span class="bar-val">6</span><span class="bar" style="height:60px"></span></li>
+          <li><span class="bar-val">7</span><span class="bar" style="height:70px"></span></li>
+          <li><span class="bar-val">13</span><span class="bar" style="height:130px"></span></li>
+          <li><span class="bar-val">17</span><span class="bar" style="height:170px"></span></li>
+          <li><span class="bar-val">15</span><span class="bar" style="height:150px"></span></li>
+          <li><span class="bar-val">16</span><span class="bar" style="height:160px"></span></li>
+          <li><span class="bar-val">16</span><span class="bar" style="height:160px"></span></li>
+        </ul>
+        <ul class="bar-labels" aria-hidden="true">
+          <li>MW4<span class="bar-mark">Soft launch</span></li>
+          <li>MW5</li>
+          <li>MW6<span class="bar-mark">Public launch</span></li>
+          <li>MW7</li>
+          <li>MW8</li>
+          <li>MW9</li>
+          <li>MW10</li>
+        </ul>
+      </div>
+      <p>There's no analytics tool, so I measure the game from the database. A weekly active player is someone who locked a five that week. The numbers are small, which is fine for a side project.</p>
+      <ul class="plain-list">
+        <li>35 player accounts. Since launch, 15 to 17 players lock a five each week.</li>
+        <li>Week to week, 71 to 88% of players came back (67 to 86% without the two admin accounts).</li>
+        <li>Of the 13 who played in launch week, 7 were still playing in week 5 (5 of 11 without the admin accounts).</li>
+      </ul>
+      <p>Everyone who signs up is dealt a pack automatically, so the share of packs played fell while the number of players held steady.</p>
+      <p class="list-intro">Before launch I set two targets, and missed both:</p>
+      <ul class="plain-list">
+        <li>80% of sign-ups playing in week 1. It was 68.4%.</li>
+        <li>60% of week-1 players still playing in week 5. It was 53.8%, one player short.</li>
+      </ul>
+
+      <h3 class="sub-heading">What I saw, and what I changed</h3>
+      <div class="decision-stack">
+        <div class="decision-item"><p class="decision-item-text">A player picked five and a captain, then left without locking in, so their five was never saved. Now the pick screen saves as you go.</p></div>
+        <div class="decision-item"><p class="decision-item-text">On a slow connection, a blank rectangle flashed before the pack appeared. Now the wait looks like the pack screen.</p></div>
+        <div class="decision-item"><p class="decision-item-text">People wanted to see the game before signing up. Now "How it works" can be played through before signing in.</p></div>
+      </div>
+      <p>These went live after MW10. MW11, on 20 November, is the first week that can show whether they made a difference.</p>
+    </div>
+  </div>
+
+  <!-- ── 07 WHAT'S NEXT ── -->
+  <div class="case-section" id="s07" style="padding-top:96px">
+    <div class="case-label highlight">07</div>
+    <div class="case-content">
+      <h2 class="problem-headline">What's next</h2>
+      <ul class="plain-list">
+        <li>Support for overlapping matchweeks before 2 December.</li>
+        <li>A rule for double gameweeks.</li>
+        <li>Analytics, so I can see where people stop before they lock a five.</li>
+        <li>A licensed data provider before any commercial launch, since the FPL feed is unofficial.</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- /case-body -->
+
+<!-- Contact footer -->
+<div class="back-to-top"><a href="#"><span class="btt-arrow">&uarr;</span>Back to top</a></div>
+<footer class="contact-footer" id="contact">
+  <div class="contact-label">Get In Touch</div>
+  <div class="contact-row">
+    <a href="mailto:thisispaultaylor@icloud.com">thisispaultaylor@icloud.com</a>
+    <span>(929) 539-2992</span>
+    <div class="contact-icons">
+      <a class="icon-link" href="https://linkedin.com/in/paultaylormade" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      <a class="icon-link" href="https://instagram.com/thisispaultaylor" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 100 12.324 6.162 6.162 0 100-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 11-2.88 0 1.441 1.441 0 012.88 0z"/></svg></a>
+    </div>
+  </div>
+  <div class="contact-copy">&copy; 2026 Paul Taylor</div>
+</footer>
+
+<script>
+(function(){
+  /* MOBILE NAV */
+  var burger=document.getElementById('mobBurger');
+  var overlay=document.getElementById('mobOverlay');
+  burger.addEventListener('click',function(){burger.classList.toggle('active');overlay.classList.toggle('open')});
+  overlay.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){burger.classList.remove('active');overlay.classList.remove('open')})});
+
+  /* ── MENU TOGGLE ── */
+  var menuBtn=document.getElementById('menuBtn');
+  var dropdown=document.getElementById('dropdown');
+  var menuOpen=false;
+  menuBtn.addEventListener('click',function(){
+    menuOpen=!menuOpen;
+    dropdown.classList.toggle('open',menuOpen);
+    menuBtn.textContent=menuOpen?'CLOSE':'MENU';
+  });
+  document.addEventListener('click',function(e){
+    if(menuOpen&&!dropdown.contains(e.target)&&e.target!==menuBtn){
+      menuOpen=false;dropdown.classList.remove('open');
+      menuBtn.textContent='MENU';
+    }
+  });
+
+  /* ── PROGRESS BAR + MINIMAP ── */
+  var fill=document.getElementById('progressFill');
+  var minimap=document.getElementById('minimap');
+  var mmLinks=minimap.querySelectorAll('a');
+  var sections=document.querySelectorAll('.case-section');
+  var heroEl=document.getElementById('hero');
+  var activeIdx=-1;
+
+  function onScroll(){
+    var sy=window.scrollY;
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    fill.style.height=(h>0?(sy/h)*100:0)+'%';
+
+    /* Show the section menu once section 01 reaches the top of the screen */
+    var firstTop=sections.length?sections[0].getBoundingClientRect().top:heroEl.getBoundingClientRect().bottom;
+    if(firstTop<1){minimap.classList.add('on')}else{minimap.classList.remove('on')}
+
+    var newIdx=0;
+    for(var i=0;i<sections.length;i++){
+      if(sections[i].getBoundingClientRect().top<window.innerHeight*.4)newIdx=i;
+    }
+    if(newIdx!==activeIdx){
+      if(activeIdx>=0&&mmLinks[activeIdx]){
+        mmLinks[activeIdx].classList.remove('active');
+        mmLinks[activeIdx].removeAttribute('aria-current');
+      }
+      activeIdx=newIdx;
+      if(mmLinks[activeIdx]){
+        mmLinks[activeIdx].classList.add('active');
+        mmLinks[activeIdx].setAttribute('aria-current','true');
+      }
+    }
+  }
+
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ── TERMINAL SCRAMBLE ── */
+  var scrambleEls=document.querySelectorAll('[data-final]');
+  var pool='0123456789#%X@&!?$';
+  var scrambled=false;
+
+  var scrambleObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting&&!scrambled){
+        scrambled=true;
+        scrambleEls.forEach(function(el,idx){
+          var final=el.getAttribute('data-final');
+          var len=final.length;
+          var start=performance.now();
+          var duration=400+idx*80;
+
+          function tick(now){
+            var elapsed=now-start;
+            if(elapsed>=duration){
+              el.textContent=final;
+              return;
+            }
+            var resolved=Math.floor((elapsed/duration)*len);
+            var out='';
+            for(var i=0;i<len;i++){
+              if(i<resolved){
+                out+=final[i];
+              }else{
+                out+=pool[Math.floor(Math.random()*pool.length)];
+              }
+            }
+            el.textContent=out;
+            requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        });
+      }
+    });
+  },{threshold:0.3});
+
+  var statsBlock=document.querySelector('.stat-bar');
+  if(statsBlock)scrambleObs.observe(statsBlock);
+
+  /* ── CALLOUT REVEAL ── */
+  var callouts=document.querySelectorAll('.callout-box');
+  if(callouts.length){
+    var calloutObs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting)e.target.classList.add('reveal');
+      });
+    },{threshold:0.3});
+    callouts.forEach(function(c){calloutObs.observe(c)});
+  }
+})();
+</script>
+</body>
+</html>
