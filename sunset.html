@@ -251,6 +251,19 @@ a{color:inherit}img{display:block;max-width:100%}
 .cs-video.is-still .video-play{display:flex}
 @media(max-width:800px){.video-play{right:12px;bottom:12px;width:48px;height:48px}.video-play svg{width:18px;height:18px}}
 
+/* ── Screenshots ── */
+.shot{margin:40px 0 0;max-width:1248px}
+.shot img{width:100%;height:auto;border-radius:10px;border:1px solid rgba(0,0,0,.12)}
+.shot-wide{margin-top:96px}
+.shot-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cap{font:400 14px/1.4 var(--sans);color:#555;margin-top:12px}
+@media(max-width:800px){
+  .shot{margin-top:28px}
+  .shot img{border-radius:6px}
+  .shot-wide{margin-top:56px}
+  .shot-pair{grid-template-columns:1fr;gap:12px}
+}
+
 /* ── Steps ── */
 .steps{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:40px 48px;margin:56px 0 0;max-width:960px;counter-reset:step}
 .steps li{border-top:2px solid var(--ink);padding-top:20px;counter-increment:step}
@@ -316,7 +329,7 @@ a{color:inherit}img{display:block;max-width:100%}
     </div>
     <div>
       <p class="cs-label">Outcome</p>
-      <p class="cs-text">Used for Seen&rsquo;s TikTok. Early posts got about 80 views. The top post has reached 60,000 views and 2,000+ likes.</p>
+      <p class="cs-text">Used for Seen&rsquo;s TikTok. Early posts got about 80 views. The top post has reached over 60,000 views and 2,000+ likes.</p>
     </div>
   </div>
   <ul class="cs-skills"><li>AI with human review</li><li>Internal tools</li><li>Content workflow design</li></ul>
@@ -343,6 +356,7 @@ a{color:inherit}img{display:block;max-width:100%}
         </video>
         <button class="video-play" type="button" aria-label="Play video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg></button>
       </div>
+      <p class="cap">Screens show sample data.</p>
 
       <ol class="steps">
         <li>
@@ -366,6 +380,47 @@ a{color:inherit}img{display:block;max-width:100%}
           <p>Sunset shows which hooks get the most views, and turns that into ideas for the next post.</p>
         </li>
       </ol>
+    </div>
+  </div>
+
+  <!-- ── CHECKING WHAT THE AI MADE ── -->
+  <div class="case-section" id="s02" style="padding-top:96px">
+    <div class="case-content">
+      <h2 class="problem-headline">Checking what the AI made</h2>
+      <p>The AI lists every step it took, with a tick or a warning. If it isn&rsquo;t sure about something, it says so and asks. Here it matched Gomorrah to both a 2008 film and a 2014 series, and asks which one I meant. Nothing is posted until I approve it.</p>
+      <figure class="shot">
+        <img src="public/images/sunset/to-check.webp" alt="Sunset To check screen. A draft post sits next to a list of what the AI did, with a warning that asks which Gomorrah was meant." width="2400" height="1500" loading="lazy">
+        <figcaption class="cap">Screens show sample data.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- ── SEEING WHAT WORKS ── -->
+  <div class="case-section" id="s03" style="padding-top:96px">
+    <div class="case-content">
+      <h2 class="problem-headline">Seeing what works</h2>
+      <p>Insights compares every post with my median views. Green bars are well above the median, grey are close to it, and orange are below. So colour shows good or bad rather than up or down. The cards at the top turn the data into one thing to repeat, one to change and one to stop.</p>
+      <figure class="shot">
+        <img src="public/images/sunset/insights.webp" alt="Sunset Insights screen. Three cards at the top say what to repeat, change and stop. Below, each post has a bar comparing it with the median." width="2400" height="1500" loading="lazy">
+      </figure>
+    </div>
+  </div>
+
+  <!-- ── TODAY ── -->
+  <div class="case-section" id="s04" style="padding-top:96px">
+    <div class="case-content">
+      <h2 class="problem-headline">Today</h2>
+      <p>The home screen shows what needs me today: drafts to check, posts due, and results to enter.</p>
+      <figure class="shot">
+        <img src="public/images/sunset/today.webp" alt="Sunset Today screen, showing the next post, drafts to check, posts due this week and results to enter." width="2400" height="1500" loading="lazy">
+      </figure>
+      <figure class="shot shot-wide">
+        <div class="shot-pair">
+          <img src="public/images/sunset/to-check.webp" alt="Sunset To check screen in light mode." width="2400" height="1500" loading="lazy">
+          <img src="public/images/sunset/to-check-dark.webp" alt="Sunset To check screen in dark mode." width="2400" height="1500" loading="lazy">
+        </div>
+        <figcaption class="cap">Light and dark</figcaption>
+      </figure>
     </div>
   </div>
 
