@@ -436,6 +436,21 @@ a{color:inherit}img{display:block;max-width:100%}
 .bar-labels li{text-align:center;font:600 14px/1.2 var(--sans);color:#555}
 .bar-mark{display:block;margin-top:8px;padding-top:8px;border-top:2px solid #0369A1;font:700 13px/1.25 var(--sans);color:#0369A1}
 
+/* What I saw / What I changed */
+.saw{width:100%;max-width:860px;border-collapse:collapse;margin:16px 0 32px;table-layout:fixed}
+.saw th{text-align:left;font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:#555;padding:0 32px 12px 0;border-bottom:2px solid var(--ink)}
+.saw td{vertical-align:top;font:400 18px/1.6 var(--sans);color:#555;padding:20px 32px 20px 0;border-bottom:1px solid rgba(0,0,0,.12)}
+.saw td:last-child{color:var(--ink)}
+@media(max-width:800px){
+  .saw,.saw tbody,.saw tr,.saw td{display:block;width:100%}
+  .saw thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .saw tr{padding:20px 0;border-bottom:1px solid rgba(0,0,0,.12)}
+  .saw tr:first-child{border-top:2px solid var(--ink)}
+  .saw td{border:0;padding:0;font-size:17px}
+  .saw td + td{margin-top:16px}
+  .saw td::before{content:attr(data-label);display:block;font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:#555;margin-bottom:6px}
+}
+
 @media(max-width:800px){
   .case-hero-line{font-size:18px}
   .fig{margin:28px 0}
@@ -478,13 +493,12 @@ a{color:inherit}img{display:block;max-width:100%}
   <a class="dd-link" href="about.html">About</a>
   <div class="dd-sep"></div>
   <div class="dd-label">Case Studies</div>
-  <a class="dd-case" href="mealmatch.html">MealMatch AI</a>
-  <a class="dd-case" href="ballrs.html">Ballrs</a>
   <a class="dd-case" href="jetsweat.html">JetSweat</a>
   <a class="dd-case" href="loupe.html">Loupe</a>
   <a class="dd-case" href="sunset.html">Sunset</a>
   <a class="dd-case active" href="5ives.html">5ives</a>
-  <a class="dd-case" href="5ives.html">5ives</a>
+  <a class="dd-case" href="mealmatch.html">MealMatch AI</a>
+  <a class="dd-case" href="ballrs.html">Ballrs</a>
 </div>
 
 <!-- Hero -->
@@ -536,9 +550,9 @@ a{color:inherit}img{display:block;max-width:100%}
 
   <!-- ── 01 HOW THE GAME WORKS ── -->
   <div class="case-section" id="s01" style="padding-top:96px">
-    <div class="case-label highlight">01</div>
+    <div class="case-label highlight">01 How the game works</div>
     <div class="case-content">
-      <h2 class="problem-headline">How the game works</h2>
+      <h2 class="problem-headline">A new pack every week.</h2>
       <p>Each week every player gets a sealed pack of 11 player cards and a stadium card. They pick five and a captain before the deadline, and score from the real matches. Leagues rank each week: the top 30% win (3 points), the middle 40% draw (1) and the bottom 30% lose (0).</p>
       <p>The game idea and rules came from a friend; I designed and built the product.</p>
       <p class="fact-line"><strong>Timeline:</strong> first commit 4 September, soft launch 12 September, public launch 10 October.</p>
@@ -548,18 +562,18 @@ a{color:inherit}img{display:block;max-width:100%}
 
   <!-- ── 02 THE IDEA ── -->
   <div class="case-section" id="s02" style="padding-top:96px">
-    <div class="case-label highlight">02</div>
+    <div class="case-label highlight">02 The idea</div>
     <div class="case-content">
-      <h2 class="problem-headline">The idea</h2>
+      <h2 class="problem-headline">A bad week only costs you 3 points.</h2>
       <p>In season-long fantasy football, one bad captain choice or the wrong players on the bench can leave you 30 points or more behind, and it can feel like you'll never catch up. 5ives works week by week instead. You get a new pack to open every week, and a bad week only ever costs you 3 points.</p>
     </div>
   </div>
 
   <!-- ── 03 FINDING THE LOOK ── -->
   <div class="case-section" id="s03" style="padding-top:96px">
-    <div class="case-label highlight">03</div>
+    <div class="case-label highlight">03 Finding the look</div>
     <div class="case-content">
-      <h2 class="problem-headline">Finding the look</h2>
+      <h2 class="problem-headline">Five directions, one kept.</h2>
       <figure class="fig fig-concept">
         <img src="public/images/5ives/early-concept.webp" alt="Three early concept screens in dark purple and mint, headed Pick 5: a home screen, a league table and a player stats screen." width="1600" height="1612" loading="lazy">
         <figcaption>Early concept, made with Google Stitch. Invented data.</figcaption>
@@ -600,9 +614,9 @@ a{color:inherit}img{display:block;max-width:100%}
 
   <!-- ── 04 THE DESIGN SYSTEM ── -->
   <div class="case-section" id="s04" style="padding-top:96px">
-    <div class="case-label highlight">04</div>
+    <div class="case-label highlight">04 The design system</div>
     <div class="case-content">
-      <h2 class="problem-headline">The design system</h2>
+      <h2 class="problem-headline">13 colours, 7 spacing steps.</h2>
       <p>Album Blue has 13 colour tokens and one spacing scale with 7 steps. Gold only appears on shiny cards, so it always means the same thing. I darkened the red so white text on it passes contrast checks.</p>
       <div class="tokens">
         <p class="tokens-label">Colour</p>
@@ -632,9 +646,9 @@ a{color:inherit}img{display:block;max-width:100%}
 
   <!-- ── 05 SCREENS BUILT AROUND LIVE DATA ── -->
   <div class="case-section" id="s05" style="padding-top:96px">
-    <div class="case-label highlight">05</div>
+    <div class="case-label highlight">05 Screens built around live data</div>
     <div class="case-content">
-      <h2 class="problem-headline">Screens built around live data</h2>
+      <h2 class="problem-headline">Scored only when both sources agree.</h2>
       <h3 class="sub-heading">League table</h3>
       <div class="split">
       <figure class="fig ">
@@ -673,9 +687,9 @@ a{color:inherit}img{display:block;max-width:100%}
 
   <!-- ── 06 PRODUCT DATA ── -->
   <div class="case-section" id="s06" style="padding-top:96px">
-    <div class="case-label highlight">06</div>
+    <div class="case-label highlight">06 Product data</div>
     <div class="case-content">
-      <h2 class="problem-headline">Product data</h2>
+      <h2 class="problem-headline">Two targets, both missed.</h2>
       <div class="chart">
         <p class="chart-title">Fives locked per week</p>
         <ul class="bars" role="img" aria-label="Bar chart of fives locked per week. MW4 6, MW5 7, MW6 13, MW7 17, MW8 15, MW9 16, MW10 16. MW4 was the soft launch and MW6 the public launch.">
@@ -711,20 +725,23 @@ a{color:inherit}img{display:block;max-width:100%}
       </ul>
 
       <h3 class="sub-heading">What I saw, and what I changed</h3>
-      <div class="decision-stack">
-        <div class="decision-item"><p class="decision-item-text">A player picked five and a captain, then left without locking in, so their five was never saved. Now the pick screen saves as you go.</p></div>
-        <div class="decision-item"><p class="decision-item-text">On a slow connection, a blank rectangle flashed before the pack appeared. Now the wait looks like the pack screen.</p></div>
-        <div class="decision-item"><p class="decision-item-text">People wanted to see the game before signing up. Now "How it works" can be played through before signing in.</p></div>
-      </div>
+      <table class="saw">
+        <thead><tr><th scope="col">What I saw</th><th scope="col">What I changed</th></tr></thead>
+        <tbody>
+          <tr><td data-label="What I saw">A player picked five and a captain, then left without locking in, so their five was never saved.</td><td data-label="What I changed">Now the pick screen saves as you go.</td></tr>
+          <tr><td data-label="What I saw">On a slow connection, a blank rectangle flashed before the pack appeared.</td><td data-label="What I changed">Now the wait looks like the pack screen.</td></tr>
+          <tr><td data-label="What I saw">People wanted to see the game before signing up.</td><td data-label="What I changed">Now "How it works" can be played through before signing in.</td></tr>
+        </tbody>
+      </table>
       <p>These went live after MW10. MW11, on 20 November, is the first week that can show whether they made a difference.</p>
     </div>
   </div>
 
   <!-- ── 07 WHAT'S NEXT ── -->
   <div class="case-section" id="s07" style="padding-top:96px">
-    <div class="case-label highlight">07</div>
+    <div class="case-label highlight">07 What's next</div>
     <div class="case-content">
-      <h2 class="problem-headline">What's next</h2>
+      <h2 class="problem-headline">What's left to build.</h2>
       <ul class="plain-list">
         <li>Support for overlapping matchweeks before 2 December.</li>
         <li>A rule for double gameweeks.</li>
