@@ -183,6 +183,11 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .hero{padding:calc(var(--frame) + 60px) calc(var(--frame) + 20px) calc(var(--frame) + 60px)}
   .scroll-sig{bottom:calc(var(--frame) + 20px)}
 }
+/* Very narrow phones: the SHIPPED list can wrap, but never inside a name */
+@media(max-width:359px){
+  .hero-status .meta-segment{display:block;white-space:normal}
+  .hero-status a{white-space:nowrap}
+}
 
 /* ── Mobile hamburger nav ── */
 .mob-burger{
@@ -436,7 +441,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
     <div class="hero-status" id="heroStatus">
       <div class="meta-dot"></div>
-      <span><span class="meta-segment"><span class="meta-label">STATUS:</span> Open to product design roles</span> <span class="meta-sep">//</span> <span class="meta-segment"><span class="meta-label">SHIPPED:</span> <a href="https://ballrs.net" target="_blank" rel="noopener">Ballrs</a> + <a href="https://seenrecs.com" target="_blank" rel="noopener">Seen</a> + <a href="https://5ives.org" target="_blank" rel="noopener">Fives</a></span> <span class="meta-sep">//</span> <span class="meta-segment"><span class="meta-label">BETA:</span> <a href="https://tagwithloupe.com" target="_blank" rel="noopener">Loupe</a> for Mac</span></span>
+      <span><span class="meta-segment"><span class="meta-label">STATUS:</span> Open to product design roles</span> <span class="meta-sep">//</span> <span class="meta-segment"><span class="meta-label">SHIPPED:</span> <a href="https://ballrs.net" target="_blank" rel="noopener">Ballrs</a> + <a href="https://seenrecs.com" target="_blank" rel="noopener">Seen</a> + <a href="https://5ives.org" target="_blank" rel="noopener">Fives</a> + <a href="https://apps.apple.com/us/app/beat-block/id6758417317" target="_blank" rel="noopener">Beat Block</a></span> <span class="meta-sep">//</span> <span class="meta-segment"><span class="meta-label">BETA:</span> <a href="https://tagwithloupe.com" target="_blank" rel="noopener">Loupe</a> for Mac</span></span>
     </div>
     <!-- Scroll signifier -->
     <div class="scroll-sig" id="scrollSig">

@@ -177,7 +177,7 @@ a{color:inherit}img{display:block;max-width:100%}
    ================================================================ */
 .s1-split{
   display:grid;grid-template-columns:auto 1fr;gap:clamp(40px,5vw,64px);
-  align-items:start;margin-top:40px;
+  align-items:start;margin-top:80px;
 }
 .s1-phone{flex-shrink:0}
 .s1-device{
@@ -1457,16 +1457,18 @@ a{color:inherit}img{display:block;max-width:100%}
 .comp-card .redline-label{white-space:normal;max-width:calc(100% - 16px);width:max-content}
 
 /* ── Summary under the hero ── */
-.case-summary{padding:0 clamp(32px,8vw,96px) 64px}
-.cs-rows{display:grid;grid-template-columns:120px minmax(0,62ch);gap:14px 24px}
-.cs-rows dt{font:700 13px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink);padding-top:4px}
-.cs-rows dd{font:400 18px/1.55 var(--sans);color:var(--ink)}
-.cs-skills{margin-top:28px;padding-left:144px;font:600 15px/1.5 var(--sans);color:#4A4A4A}
+.case-summary{padding:48px clamp(32px,8vw,96px) 104px;max-width:1100px}
+.cs-label{font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:#6B6B6B;margin-bottom:12px}
+.cs-lead{font:600 26px/1.35 var(--sans);letter-spacing:-.015em;color:var(--ink);max-width:44ch}
+.cs-cols{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;max-width:960px}
+.cs-text{font:400 18px/1.6 var(--sans);color:#555}
+.cs-skills{list-style:none;display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:48px;font:600 15px/1.4 var(--sans);color:#4A4A4A}
 @media(max-width:800px){
-  .case-summary{padding:0 calc(var(--frame) + 20px) 40px}
-  .cs-rows{grid-template-columns:1fr;gap:4px}
-  .cs-rows dd{font-size:17px;margin-bottom:14px}
-  .cs-skills{padding-left:0;margin-top:12px}
+  .case-summary{padding:24px calc(var(--frame) + 20px) 64px}
+  .cs-lead{font-size:21px;line-height:1.4}
+  .cs-cols{grid-template-columns:1fr;gap:28px;margin-top:32px}
+  .cs-text{font-size:17px}
+  .cs-skills{margin-top:32px;gap:8px 24px}
 }
 
 /* ── Decision / Why blocks (replace the old Design Decision callouts) ── */
@@ -1537,12 +1539,19 @@ a{color:inherit}img{display:block;max-width:100%}
 
 <!-- Summary -->
 <section class="case-summary" aria-label="Summary">
-  <dl class="cs-rows">
-    <dt>Problem</dt><dd>Most daily sports puzzle games covered one sport, had one game and ran mainly on the web.</dd>
-    <dt>What I did</dt><dd>I designed, built and shipped a daily sports trivia app for iOS and Android, with 7 game modes across 4 sports. I also designed the ads, QR code stickers and the landing page.</dd>
-    <dt>Outcome</dt><dd>Live on the App Store and Google Play. People who found it kept playing, at 7.44 sessions per device, so the data showed the limit was getting found. 44% of people who see the App Store page download it.</dd>
-  </dl>
-  <p class="cs-skills">Game design · Mobile app design · Design systems · React Native · App marketing</p>
+  <p class="cs-label">Problem</p>
+  <p class="cs-lead">Most daily sports puzzle games covered one sport, had one game and ran mainly on the web.</p>
+  <div class="cs-cols">
+    <div>
+      <p class="cs-label">What I did</p>
+      <p class="cs-text">I designed, built and shipped a daily sports trivia app for iOS and Android, with 7 game modes across 4 sports. I also designed the ads, QR code stickers and the landing page.</p>
+    </div>
+    <div>
+      <p class="cs-label">Outcome</p>
+      <p class="cs-text">Live on the App Store and Google Play. People who found it kept playing, at 7.44 sessions per device, and 44% of people who see the App Store page download it, so the limit was getting found.</p>
+    </div>
+  </div>
+  <ul class="cs-skills"><li>Game design</li><li>Mobile app design</li><li>Design systems</li><li>React Native</li><li>App marketing</li></ul>
 </section>
 
 
