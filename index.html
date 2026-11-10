@@ -164,7 +164,8 @@ body{font-family:var(--mono);color:var(--ink);background:var(--bg);overflow-x:hi
 }
 .meta-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px rgba(3,105,161,.3);flex-shrink:0;animation:pulse 2s ease-in-out infinite}
 .meta-label{font-weight:700;letter-spacing:.03em}
-.meta-sep{color:#6B6B6B;margin:0 6px}
+/* Thin vertical rule between status parts. Margin allows for the word space either side, so the visible gap is 16px */
+.meta-sep{display:inline-block;width:1px;height:1em;background:#6B6B6B;vertical-align:-.15em;margin:0 12px}
 .meta-segment{white-space:nowrap;display:inline}
 .hero-status a{color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(0,0,0,.2);transition:text-decoration-color .2s,color .2s}
 .hero-status a:hover{color:var(--accent);text-decoration-color:var(--accent)}
@@ -441,7 +442,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
     <div class="hero-status" id="heroStatus">
       <div class="meta-dot"></div>
-      <span><span class="meta-segment"><span class="meta-label">STATUS:</span> Open to product design roles</span> <span class="meta-sep">//</span> <span class="meta-segment"><span class="meta-label">SHIPPED:</span> <a href="https://ballrs.net" target="_blank" rel="noopener">Ballrs</a> + <a href="https://seenrecs.com" target="_blank" rel="noopener">Seen</a> + <a href="https://5ives.org" target="_blank" rel="noopener">Fives</a> + <a href="https://apps.apple.com/us/app/beat-block/id6758417317" target="_blank" rel="noopener">Beat Block</a></span> <span class="meta-sep">//</span> <span class="meta-segment"><span class="meta-label">BETA:</span> <a href="https://tagwithloupe.com" target="_blank" rel="noopener">Loupe</a> for Mac</span></span>
+      <span><span class="meta-segment"><span class="meta-label">STATUS:</span> Open to product design roles</span> <span class="meta-sep" aria-hidden="true"></span> <span class="meta-segment"><span class="meta-label">SHIPPED:</span> <a href="https://ballrs.net" target="_blank" rel="noopener">Ballrs</a>, <a href="https://seenrecs.com" target="_blank" rel="noopener">Seen</a>, <a href="https://5ives.org" target="_blank" rel="noopener">5ives</a>, <a href="https://apps.apple.com/us/app/beat-block/id6758417317" target="_blank" rel="noopener">Beat Block</a></span> <span class="meta-sep" aria-hidden="true"></span> <span class="meta-segment"><span class="meta-label">BETA:</span> <a href="https://tagwithloupe.com" target="_blank" rel="noopener">Loupe</a> for Mac</span></span>
     </div>
     <!-- Scroll signifier -->
     <div class="scroll-sig" id="scrollSig">
