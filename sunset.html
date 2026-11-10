@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunset, Case Study</title>
+<link rel="icon" type="image/png" href="/public/images/favicon-1.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="/public/images/favicon-1.png?v=3">
+<meta name="description" content="Sunset case study. A Mac app that turns an idea into on-brand social posts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --rule:1px solid rgba(0,0,0,.12);
+  --accent-on-dark:#38BDF8;
+  --accent-text:#B4491F;
+  --bg:#F9F9F9;--ink:#000;--accent:#F28C5B;--grey:#6B6B6B;
+  --sans:'Figtree',system-ui,sans-serif;
+  --mono:'Figtree',system-ui,sans-serif;
+  --frame:12px;
+  --pad:clamp(24px,5vw,64px);
+}
+html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);overflow-x:hidden;line-height:1.6}
+a{color:inherit}img{display:block;max-width:100%}
+::selection{background:var(--accent);color:#fff}
+
+.frame{position:fixed;inset:0;border:var(--frame) solid var(--ink);pointer-events:none;z-index:900}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+
+/* ================================================================
+   TOP BAR
+   ================================================================ */
+.topbar{
+  position:sticky;top:var(--frame);z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:48px clamp(32px,8vw,96px);
+  background:var(--bg);
+}
+.topbar-name{font:700 16px/1 var(--mono);color:var(--ink);text-decoration:none}
+.topbar-menu{
+  font:600 13px/1 var(--mono);color:var(--ink);letter-spacing:.03em;
+  cursor:pointer;background:none;border:none;border-radius:0;
+  outline:none;-webkit-appearance:none;appearance:none;
+  padding:0;transition:color .12s;
+}
+.topbar-menu:hover{color:var(--accent-text)}
+
+/* Dropdown */
+.dropdown{
+  position:fixed;top:calc(var(--frame) + 70px);right:clamp(32px,8vw,96px);
+  z-index:300;
+  background:var(--bg);border:2px solid var(--ink);
+  box-shadow:8px 8px 0 var(--ink);
+  padding:24px 28px;min-width:250px;
+  clip-path:inset(0 0 100% 0);
+  pointer-events:none;
+  transition:clip-path .12s linear;
+}
+.dropdown.open{
+  clip-path:inset(0 0 0 0);
+  pointer-events:auto;
+}
+.dd-link{
+  display:block;font:800 20px/1 var(--sans);text-transform:uppercase;
+  letter-spacing:-.02em;text-decoration:none;color:var(--ink);
+  padding:8px 0;transition:color .12s;
+}
+.dd-link:hover{color:var(--accent-text)}
+.dd-sep{height:1px;background:var(--ink);margin:16px 0}
+.dd-label{font:600 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555;margin-bottom:12px}
+.dd-case{
+  display:block;font:600 13px/1 var(--mono);text-decoration:none;color:var(--ink);
+  padding:6px 8px;margin-bottom:4px;transition:background .12s,color .12s;
+}
+.dd-case:hover{color:var(--accent-text)}
+.dd-case.active{background:var(--accent);color:var(--ink)}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+.case-hero{
+  padding:calc(var(--frame) + 20px) clamp(32px,8vw,96px) 60px;
+}
+.case-hero h1{
+  font:900 clamp(36px,8vw,96px)/0.85 var(--sans);
+  text-transform:uppercase;letter-spacing:-.05em;
+  margin-bottom:16px;
+}
+.case-hero-meta{
+  display:flex;flex-wrap:wrap;gap:12px;
+  font:500 13px/1 var(--mono);text-transform:uppercase;letter-spacing:.03em;
+}
+.case-hero-meta span{
+  padding:6px 14px;border:2px solid var(--ink);
+  transition:background .15s,color .15s;cursor:default;
+}
+.case-hero-meta span:hover{background:var(--accent);color:var(--ink)}
+
+/* ================================================================
+   PROGRESS BAR
+   ================================================================ */
+.progress-track{
+  position:fixed;top:var(--frame);right:var(--frame);bottom:var(--frame);
+  width:3px;z-index:700;background:rgba(0,0,0,.06);
+}
+.progress-fill{
+  width:100%;height:0;background:var(--accent);
+  transition:height .1s linear;
+}
+
+/* ================================================================
+   CONTENT
+   ================================================================ */
+.case-body{
+  padding:0 clamp(32px,8vw,96px);
+  border-top:var(--rule);
+}
+.case-section{padding-top:64px}
+.case-label{
+  font:700 13px/1.3 var(--mono);
+  text-transform:uppercase;letter-spacing:.03em;
+  color:var(--ink);margin-bottom:24px;
+  padding:6px 8px;display:inline-block;
+}
+.case-label.highlight{background:var(--accent);color:var(--ink)}
+
+.case-content{padding:0 0 80px}
+.case-content h2{
+  font:800 clamp(24px,3vw,36px)/1.1 var(--sans);
+  letter-spacing:-.03em;margin-bottom:20px;
+}
+.case-content p{
+  font:400 18px/1.6 var(--sans);color:#555;
+  max-width:58ch;margin-bottom:16px;
+}
+
+.problem-headline{
+  font:900 clamp(28px,4vw,52px)/1.05 var(--sans);
+  letter-spacing:-.04em;margin-bottom:20px;
+}
+
+/* ================================================================
+   CONTACT FOOTER
+   ================================================================ */
+.contact-footer{
+  padding:48px clamp(32px,8vw,96px);
+  border-top:var(--rule);
+}
+.contact-label{
+  font:700 13px/1 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:#6B6B6B;
+  margin-bottom:20px;
+}
+.contact-row{
+  display:flex;gap:48px;flex-wrap:wrap;align-items:center;
+}
+.contact-row a,.contact-row span{
+  font:500 15px/1.4 var(--sans);
+  color:var(--ink);text-decoration:none;
+  transition:color .12s;
+}
+.contact-row a:hover{color:var(--accent-text)}
+.contact-row a:visited{color:var(--ink)}
+.contact-icons{display:flex;gap:16px;align-items:center}
+.contact-icons .icon-link{display:inline-flex;align-items:center}
+.contact-icons .icon-link svg{width:20px;height:20px;fill:var(--ink);transition:fill .12s}
+.contact-icons .icon-link:hover svg{fill:var(--accent)}
+.contact-copy{
+  margin-top:32px;
+  font:400 13px/1 var(--mono);color:#6B6B6B;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media(max-width:800px){
+  .case-hero{padding:calc(var(--frame) + 12px) calc(var(--frame) + 20px) 32px}
+  .case-body{padding:0 20px;padding-right:20px}
+  .case-section{padding-top:32px!important}
+  .case-content{padding:0 0 24px}
+  .contact-footer{padding:32px calc(var(--frame) + 20px)}
+  .contact-row{flex-direction:column;gap:16px}
+}
+
+/* Mobile hamburger nav */
+.mob-burger{display:none;position:fixed;top:calc(var(--frame) + 16px);right:calc(var(--frame) + 16px);z-index:1000;width:40px;height:40px;background:rgba(255,255,255,.55);backdrop-filter:blur(8px);border:none;border-radius:8px;cursor:pointer;padding:6px}
+.mob-burger span{display:block;width:100%;height:2px;background:var(--ink);margin-bottom:6px;transition:transform .3s,opacity .3s}
+.mob-burger span:last-child{margin-bottom:0}
+.mob-burger.active span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+.mob-burger.active span:nth-child(2){opacity:0}
+.mob-burger.active span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+.mob-burger.active span{background:#fff}
+.mob-burger.active{background:transparent;backdrop-filter:none}
+.mob-overlay{display:none;position:fixed;inset:0;z-index:799;background:var(--ink);flex-direction:column;align-items:center;justify-content:center;gap:32px;opacity:0;transition:opacity .3s}
+.mob-overlay.open{display:flex;opacity:1}
+.mob-overlay a{font:800 clamp(28px,8vw,48px)/1.2 'Figtree',system-ui,sans-serif;text-transform:uppercase;letter-spacing:-.03em;color:#fff;text-decoration:none;transition:color .2s}
+.mob-overlay a:hover{color:var(--accent-on-dark)}
+@media(max-width:768px){:root{--frame:6px}.mob-burger{display:block}.topbar-menu{display:none}}
+/* Mobile footer */
+@media(max-width:768px){
+  .contact-footer{padding:32px 20px;text-align:center}
+  .contact-label{text-align:center}
+  .contact-row{flex-direction:column;gap:16px;align-items:center}
+  .contact-icons{gap:24px}
+  .contact-icons .icon-link{width:44px;height:44px;display:inline-flex;justify-content:center;align-items:center}
+  .contact-icons .icon-link svg{width:28px;height:28px}
+  .contact-copy{text-align:center}
+}
+.back-to-top{position:relative;z-index:2;display:flex;justify-content:center;padding:32px 0}
+.back-to-top a{font:600 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--grey);text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;gap:8px;transition:color .2s}
+.back-to-top a:hover{color:var(--ink)}
+
+/* ── Readability: minimum text sizes, line length ── */
+.case-content p{max-width:50ch}
+@media(max-width:768px){.case-content p{font-size:17px}}
+
+/* ── Summary under the hero ── */
+.case-summary{padding:48px clamp(32px,8vw,96px) 104px;max-width:1100px}
+.cs-label{font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:#6B6B6B;margin-bottom:12px}
+.cs-lead{font:600 26px/1.35 var(--sans);letter-spacing:-.015em;color:var(--ink);max-width:44ch}
+.cs-cols{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;max-width:960px}
+.cs-text{font:400 18px/1.6 var(--sans);color:#555}
+.cs-skills{list-style:none;display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:48px;font:600 15px/1.4 var(--sans);color:#4A4A4A}
+@media(max-width:800px){
+  .case-summary{padding:24px calc(var(--frame) + 20px) 64px}
+  .cs-lead{font-size:21px;line-height:1.4}
+  .cs-cols{grid-template-columns:1fr;gap:28px;margin-top:32px}
+  .cs-text{font-size:17px}
+  .cs-skills{margin-top:32px;gap:8px 24px}
+}
+
+.built-with{font:400 13px/1.4 var(--mono);color:#555;margin:8px 0 0;letter-spacing:.02em}
+.built-with strong{font-weight:700;color:var(--ink)}
+
+/* ── Video ── */
+.cs-video{position:relative;margin:40px 0 0;background:#EFEAE4}
+.cs-video video{display:block;width:100%;height:auto;aspect-ratio:16/9}
+.video-play{
+  display:none;position:absolute;right:24px;bottom:24px;
+  width:64px;height:64px;border-radius:50%;border:2px solid #fff;cursor:pointer;
+  background:var(--ink);color:#fff;align-items:center;justify-content:center;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+}
+.video-play svg{width:24px;height:24px;margin-left:3px;fill:currentColor}
+.video-play:hover{background:#222}
+.video-play:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.cs-video.is-still .video-play{display:flex}
+@media(max-width:800px){.video-play{right:12px;bottom:12px;width:48px;height:48px}.video-play svg{width:18px;height:18px}}
+
+/* ── Steps ── */
+.steps{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:40px 48px;margin:56px 0 0;max-width:960px;counter-reset:step}
+.steps li{border-top:2px solid var(--ink);padding-top:20px;counter-increment:step}
+.steps li::before{content:counter(step,decimal-leading-zero);display:block;font:700 13px/1 var(--mono);letter-spacing:.06em;color:#555;margin-bottom:14px}
+.steps h3{font:700 20px/1.3 var(--sans);letter-spacing:-.01em;margin-bottom:8px}
+.case-content .steps p{margin-bottom:0}
+@media(max-width:800px){
+  .cs-video{margin-top:28px}
+  .steps{grid-template-columns:1fr;gap:32px;margin-top:40px}
+  .steps h3{font-size:19px}
+}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<div class="frame"></div>
+<div class="grain"></div>
+<button class="mob-burger" id="mobBurger"><span></span><span></span><span></span></button>
+<div class="mob-overlay" id="mobOverlay">
+  <a href="index.html">Home</a>
+  <a href="index.html#work">Work</a>
+  <a href="about.html">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- Top bar -->
+<nav class="topbar">
+  <a class="topbar-name" href="index.html">PAUL TAYLOR</a>
+  <button class="topbar-menu" id="menuBtn">MENU</button>
+</nav>
+
+<!-- Dropdown menu -->
+<div class="dropdown" id="dropdown">
+  <a class="dd-link" href="index.html">Home</a>
+  <a class="dd-link" href="about.html">About</a>
+  <div class="dd-sep"></div>
+  <div class="dd-label">Case Studies</div>
+  <a class="dd-case" href="mealmatch.html">MealMatch AI</a>
+  <a class="dd-case" href="ballrs.html">Ballrs</a>
+  <a class="dd-case" href="jetsweat.html">JetSweat</a>
+  <a class="dd-case" href="loupe.html">Loupe</a>
+  <a class="dd-case active" href="sunset.html">Sunset</a>
+</div>
+
+<!-- Hero -->
+<section class="case-hero" id="hero">
+  <h1>Sunset</h1>
+  <div class="case-hero-meta">
+    <span>Designer and Developer</span>
+    <span>Mac App</span>
+    <span>AI Content Workflow</span>
+  </div>
+</section>
+
+<!-- Summary -->
+<section class="case-summary" aria-label="Summary">
+  <p class="cs-label">Problem</p>
+  <p class="cs-lead">I make social posts for several apps. Keeping each one on brand and consistent took too long.</p>
+  <div class="cs-cols">
+    <div>
+      <p class="cs-label">What I did</p>
+      <p class="cs-text">I designed and built a Mac app to run social media for my apps. It stores each app&rsquo;s brand, uses templates to keep posts consistent, and turns an idea into posts with captions and music suggestions. I review, schedule on a timeline and export for TikTok, Instagram, X and YouTube Shorts.</p>
+    </div>
+    <div>
+      <p class="cs-label">Outcome</p>
+      <p class="cs-text">Used for Seen&rsquo;s TikTok. Early posts got about 80 views. The top post has reached 60,000 views and 2,000+ likes.</p>
+    </div>
+  </div>
+  <ul class="cs-skills"><li>AI with human review</li><li>Internal tools</li><li>Content workflow design</li></ul>
+</section>
+
+<!-- Progress bar -->
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     CASE BODY
+     ════════════════════════════════════════════════════════════════ -->
+<div class="case-body">
+
+  <!-- ── HOW IT WORKS ── -->
+  <div class="case-section" id="s01" style="padding-top:96px">
+    <div class="case-label highlight">How It Works</div>
+    <div class="case-content">
+      <h2 class="problem-headline">From an idea to posts ready to export.</h2>
+      <div class="built-with"><strong>Built with:</strong> Swift &middot; SQLite &middot; Claude API</div>
+
+      <div class="cs-video" id="ssVideo">
+        <video muted loop playsinline preload="none" poster="public/images/sunset/sunset-poster.jpg" aria-label="Sunset walkthrough: an idea becomes post drafts, I review them, then export them for each platform.">
+          <source src="public/images/sunset/sunset.mp4" type="video/mp4">
+        </video>
+        <button class="video-play" type="button" aria-label="Play video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg></button>
+      </div>
+
+      <ol class="steps">
+        <li>
+          <h3>Brand and context</h3>
+          <p>Sunset stores the brand and context for each app. Every post starts there.</p>
+        </li>
+        <li>
+          <h3>Idea to drafts</h3>
+          <p>I type an idea. The AI turns it into posts with captions and music suggestions. Templates keep the posts consistent.</p>
+        </li>
+        <li>
+          <h3>Review</h3>
+          <p>I review every post before it is scheduled.</p>
+        </li>
+        <li>
+          <h3>Schedule and export</h3>
+          <p>I schedule posts on a timeline. Then I export them for TikTok, Instagram, X and YouTube Shorts.</p>
+        </li>
+        <li>
+          <h3>Learn from results</h3>
+          <p>Sunset shows which hooks get the most views, and turns that into ideas for the next post.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+</div><!-- /case-body -->
+
+<!-- Contact footer -->
+<div class="back-to-top"><a href="#"><span class="btt-arrow">&uarr;</span>Back to top</a></div>
+<footer class="contact-footer" id="contact">
+  <div class="contact-label">Get In Touch</div>
+  <div class="contact-row">
+    <a href="mailto:thisispaultaylor@icloud.com">thisispaultaylor@icloud.com</a>
+    <span>(929) 539-2992</span>
+    <div class="contact-icons">
+      <a class="icon-link" href="https://linkedin.com/in/paultaylormade" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      <a class="icon-link" href="https://instagram.com/thisispaultaylor" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 100 12.324 6.162 6.162 0 100-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 11-2.88 0 1.441 1.441 0 012.88 0z"/></svg></a>
+    </div>
+  </div>
+  <div class="contact-copy">&copy; 2026 Paul Taylor</div>
+</footer>
+
+<script>
+(function(){
+  /* MOBILE NAV */
+  var burger=document.getElementById('mobBurger');
+  var overlay=document.getElementById('mobOverlay');
+  burger.addEventListener('click',function(){burger.classList.toggle('active');overlay.classList.toggle('open')});
+  overlay.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){burger.classList.remove('active');overlay.classList.remove('open')})});
+
+  /* ── MENU TOGGLE ── */
+  var menuBtn=document.getElementById('menuBtn');
+  var dropdown=document.getElementById('dropdown');
+  var menuOpen=false;
+  menuBtn.addEventListener('click',function(){
+    menuOpen=!menuOpen;
+    dropdown.classList.toggle('open',menuOpen);
+    menuBtn.textContent=menuOpen?'CLOSE':'MENU';
+  });
+  document.addEventListener('click',function(e){
+    if(menuOpen&&!dropdown.contains(e.target)&&e.target!==menuBtn){
+      menuOpen=false;dropdown.classList.remove('open');
+      menuBtn.textContent='MENU';
+    }
+  });
+
+  /* ── PROGRESS BAR ── */
+  var fill=document.getElementById('progressFill');
+  function onScroll(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    fill.style.height=(h>0?(window.scrollY/h)*100:0)+'%';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  /* ── VIDEO: autoplay muted and looping, or poster + play button with reduced motion ── */
+  var rm=window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll('.cs-video').forEach(function(wrap){
+    var video=wrap.querySelector('video');
+    var playBtn=wrap.querySelector('.video-play');
+    var started=false;
+    function setMode(){
+      if(started)return;
+      if(rm.matches){
+        video.pause();
+        wrap.classList.add('is-still');
+      }else{
+        wrap.classList.remove('is-still');
+        video.preload='auto';
+        var p=video.play();
+        if(p&&p.catch)p.catch(function(){wrap.classList.add('is-still')});
+      }
+    }
+    playBtn.addEventListener('click',function(){
+      started=true;
+      wrap.classList.remove('is-still');
+      video.controls=true;
+      video.play();
+    });
+    if(rm.addEventListener)rm.addEventListener('change',setMode);
+    setMode();
+  });
+})();
+</script>
+</body>
+</html>

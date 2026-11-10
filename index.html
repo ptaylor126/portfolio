@@ -278,6 +278,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .bento-tile:nth-child(2){transition-delay:.1s}
 .bento-tile:nth-child(3){transition-delay:.2s}
 .bento-tile:nth-child(4){transition-delay:.3s}
+.bento-tile:nth-child(5){transition-delay:.4s}
 .bento-tile:focus-visible{outline:2px solid var(--accent);outline-offset:8px;border-radius:24px}
 
 /* Image panel — brand colour block with the screenshot centred */
@@ -323,11 +324,19 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .bento-tile:hover .bt-title,.bento-tile.touch-active .bt-title{color:var(--accent)}
 .bento-tile:hover .bt-tags span,.bento-tile.touch-active .bt-tags span{background:var(--accent);border-color:var(--accent);color:#fff}
 
+/* Featured tile — full width above the 2x2 grid (desktop only) */
+@media(min-width:901px){
+  .bento-tile--feature{grid-column:1/-1}
+  .bento-tile--feature .bt-media{aspect-ratio:5/2}
+  .bento-tile--feature .bt-img--wide{width:auto;height:84%;max-width:88%;max-height:none}
+}
+
 /* ── Tile colors ── */
 .bt-mint{background:#2D6A4F}
 .bt-navy{background:#1E3A8A}
 .bt-purple{background:#3D2C5E}
 .bt-burnt{background:#C45A2D}
+.bt-rose{background:#8C3B4A}
 
 /* ── VIEW cursor pill — follows mouse on card hover ── */
 .view-cursor{
@@ -458,7 +467,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 <div class="bento">
 
   <!-- 01 JetSweat — Orange -->
-  <a class="bento-tile" href="jetsweat.html">
+  <a class="bento-tile bento-tile--feature" href="jetsweat.html">
     <div class="bt-media bt-burnt"><img class="bt-img bt-img--wide" src="public/images/jetsweat/new-dashboard.png" alt="JetSweat Dashboard"></div>
     <div class="bt-content">
       <h3 class="bt-title">JetSweat</h3>
@@ -488,7 +497,22 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     </div>
   </a>
 
-  <!-- 03 MealMatch AI — Mint -->
+  <!-- 03 Sunset — Rose -->
+  <a class="bento-tile" href="sunset.html">
+    <div class="bt-media bt-rose"><img class="bt-img bt-img--wide" src="public/images/sunset/sunset-tile.jpg" alt="Sunset review screen"></div>
+    <div class="bt-content">
+      <h3 class="bt-title">Sunset</h3>
+      <p class="bt-facts">Designer and developer · Mac app · AI content workflow</p>
+      <p class="bt-desc">A Mac app that turns an idea into on-brand social posts.</p>
+      <div class="bt-tags">
+        <span>AI with human review</span>
+        <span>Internal tools</span>
+        <span>Content workflow design</span>
+      </div>
+    </div>
+  </a>
+
+  <!-- 04 MealMatch AI — Mint -->
   <a class="bento-tile" href="mealmatch.html">
     <div class="bt-media bt-mint"><img class="bt-img" src="public/images/mealmatch/section-1/mealmatch-hero-screen.png" alt="MealMatch AI"></div>
     <div class="bt-content">
@@ -504,7 +528,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     </div>
   </a>
 
-  <!-- 04 Ballrs — Navy -->
+  <!-- 05 Ballrs — Navy -->
   <a class="bento-tile" href="ballrs.html">
     <div class="bt-media bt-navy"><img class="bt-img" src="public/images/ballrs/S4-P3.PNG" alt="Ballrs"></div>
     <div class="bt-content">

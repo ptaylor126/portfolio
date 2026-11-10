@@ -363,6 +363,23 @@ a{color:inherit}img{display:block;max-width:100%}
   .cs-text{font-size:17px}
   .cs-skills{margin-top:32px;gap:8px 24px}
 }
+
+/* ── Video ── */
+.case-video{padding:0 clamp(32px,8vw,96px) 96px}
+.cs-video{position:relative;background:#000;max-width:1248px}
+.cs-video video{display:block;width:100%;height:auto;aspect-ratio:16/9}
+.video-play{
+  display:none;position:absolute;right:24px;bottom:24px;
+  width:64px;height:64px;border-radius:50%;border:2px solid #fff;cursor:pointer;
+  background:var(--ink);color:#fff;align-items:center;justify-content:center;
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+}
+.video-play svg{width:24px;height:24px;margin-left:3px;fill:currentColor}
+.video-play:hover{background:#222}
+.video-play:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.cs-video.is-still .video-play{display:flex}
+@media(max-width:800px){.video-play{right:12px;bottom:12px;width:48px;height:48px}.video-play svg{width:18px;height:18px}}
+@media(max-width:800px){.case-video{padding:0 calc(var(--frame) + 20px) 56px}}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -393,6 +410,7 @@ a{color:inherit}img{display:block;max-width:100%}
   <a class="dd-case" href="ballrs.html">Ballrs</a>
   <a class="dd-case" href="jetsweat.html">JetSweat</a>
   <a class="dd-case active" href="loupe.html">Loupe</a>
+  <a class="dd-case" href="sunset.html">Sunset</a>
 </div>
 
 <!-- Hero -->
@@ -423,6 +441,15 @@ a{color:inherit}img{display:block;max-width:100%}
   <ul class="cs-skills"><li>AI with human review</li><li>Mac app design</li><li>Prompt design</li><li>SwiftUI</li></ul>
 </section>
 
+<!-- Demo video -->
+<section class="case-video" aria-label="Demo video">
+  <div class="cs-video">
+    <video muted loop playsinline preload="none" poster="public/images/loupe/loupe-demo-poster.jpg" aria-label="Loupe demo: a folder of photos is dropped in, the photos are tagged, then the tags are reviewed and approved.">
+      <source src="public/images/loupe/loupe-demo.mp4" type="video/mp4">
+    </video>
+    <button class="video-play" type="button" aria-label="Play video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg></button>
+  </div>
+</section>
 
 <!-- Progress bar -->
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
@@ -657,6 +684,34 @@ a{color:inherit}img{display:block;max-width:100%}
 
   var statsBlock=document.querySelector('.stat-bar');
   if(statsBlock)scrambleObs.observe(statsBlock);
+
+  /* ── VIDEO: autoplay muted and looping, or poster + play button with reduced motion ── */
+  var rm=window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll('.cs-video').forEach(function(wrap){
+    var video=wrap.querySelector('video');
+    var playBtn=wrap.querySelector('.video-play');
+    var started=false;
+    function setMode(){
+      if(started)return;
+      if(rm.matches){
+        video.pause();
+        wrap.classList.add('is-still');
+      }else{
+        wrap.classList.remove('is-still');
+        video.preload='auto';
+        var p=video.play();
+        if(p&&p.catch)p.catch(function(){wrap.classList.add('is-still')});
+      }
+    }
+    playBtn.addEventListener('click',function(){
+      started=true;
+      wrap.classList.remove('is-still');
+      video.controls=true;
+      video.play();
+    });
+    if(rm.addEventListener)rm.addEventListener('change',setMode);
+    setMode();
+  });
 
   /* ── CALLOUT REVEAL ── */
   var callouts=document.querySelectorAll('.callout-box');
