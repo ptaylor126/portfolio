@@ -396,6 +396,8 @@ a{color:inherit}img{display:block;max-width:100%}
 .fig-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .fig-pair figcaption{grid-column:1/-1;margin-top:0}
 .fig-ba{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:720px}
+.fig-three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;max-width:960px}
+.fig-three figcaption{grid-column:1/-1;margin-top:0}
 .fig-ba figure figcaption{font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:var(--ink);margin-top:12px}
 .split{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:48px;align-items:start;margin:24px 0 0}
 .split .fig{margin:0}
@@ -464,6 +466,7 @@ a{color:inherit}img{display:block;max-width:100%}
   .fig-small{width:100%;min-width:0}
   .fig-pair{grid-template-columns:1fr;gap:12px}
   .fig-ba{gap:12px}
+  .fig-three{grid-template-columns:1fr;gap:16px;max-width:300px}
   .split{grid-template-columns:1fr;gap:20px}
   .split .fig{max-width:300px}
   .swatches{grid-template-columns:repeat(3,1fr)}
@@ -602,11 +605,7 @@ a{color:inherit}img{display:block;max-width:100%}
         <img src="public/images/5ives/direction-b.webp" alt="A dropped direction in purple, pink and cream, shown on the same four screens." width="2000" height="872" loading="lazy">
         <figcaption>Two of the four directions I dropped.</figcaption>
       </figure>
-      <p>I designed Album Blue in Figma, then built it. The built version had to handle long names that the design didn't.</p>
-      <figure class="fig fig-tall">
-        <img src="public/images/5ives/figma-vs-built.webp" alt="The Album Blue home screen twice: the Figma design on the left and the built screen on the right. The built league table fits a much longer player name." width="1570" height="2196" loading="lazy">
-        <figcaption>Figma design (left) and the built screen (right).</figcaption>
-      </figure>
+      <p>I didn't use a design tool for Album Blue. I worked it out with Claude Code: I gave it the references, looked at each screen, said what wasn't working, and changed it, round after round.</p>
       <div class="fig fig-ba">
         <figure>
           <img src="public/images/5ives/pick-before.webp" alt="The Pick your five screen before the restyle: navy background, glossy shirts and a pink Lock in my five button." width="780" height="1688" loading="lazy">
@@ -617,6 +616,12 @@ a{color:inherit}img{display:block;max-width:100%}
           <figcaption>After</figcaption>
         </figure>
       </div>
+      <figure class="fig fig-three">
+        <img src="public/images/5ives/now-home.webp" alt="The home screen in Album Blue: Matchweek 5 with matches under way, 9 points so far, the five picked players and their points, and league positions." width="780" height="1689" loading="lazy">
+        <img src="public/images/5ives/now-pick.webp" alt="The Pick your five screen in Album Blue: five shirts on a pitch, a message that the five is locked in with Rogers as captain, and the squad below." width="780" height="1689" loading="lazy">
+        <img src="public/images/5ives/now-score.webp" alt="The Your five screen in Album Blue: each player's points in a list, and a score breakdown of players, captain bonus, five bonuses and stadium, totalling 49." width="780" height="1689" loading="lazy">
+        <figcaption>Album Blue, as it is now.</figcaption>
+      </figure>
     </div>
   </div>
 
@@ -668,7 +673,7 @@ a{color:inherit}img{display:block;max-width:100%}
       <h3 class="sub-heading">League table</h3>
       <div class="split">
       <figure class="fig ">
-        <img src="public/images/5ives/league-table.webp" alt="The league table during live games, with This week and Season tabs, a note that the order is provisional, and players grouped into Win, Draw, Loss and No five bands." width="1124" height="4226" loading="lazy">
+        <img src="public/images/5ives/league.webp" alt="The league table for Matchweek 5, marked final, with This week and Season tabs and players grouped into Win and Draw bands." width="780" height="1689" loading="lazy">
       </figure>
         <p>The league table has to work while games are still being played. It switches between this week and the season, splits players into Win, Draw and Loss bands, and marks the order as provisional until games finish. If a score is corrected later, the player sees "Updated: FPL corrected a stat".</p>
       </div>
