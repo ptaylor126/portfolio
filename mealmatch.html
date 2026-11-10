@@ -832,6 +832,28 @@ img.filmstrip-img{
   .cs-rows dd{font-size:17px;margin-bottom:14px}
   .cs-skills{padding-left:0;margin-top:12px}
 }
+
+/* ── Decision / Why blocks (replace the old Design Decision callouts) ── */
+.decision{display:grid;grid-template-columns:110px minmax(0,58ch);gap:16px 0;margin:72px 0}
+.decision dt{font:700 13px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:#6B6B6B;padding-top:7px}
+.decision dt.drawn{color:var(--ink)}
+.decision .d-what{font:800 20px/1.35 var(--sans);letter-spacing:-.01em;color:var(--ink)}
+.decision .d-why{font:400 18px/1.6 var(--sans);color:#555}
+/* Hand-drawn underline, same stroke style as the homepage arrow */
+.drawn span{position:relative;display:inline-block}
+.drawn svg{position:absolute;left:-2px;top:calc(100% + 3px);width:calc(100% + 6px);height:8px;overflow:visible;
+  fill:none;stroke:#0369A1;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.drawn svg path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .45s ease-out .15s}
+.decision.is-drawn .drawn svg path{stroke-dashoffset:0}
+@media(prefers-reduced-motion:reduce){.drawn svg path{transition:none;stroke-dashoffset:0}}
+@media(max-width:768px){.decision .d-why{font-size:17px}}
+@media(max-width:600px){
+  .decision{grid-template-columns:1fr;gap:0;margin:56px 0}
+  .decision dt{padding-top:0;margin-bottom:10px}
+  .decision dt.drawn{margin-bottom:16px}
+  .decision dd{margin-bottom:22px}
+  .decision dd:last-child{margin-bottom:0}
+}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -1056,10 +1078,12 @@ img.filmstrip-img{
       </div>
 
       <!-- Design Decision Callout -->
-      <div class="callout-box">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">This is progressive disclosure. Low-stakes questions come first, so people are invested before we ask for anything personal. Each extra personal field tends to increase drop-off. With height, weight and biological sex at the very end, users have already put time in.</p>
-      </div>
+      <dl class="decision">
+        <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">Ask personal questions last.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">Low-stakes questions come first, so people are invested before we ask for anything personal. Each extra personal field tends to increase drop-off. With height, weight and biological sex at the very end, users have already put time in.</dd>
+      </dl>
 
       <!-- Onboarding Funnel -->
       <h3 style="margin-top:64px">Where users dropped off</h3>
@@ -1093,10 +1117,7 @@ img.filmstrip-img{
         </div>
       </div>
 
-      <div class="callout-box" style="margin-top:32px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">Two clear problems. First, 39% of users never started onboarding, so something between opening the app and the first screen isn't working. Second, the age question caused a 22% drop. That's the personal data wall. Both back up two points in my reflection: we needed event tracking from day one, and removing the skip button cost us users.</p>
-      </div>
+      <p>Two clear problems. First, 39% of users never started onboarding, so something between opening the app and the first screen isn't working. Second, the age question caused a 22% drop. That's the personal data wall. Both back up two points in my reflection: we needed event tracking from day one, and removing the skip button cost us users.</p>
 
     </div>
   </div>
@@ -1223,10 +1244,12 @@ img.filmstrip-img{
             <p class="hc-body">A teammate suggested changing 'biological sex' to 'gender' in the onboarding. I pushed back because our calorie calculations depend on physiology, not identity. Get it wrong and the AI gives inaccurate numbers.</p>
           </div>
         </div>
-        <div class="callout-box" style="margin-top:32px">
-          <div class="callout-tag">Design Decision</div>
-          <p class="callout-text">Biological sex and gender identity aren't interchangeable. Calorie calculations use basal metabolic rate, which depends on physiology. Using gender instead of sex would produce inaccurate recommendations for some users.</p>
-        </div>
+        <dl class="decision">
+          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+          <dd class="d-what">Keep the label 'biological sex'.</dd>
+          <dt>Why</dt>
+          <dd class="d-why">Biological sex and gender identity aren't interchangeable. Calorie calculations use basal metabolic rate, which depends on physiology. Using gender instead of sex would produce inaccurate recommendations for some users.</dd>
+        </dl>
       </div>
 
       <!-- Call 02 -->
@@ -1254,10 +1277,12 @@ img.filmstrip-img{
             </div>
           </div>
         </div>
-        <div class="callout-box" style="margin-top:32px">
-          <div class="callout-tag">Design Decision</div>
-          <p class="callout-text">Rather than cutting screens based on internal opinion, we let users decide. The data backed the original length. Every screen collected data the AI needed to personalise recommendations.</p>
-        </div>
+        <dl class="decision">
+          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+          <dd class="d-what">Test the length before cutting screens.</dd>
+          <dt>Why</dt>
+          <dd class="d-why">Rather than cutting screens based on internal opinion, we tested with users. The data backed the original length. Every screen collected data the AI needed to personalise recommendations.</dd>
+        </dl>
       </div>
 
       <!-- Call 03 -->
@@ -1272,10 +1297,12 @@ img.filmstrip-img{
             <img class="hc-ui" src="public/images/mealmatch/section-4/modal.png" alt="Quota limit modal with celebratory copy">
           </div>
         </div>
-        <div class="callout-box" style="margin-top:32px">
-          <div class="callout-tag">Design Decision</div>
-          <p class="callout-text">Most apps show limits as a wall. We used Kofi and celebratory copy to show it as progress, so upgrading felt like a reward.</p>
-        </div>
+        <dl class="decision">
+          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+          <dd class="d-what">Show the limit as progress.</dd>
+          <dt>Why</dt>
+          <dd class="d-why">Most apps show limits as a wall. We used Kofi and celebratory copy to show it as progress, so upgrading felt like a reward.</dd>
+        </dl>
       </div>
 
     </div>
@@ -1742,6 +1769,18 @@ img.filmstrip-img{
     if(e.key==='ArrowLeft'){filmWrap.scrollBy({left:-scrollAmt,behavior:'smooth'});e.preventDefault()}
     if(e.key==='ArrowRight'){filmWrap.scrollBy({left:scrollAmt,behavior:'smooth'});e.preventDefault()}
   });
+})();
+</script>
+<script>
+/* Draw the Decision underline when the block scrolls into view */
+(function(){
+  var blocks=document.querySelectorAll('.decision');
+  if(!blocks.length)return;
+  if(!('IntersectionObserver' in window)){blocks.forEach(function(b){b.classList.add('is-drawn')});return}
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-drawn');obs.unobserve(e.target)}});
+  },{threshold:.6});
+  blocks.forEach(function(b){obs.observe(b)});
 })();
 </script>
 </body>

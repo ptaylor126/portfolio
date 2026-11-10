@@ -444,6 +444,28 @@ a{color:inherit}img{display:block;max-width:100%}
   .cs-rows dd{font-size:17px;margin-bottom:14px}
   .cs-skills{padding-left:0;margin-top:12px}
 }
+
+/* ── Decision / Why blocks (replace the old Design Decision callouts) ── */
+.decision{display:grid;grid-template-columns:110px minmax(0,58ch);gap:16px 0;margin:72px 0}
+.decision dt{font:700 13px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:#6B6B6B;padding-top:7px}
+.decision dt.drawn{color:var(--ink)}
+.decision .d-what{font:800 20px/1.35 var(--sans);letter-spacing:-.01em;color:var(--ink)}
+.decision .d-why{font:400 18px/1.6 var(--sans);color:#555}
+/* Hand-drawn underline, same stroke style as the homepage arrow */
+.drawn span{position:relative;display:inline-block}
+.drawn svg{position:absolute;left:-2px;top:calc(100% + 3px);width:calc(100% + 6px);height:8px;overflow:visible;
+  fill:none;stroke:#0369A1;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.drawn svg path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .45s ease-out .15s}
+.decision.is-drawn .drawn svg path{stroke-dashoffset:0}
+@media(prefers-reduced-motion:reduce){.drawn svg path{transition:none;stroke-dashoffset:0}}
+@media(max-width:768px){.decision .d-why{font-size:17px}}
+@media(max-width:600px){
+  .decision{grid-template-columns:1fr;gap:0;margin:56px 0}
+  .decision dt{padding-top:0;margin-bottom:10px}
+  .decision dt.drawn{margin-bottom:16px}
+  .decision dd{margin-bottom:22px}
+  .decision dd:last-child{margin-bottom:0}
+}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -492,7 +514,7 @@ a{color:inherit}img{display:block;max-width:100%}
   <dl class="cs-rows">
     <dt>Problem</dt><dd>The studio dashboard didn't show the important numbers at a glance. Studios also couldn't try the platform before buying, and every new customer needed 3 hours of website setup by the ops team.</dd>
     <dt>What I did</dt><dd>I redesigned the dashboard as a freelance product designer, over about 3 months. I also designed a free trial onboarding flow and a self-serve website builder.</dd>
-    <dt>Outcome</dt><dd>The designs were delivered but not built.</dd>
+    <dt>Outcome</dt><dd>Delivered the dashboard redesign, a free trial flow and a self-serve site builder to the JetSweat team.</dd>
   </dl>
   <p class="cs-skills">Dashboard design · Data visualisation · Heuristic review · Competitive analysis · Onboarding design</p>
 </section>
@@ -615,10 +637,12 @@ a{color:inherit}img{display:block;max-width:100%}
         <img src="public/images/jetsweat/step-1.png" alt="Onboarding step 1" style="width:100%;display:block">
         <img src="public/images/jetsweat/step-4.png" alt="Onboarding step 4" style="width:100%;display:block">
       </div>
-      <div class="callout-box" style="margin-top:32px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"Easy questions first." Name and studio name come before business details. This builds momentum before the flow asks for anything sensitive. By step 3, the user is already invested.</p>
-      </div>
+      <dl class="decision">
+        <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">Easy questions first.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">Light questions come first, like how people heard about JetSweat. Business details come later, once people are invested.</dd>
+      </dl>
     </div>
   </div>
   <!-- ── 06 SITE BUILDER ── -->
@@ -680,10 +704,12 @@ a{color:inherit}img{display:block;max-width:100%}
           <div class="cms-ann-dot" style="bottom:calc(100% + 40px);left:50%;transform:translate(-50%,-50%)"></div>
         </div>
       </div>
-      <div class="callout-box" style="margin-top:64px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"Live preview." Studios see their content on the page as they build, so they don't have to guess how the site will look. The aim was fewer revisions and support tickets.</p>
-      </div>
+      <dl class="decision">
+        <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">Live preview.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">Studios see their content on the page as they build, so they don't have to guess how the site will look. The aim was fewer revisions and support tickets.</dd>
+      </dl>
     </div>
   </div>
   <!-- ── 07 FEEDBACK ── -->
@@ -846,6 +872,18 @@ a{color:inherit}img{display:block;max-width:100%}
     },{threshold:0.3});
     callouts.forEach(function(c){calloutObs.observe(c)});
   }
+})();
+</script>
+<script>
+/* Draw the Decision underline when the block scrolls into view */
+(function(){
+  var blocks=document.querySelectorAll('.decision');
+  if(!blocks.length)return;
+  if(!('IntersectionObserver' in window)){blocks.forEach(function(b){b.classList.add('is-drawn')});return}
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-drawn');obs.unobserve(e.target)}});
+  },{threshold:.6});
+  blocks.forEach(function(b){obs.observe(b)});
 })();
 </script>
 </body>

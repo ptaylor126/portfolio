@@ -1468,6 +1468,28 @@ a{color:inherit}img{display:block;max-width:100%}
   .cs-rows dd{font-size:17px;margin-bottom:14px}
   .cs-skills{padding-left:0;margin-top:12px}
 }
+
+/* ── Decision / Why blocks (replace the old Design Decision callouts) ── */
+.decision{display:grid;grid-template-columns:110px minmax(0,58ch);gap:16px 0;margin:72px 0}
+.decision dt{font:700 13px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:#6B6B6B;padding-top:7px}
+.decision dt.drawn{color:var(--ink)}
+.decision .d-what{font:800 20px/1.35 var(--sans);letter-spacing:-.01em;color:var(--ink)}
+.decision .d-why{font:400 18px/1.6 var(--sans);color:#555}
+/* Hand-drawn underline, same stroke style as the homepage arrow */
+.drawn span{position:relative;display:inline-block}
+.drawn svg{position:absolute;left:-2px;top:calc(100% + 3px);width:calc(100% + 6px);height:8px;overflow:visible;
+  fill:none;stroke:#0369A1;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.drawn svg path{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .45s ease-out .15s}
+.decision.is-drawn .drawn svg path{stroke-dashoffset:0}
+@media(prefers-reduced-motion:reduce){.drawn svg path{transition:none;stroke-dashoffset:0}}
+@media(max-width:768px){.decision .d-why{font-size:17px}}
+@media(max-width:600px){
+  .decision{grid-template-columns:1fr;gap:0;margin:56px 0}
+  .decision dt{padding-top:0;margin-bottom:10px}
+  .decision dt.drawn{margin-bottom:16px}
+  .decision dd{margin-bottom:22px}
+  .decision dd:last-child{margin-bottom:0}
+}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -1649,17 +1671,20 @@ a{color:inherit}img{display:block;max-width:100%}
         </div>
       </div>
 
-      <div class="callout-box">
-        <div class="callout-tag">Design Decision</div>
-        <div class="wordle-tiles">
+      <dl class="decision">
+        <dt class="drawn"><span>Insight<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">Wordle with player names doesn't work.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">
+          <div class="wordle-tiles">
           <div class="wordle-tile empty"></div>
           <div class="wordle-tile correct">R</div>
           <div class="wordle-tile empty"></div>
           <div class="wordle-tile correct">W</div>
           <div class="wordle-tile correct">N</div>
         </div>
-        <p class="callout-text">"Wordle with player names doesn't work." Player names aren't stored in your brain the way English words are. You know Jaylen Brown plays for Boston, not that his name is five letters ending in OWN. When you see _R_WN on a Wordle board, your brain can't do the passive scan it does with regular words. You'd have to consciously go through every team and roster. That's hard work, and it isn't fun. It shaped the whole game format.</p>
-      </div>
+          Player names aren't stored in your brain the way English words are. You know Jaylen Brown plays for Boston, not that his name is five letters ending in OWN. When you see _R_WN on a Wordle board, your brain can't do the passive scan it does with regular words. You'd have to consciously go through every team and roster. That's hard work, and it isn't fun. It shaped the whole game format.</dd>
+      </dl>
     </div>
   </div>
 
@@ -1810,16 +1835,19 @@ a{color:inherit}img{display:block;max-width:100%}
         </div>
       </div>
 
-      <div class="callout-box" style="margin-top:96px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"The dashboard was the right call for one game. It gave each sport its own space with leaderboards, streaks, and duels. But it couldn't hold seven game modes per sport. The vertical list solved that. Every game mode is visible immediately. Sport tabs filter if you want, but the default shows everything. The layout scales to any number of games without redesigning the screen."</p>
-        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;font:500 15px/1.5 var(--mono);color:#555">
+      <dl class="decision">
+        <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">Replace the dashboard with a vertical list.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">The dashboard was the right call for one game. It gave each sport its own space with leaderboards, streaks, and duels. But it couldn't hold seven game modes per sport. The vertical list solved that. Every game mode is visible immediately. Sport tabs filter if you want, but the default shows everything. The layout scales to any number of games without redesigning the screen.
+          <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;font:500 15px/1.5 var(--mono);color:#555">
           <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:22px;height:22px;font:700 13px/22px var(--mono);flex-shrink:0">1</span>Profile name and icon visible without opening settings.</div>
           <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:22px;height:22px;font:700 13px/22px var(--mono);flex-shrink:0">2</span>Date reinforces the daily puzzle habit.</div>
           <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:22px;height:22px;font:700 13px/22px var(--mono);flex-shrink:0">3</span>Duel section breaks up the list and drives social play.</div>
           <div style="display:flex;align-items:center;gap:8px"><span class="hs-dot-num" style="width:22px;height:22px;font:700 13px/22px var(--mono);flex-shrink:0">4</span>Ad slot built in from launch so adding monetisation later won't disrupt the layout.</div>
         </div>
-      </div>
+        </dd>
+      </dl>
     </div>
   </div>
 
@@ -1850,15 +1878,19 @@ a{color:inherit}img{display:block;max-width:100%}
         </div>
       </div>
 
-      <div class="callout-box" style="margin-top:8px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"No email at sign-up." Account creation asks for a username (with a random generator if you can't think of one), a flag to represent where you're from, and nothing else. No email required. At level 5, the app asks if you want to link an email to protect your progress. By then you've got streaks, XP, and unlocks worth keeping. So people link their email because they want to.</p>
-      </div>
+      <dl class="decision">
+        <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">No email at sign-up.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">Account creation asks for a username (with a random generator if you can't think of one), a flag to represent where you're from, and nothing else. No email required. At level 5, the app asks if you want to link an email to protect your progress. By then you've got streaks, XP, and unlocks worth keeping. So people link their email because they want to.</dd>
+      </dl>
 
-      <div class="callout-box" style="margin-top:40px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"Profanity filter from day one." Random name generator and custom usernames both run through a profanity filter. Learned this the hard way when a leaderboard username had to be manually corrected in the database.</p>
-      </div>
+      <dl class="decision">
+        <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">Profanity filter from day one.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">Random name generator and custom usernames both run through a profanity filter. Learned this the hard way when a leaderboard username had to be manually corrected in the database.</dd>
+      </dl>
     </div>
   </div>
 
@@ -2032,25 +2064,33 @@ a{color:inherit}img{display:block;max-width:100%}
         </div>
       </div>
 
-      <div class="callout-box" style="margin-top:48px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"The level-up moment is intentionally dramatic." Full-screen modal, confetti animation, spring bounce, haptic feedback. In an app with no sound effects and minimal animation elsewhere, this moment stands out on purpose.</p>
-      </div>
+      <dl class="decision">
+        <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">The level-up moment is intentionally dramatic.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">Full-screen modal, confetti animation, spring bounce, haptic feedback. In an app with no sound effects and minimal animation elsewhere, this moment stands out on purpose.</dd>
+      </dl>
 
-      <div class="callout-box" style="margin-top:40px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"Review prompt on the 5th win, not the 5th play." It asks players right after a win, when they're happy. Limited to 3 prompts total (games 5, 25, 50) with 60-day cooldowns.</p>
-      </div>
+      <dl class="decision">
+        <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">Review prompt on the 5th win, not the 5th play.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">It asks players right after a win, when they're happy. Limited to 3 prompts total (games 5, 25, 50) with 60-day cooldowns.</dd>
+      </dl>
 
-      <div class="callout-box callout-box--business" style="margin-top:40px">
-        <div class="callout-tag">Business Decision</div>
-        <p class="callout-text">"Ad slots from day one." The app ships with Ballrs-branded banners in every ad slot: home screen, leaderboard, leagues, profile and duel results. No paid ads yet. But when a sponsor fills the slot, nothing changes for the user. "I want to start with ads because I don't want the experience to suddenly change for people."</p>
-      </div>
+      <dl class="decision">
+        <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">Ad slots from day one.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">The app ships with Ballrs-branded banners in every ad slot: home screen, leaderboard, leagues, profile and duel results. No paid ads yet. But when a sponsor fills the slot, nothing changes for the user. "I want to start with ads because I don't want the experience to suddenly change for people."</dd>
+      </dl>
 
-      <div class="callout-box" style="margin-top:40px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"Archive replay exploit." Users could give up on a puzzle and replay it later for full first-completion rewards. Failed attempts weren't creating completion records, so the system treated every retry as the first attempt. Fix: a completion record is created the moment a user finishes a puzzle, whether they win, lose or give up. First finish counts. After that, it's a replay. Full XP on the first replay, nothing after that.</p>
-      </div>
+      <dl class="decision">
+        <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">Only the first finish counts.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">Users could give up on a puzzle and replay it later for full first-completion rewards. Failed attempts weren't creating completion records, so the system treated every retry as the first attempt. Fix: a completion record is created the moment a user finishes a puzzle, whether they win, lose or give up. First finish counts. After that, it's a replay. Full XP on the first replay, nothing after that.</dd>
+      </dl>
 
     </div>
   </div>
@@ -2175,10 +2215,12 @@ a{color:inherit}img{display:block;max-width:100%}
         </div>
       </div>
 
-      <div class="callout-box" style="margin-top:8px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"The ads show the daily habit." Besides driving installs, they show the daily loop: puzzles resetting, streaks building and duels being played. People who download after watching already know how the app works day to day.</p>
-      </div>
+      <dl class="decision">
+        <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">The ads show the daily habit.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">Besides driving installs, they show the daily loop: puzzles resetting, streaks building and duels being played. People who download after watching already know how the app works day to day.</dd>
+      </dl>
 
       <h3 class="sub-heading">Real-world marketing</h3>
       <p>Designed QR code stickers linking to the App Store. Took them to sports bars showing live games. One outing: about 10 people scanned and downloaded. People watching sports in a bar are an easy audience for a sports trivia app.</p>
@@ -2211,10 +2253,12 @@ a{color:inherit}img{display:block;max-width:100%}
         </div>
       </div>
 
-      <div class="callout-box" style="margin-top:48px">
-        <div class="callout-tag">Design Decision</div>
-        <p class="callout-text">"The product converts. The problem is getting people to the listing." 44% of everyone who sees the App Store page downloads the app. So the bottleneck is discovery. The ads, stickers, content tools and website in this section all aim at that.</p>
-      </div>
+      <dl class="decision">
+        <dt class="drawn"><span>Insight<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+        <dd class="d-what">The product converts. The problem is getting people to the listing.</dd>
+        <dt>Why</dt>
+        <dd class="d-why">44% of everyone who sees the App Store page downloads the app. So the bottleneck is discovery. The ads, stickers, content tools and website in this section all aim at that.</dd>
+      </dl>
     </div>
   </div>
 
@@ -2574,6 +2618,18 @@ a{color:inherit}img{display:block;max-width:100%}
     },{threshold:0.3});
     callouts.forEach(function(c){calloutObs.observe(c)});
   }
+})();
+</script>
+<script>
+/* Draw the Decision underline when the block scrolls into view */
+(function(){
+  var blocks=document.querySelectorAll('.decision');
+  if(!blocks.length)return;
+  if(!('IntersectionObserver' in window)){blocks.forEach(function(b){b.classList.add('is-drawn')});return}
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-drawn');obs.unobserve(e.target)}});
+  },{threshold:.6});
+  blocks.forEach(function(b){obs.observe(b)});
 })();
 </script>
 </body>
