@@ -375,6 +375,19 @@ img.filmstrip-img{
   writing-mode:vertical-lr;
   white-space:nowrap;
 }
+
+/* Desktop: the onboarding screens sit in a grid, 4 per row, with no scroller */
+.filmstrip-mark{display:none}
+@media(min-width:1100px){
+  .filmstrip-controls{display:none}
+  .filmstrip-wrap{width:100%;margin-left:0;overflow:visible;padding-bottom:0;scroll-snap-type:none}
+  .filmstrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:64px 32px;width:auto;max-width:1136px;padding:0}
+  .filmstrip-card{width:auto}
+  img.filmstrip-img{width:100%}
+  .filmstrip-shift{display:none}
+  .filmstrip-card{position:relative}
+  .filmstrip-mark{display:block;position:absolute;left:0;right:0;bottom:100%;margin-bottom:10px;padding-top:8px;border-top:2px solid var(--green-text);font:700 13px/1.3 var(--sans);color:var(--green-text)}
+}
 .callout-tag{
   font:700 13px/1 var(--mono);letter-spacing:.04em;
   text-transform:uppercase;color:var(--ink);
@@ -1073,6 +1086,7 @@ img.filmstrip-img{
             <div class="filmstrip-shift-line"></div>
           </div>
           <div class="filmstrip-card">
+            <div class="filmstrip-mark">Personal questions start here</div>
             <img class="filmstrip-img" src="public/images/mealmatch/onboarding/onboarding-6.png" alt="Sex screen">
             <div class="filmstrip-cap">Sex</div>
           </div>
@@ -1773,6 +1787,8 @@ img.filmstrip-img{
     filmWrap.scrollBy({left:scrollAmt,behavior:'smooth'});
   });
   document.addEventListener('keydown',function(e){
+    // The grid on desktop doesn't scroll
+    if(window.matchMedia('(min-width:1100px)').matches)return;
     // Only trigger when filmstrip is in view
     var rect=filmWrap.getBoundingClientRect();
     if(rect.bottom<0||rect.top>window.innerHeight)return;
