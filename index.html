@@ -324,13 +324,6 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .bento-tile:hover .bt-title,.bento-tile.touch-active .bt-title{color:var(--accent)}
 .bento-tile:hover .bt-tags span,.bento-tile.touch-active .bt-tags span{background:var(--accent);border-color:var(--accent);color:#fff}
 
-/* Featured tile — full width above the 2x2 grid (desktop only) */
-@media(min-width:901px){
-  .bento-tile--feature{grid-column:1/-1}
-  .bento-tile--feature .bt-media{aspect-ratio:5/2}
-  .bento-tile--feature .bt-img--wide{width:auto;height:84%;max-width:88%;max-height:none}
-}
-
 /* ── Tile colors ── */
 .bt-mint{background:#2D6A4F}
 .bt-navy{background:#1E3A8A}
@@ -467,7 +460,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 <div class="bento">
 
   <!-- 01 JetSweat — Orange -->
-  <a class="bento-tile bento-tile--feature" href="jetsweat.html">
+  <a class="bento-tile" href="jetsweat.html">
     <div class="bt-media bt-burnt"><img class="bt-img bt-img--wide" src="public/images/jetsweat/new-dashboard.png" alt="JetSweat Dashboard"></div>
     <div class="bt-content">
       <h3 class="bt-title">JetSweat</h3>
@@ -499,7 +492,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
   <!-- 03 Sunset — Rose -->
   <a class="bento-tile" href="sunset.html">
-    <div class="bt-media bt-rose"><img class="bt-img bt-img--wide" src="public/images/sunset/to-check.webp" alt="Sunset To check screen"></div>
+    <div class="bt-media bt-rose"><img class="bt-img bt-img--wide" src="public/images/sunset/today.webp" alt="Sunset Today screen" style="border-radius:8px"></div>
     <div class="bt-content">
       <h3 class="bt-title">Sunset</h3>
       <p class="bt-facts">Designer and developer · Mac app · AI content workflow</p>
