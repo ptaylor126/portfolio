@@ -13,6 +13,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
+  --rule:1px solid rgba(0,0,0,.12);
   --accent-on-dark:#38BDF8;
   --accent-text:#117A65;
   --bg:#F9F9F9;--ink:#000;--accent:#1ABC9C;--grey:#6B6B6B;
@@ -52,7 +53,7 @@ a{color:inherit}img{display:block;max-width:100%}
 /* Dropdown menu */
 .dropdown{
   position:fixed;top:calc(var(--frame) + 70px);right:clamp(32px,8vw,96px);
-  z-index:200;
+  z-index:300;
   background:var(--bg);border:2px solid var(--ink);
   box-shadow:8px 8px 0 var(--ink);
   padding:24px 28px;min-width:250px;
@@ -106,7 +107,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .progress-track{
   position:fixed;right:calc(var(--frame) + 1px);
   top:var(--frame);bottom:var(--frame);
-  width:3px;background:rgba(0,0,0,.06);z-index:1000;
+  width:3px;background:rgba(0,0,0,.06);z-index:700;
 }
 .progress-fill{
   position:absolute;top:0;left:0;width:100%;height:0%;
@@ -145,7 +146,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .case-body{
   padding:0 clamp(32px,8vw,96px);
   padding-right:calc(clamp(32px,8vw,96px) + 180px);
-  border-top:2px solid var(--ink);
+  border-top:var(--rule);
 }
 .case-section{padding-top:64px}
 .case-label{
@@ -252,7 +253,7 @@ a{color:inherit}img{display:block;max-width:100%}
   max-width:58ch;margin-bottom:16px;
 }
 .s1-tech-row{
-  display:flex;gap:20px;align-items:center;
+  display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;
 }
 .s1-tech-logo{
   font:500 13px/1 var(--mono);letter-spacing:.04em;
@@ -1334,7 +1335,7 @@ a{color:inherit}img{display:block;max-width:100%}
    ================================================================ */
 .contact-footer{
   padding:48px clamp(32px,8vw,96px);
-  border-top:2px solid var(--ink);
+  border-top:var(--rule);
 }
 .contact-label{
   font:700 13px/1 var(--mono);letter-spacing:.06em;
@@ -1394,15 +1395,17 @@ a{color:inherit}img{display:block;max-width:100%}
   [style*="flex:1"]{flex:1 1 100%!important}
 }
 
-/* ── Store links ── */
-.store-links{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-.store-pill{
-  font:600 13px/1 var(--mono);letter-spacing:.04em;
-  text-transform:uppercase;text-decoration:none;
-  padding:8px 16px;border:1.5px solid var(--ink);border-radius:6px;
-  color:var(--ink);transition:background .2s,color .2s;
+/* ── Store badges (official App Store and Google Play artwork) ── */
+.store-badges{display:flex;align-items:center;gap:12px;margin-top:20px;flex-wrap:wrap}
+.store-badges a{display:block;line-height:0}
+.badge-apple{height:40px;width:auto}
+/* The Google badge PNG has built-in padding: 60px tall makes the visible badge 40px, to match Apple's */
+.badge-google{height:60px;width:auto;margin:-10px}
+.store-end{
+  position:relative;z-index:2;
+  padding:64px clamp(32px,8vw,96px) 32px;
 }
-.store-pill:hover{background:var(--ink);color:var(--bg)}
+.store-end-title{font:800 clamp(24px,3vw,36px)/1.1 var(--sans);letter-spacing:-.03em}
 
 /* ── Back to top ── */
 .back-to-top{
@@ -1521,9 +1524,9 @@ a{color:inherit}img{display:block;max-width:100%}
     <div class="case-content">
       <h2 class="problem-headline">A daily sports trivia app I designed, built, and shipped.</h2>
       <p>Ballrs is a multi-sport player guessing game live on iOS and Android. Seven game modes, four sports, twenty-eight daily puzzles.</p>
-      <div class="store-links">
-        <a class="store-pill" href="https://apps.apple.com/us/app/ballrs-sports-trivia/id6756982139" target="_blank" rel="noopener">App Store &nearr;</a>
-        <a class="store-pill" href="https://play.google.com/store/apps/details?id=com.anonymous.ballrs" target="_blank" rel="noopener">Google Play &nearr;</a>
+      <div class="store-badges">
+        <a href="https://apps.apple.com/us/app/ballrs-sports-trivia/id6756982139" target="_blank" rel="noopener"><img class="badge-apple" src="public/images/ballrs/badges/app-store.svg" alt="Download on the App Store" width="120" height="40"></a>
+        <a href="https://play.google.com/store/apps/details?id=com.anonymous.ballrs" target="_blank" rel="noopener"><img class="badge-google" src="public/images/ballrs/badges/google-play.png" alt="Get it on Google Play" width="155" height="60"></a>
       </div>
 
       <div class="s1-split">
@@ -2192,6 +2195,15 @@ a{color:inherit}img{display:block;max-width:100%}
   </div>
 
 </div>
+
+<!-- Store badges, again at the end -->
+<section class="store-end">
+  <p class="store-end-title">Play Ballrs on iOS or Android.</p>
+  <div class="store-badges">
+        <a href="https://apps.apple.com/us/app/ballrs-sports-trivia/id6756982139" target="_blank" rel="noopener"><img class="badge-apple" src="public/images/ballrs/badges/app-store.svg" alt="Download on the App Store" width="120" height="40"></a>
+        <a href="https://play.google.com/store/apps/details?id=com.anonymous.ballrs" target="_blank" rel="noopener"><img class="badge-google" src="public/images/ballrs/badges/google-play.png" alt="Get it on Google Play" width="155" height="60"></a>
+      </div>
+</section>
 
 <!-- Contact footer -->
 <div class="back-to-top"><a href="#"><span class="btt-arrow">&uarr;</span>Back to top</a></div>

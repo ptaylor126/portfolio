@@ -13,6 +13,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
+  --rule:1px solid rgba(0,0,0,.12);
   --accent-on-dark:#38BDF8;
   --green-text:#357A38;
   --bg:#F9F9F9;--ink:#000;--green:#4CAF50;--grey:#6B6B6B;
@@ -52,7 +53,7 @@ a{color:inherit}img{display:block;max-width:100%}
 /* Dropdown menu */
 .dropdown{
   position:fixed;top:calc(var(--frame) + 70px);right:clamp(32px,8vw,96px);
-  z-index:200;
+  z-index:300;
   background:var(--bg);border:2px solid var(--ink);
   box-shadow:8px 8px 0 var(--ink);
   padding:24px 28px;min-width:250px;
@@ -106,7 +107,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .progress-track{
   position:fixed;right:calc(var(--frame) + 1px);
   top:var(--frame);bottom:var(--frame);
-  width:3px;background:rgba(0,0,0,.06);z-index:1000;
+  width:3px;background:rgba(0,0,0,.06);z-index:700;
 }
 .progress-fill{
   position:absolute;top:0;left:0;width:100%;height:0%;
@@ -146,7 +147,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .case-body{
   padding:0 clamp(32px,8vw,96px);
   padding-right:calc(clamp(32px,8vw,96px) + 140px);
-  border-top:2px solid var(--ink);
+  border-top:var(--rule);
 }
 
 /* Section label — inline above content */
@@ -735,7 +736,7 @@ img.filmstrip-img{
    ================================================================ */
 .contact-footer{
   padding:48px clamp(32px,8vw,96px);
-  border-top:2px solid var(--ink);
+  border-top:var(--rule);
 }
 .contact-label{
   font:700 13px/1 var(--mono);letter-spacing:.06em;
