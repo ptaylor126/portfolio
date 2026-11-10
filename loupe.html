@@ -366,8 +366,8 @@ a{color:inherit}img{display:block;max-width:100%}
 
 /* ── Video ── */
 .case-video{padding:0 clamp(32px,8vw,96px) 96px}
-.cs-video{position:relative;background:#000;max-width:1248px}
-.cs-video video{display:block;width:100%;height:auto;aspect-ratio:16/9}
+.cs-video{position:relative;max-width:1248px}
+.cs-video video{display:block;width:100%;height:auto;aspect-ratio:1756/988;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:#1C1C1C}
 .video-play{
   display:none;position:absolute;right:24px;bottom:24px;
   width:64px;height:64px;border-radius:50%;border:2px solid #fff;cursor:pointer;
@@ -620,8 +620,9 @@ a{color:inherit}img{display:block;max-width:100%}
     var h=document.documentElement.scrollHeight-window.innerHeight;
     fill.style.height=(h>0?(sy/h)*100:0)+'%';
 
-    var heroBottom=heroEl.getBoundingClientRect().bottom;
-    if(heroBottom<0){minimap.classList.add('on')}else{minimap.classList.remove('on')}
+    /* Show the section menu once section 01 reaches the top of the screen */
+    var firstTop=sections.length?sections[0].getBoundingClientRect().top:heroEl.getBoundingClientRect().bottom;
+    if(firstTop<1){minimap.classList.add('on')}else{minimap.classList.remove('on')}
 
     var newIdx=0;
     for(var i=0;i<sections.length;i++){
