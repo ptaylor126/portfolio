@@ -436,6 +436,13 @@ a{color:inherit}img{display:block;max-width:100%}
 .bar-labels li{text-align:center;font:600 14px/1.2 var(--sans);color:#555}
 .bar-mark{display:block;margin-top:8px;padding-top:8px;border-top:2px solid #0369A1;font:700 13px/1.25 var(--sans);color:#0369A1}
 
+/* Restyle video: portrait, no wider than 480px, centred */
+.fig-video{max-width:480px;margin:32px auto 40px}
+.fig-video .cs-video{max-width:none}
+.fig-video .cs-video video{aspect-ratio:1080/1350;background:#FFF9E9}
+.fig-video figcaption{font:400 14px/1.4 var(--sans);color:#555;margin-top:12px}
+@media(max-width:800px){.fig-video{max-width:none;margin:24px 0 32px}}
+
 /* What I saw / What I changed */
 .saw{width:100%;max-width:860px;border-collapse:collapse;margin:16px 0 32px;table-layout:fixed}
 .saw th{text-align:left;font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:#555;padding:0 32px 12px 0;border-bottom:2px solid var(--ink)}
@@ -469,6 +476,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
+<script defer src="public/video-controls.js"></script>
 </head>
 <body>
 <div class="frame"></div>
@@ -617,6 +625,14 @@ a{color:inherit}img{display:block;max-width:100%}
     <div class="case-label highlight">04 The design system</div>
     <div class="case-content">
       <h2 class="problem-headline">13 colours, 7 spacing steps.</h2>
+      <figure class="fig-video">
+        <div class="cs-video">
+          <video muted loop playsinline preload="none" poster="public/images/5ives/restyle-poster.jpg" aria-label="The 5ives restyle: the old dark navy look, the 1990s magazine inspiration, the design tokens changing from the old values to the new ones, and the new look across the app.">
+            <source src="public/images/5ives/restyle.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption>The restyle, in 24 seconds.</figcaption>
+      </figure>
       <p>Album Blue has 13 colour tokens and one spacing scale with 7 steps. Gold only appears on shiny cards, so it always means the same thing. I darkened the red so white text on it passes contrast checks.</p>
       <div class="tokens">
         <p class="tokens-label">Colour</p>
@@ -646,7 +662,7 @@ a{color:inherit}img{display:block;max-width:100%}
 
   <!-- ── 05 SCREENS BUILT AROUND LIVE DATA ── -->
   <div class="case-section" id="s05" style="padding-top:96px">
-    <div class="case-label highlight">05 Screens built around live data</div>
+    <div class="case-label highlight">05 Live data</div>
     <div class="case-content">
       <h2 class="problem-headline">Scored only when both sources agree.</h2>
       <h3 class="sub-heading">League table</h3>
