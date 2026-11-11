@@ -3,7 +3,8 @@
    - Autoplays muted and looping. With reduced motion: poster and a play button, no autoplay.
    - Pause/Play and Restart buttons, bottom right. Shown on hover and focus, always on touch screens.
      At 800px wide or less they sit in a row below the video instead of on top of it.
-   - Pauses when scrolled out of view and resumes when back, unless the visitor paused it. */
+   - Pauses when scrolled out of view and resumes when back, unless the visitor paused it.
+   - A video with the controls attribute keeps the browser's own controls and gets no extra buttons. */
 (function(){
   var CSS=[
     '.vc{position:absolute;right:16px;bottom:16px;display:flex;gap:8px;opacity:0;transition:opacity .15s}',
@@ -38,7 +39,9 @@
 
   function setup(wrap){
     var video=wrap.querySelector('video');
-    if(!video||wrap.querySelector('.vc'))return;
+    if(!video||wrap.vcReady)return;
+    wrap.vcReady=true;
+    var native=video.controls;  /* browser controls: add no buttons of our own */
     var rm=window.matchMedia('(prefers-reduced-motion: reduce)');
     var started=false;      /* the visitor pressed play in reduced-motion mode */
     var userPaused=false;   /* the visitor pressed pause: don't resume on scroll */
@@ -49,7 +52,7 @@
     var toggle=button('vc-btn vc-toggle','Pause video',ICON.pause);
     var restart=button('vc-btn vc-restart','Restart video',ICON.restart);
     bar.appendChild(toggle);bar.appendChild(restart);
-    wrap.appendChild(bigPlay);wrap.appendChild(bar);
+    if(!native){wrap.appendChild(bigPlay);wrap.appendChild(bar)}
 
     function play(){
       video.preload='auto';
@@ -71,6 +74,11 @@
 
     video.addEventListener('play',function(){wrap.classList.remove('is-still');sync()});
     video.addEventListener('pause',sync);
+    if(native){
+      /* Play and pause come from the browser controls. A pause while on screen is the visitor's. */
+      video.addEventListener('play',function(){userPaused=false;if(rm.matches)started=true});
+      video.addEventListener('pause',function(){if(inView&&!video.ended)userPaused=true});
+    }
 
     bigPlay.addEventListener('click',function(){
       started=true;userPaused=false;

@@ -4,3 +4,6 @@ node_modules/
 *.env
 *.env.local
 *.mov
+
+# Case-study working files (notes, source images): kept locally, not published
+case-studies/
