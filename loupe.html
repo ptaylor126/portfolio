@@ -366,7 +366,8 @@ a{color:inherit}img{display:block;max-width:100%}
 
 /* ── Video ── */
 .case-video{padding:0 clamp(32px,8vw,96px) 96px}
-.cs-video{position:relative;max-width:1248px}
+/* Never taller than the screen: 124px header, 40px spare */
+.cs-video{position:relative;max-width:1248px;max-width:min(1248px,calc((100svh - 124px - 40px) * 1756 / 988))}
 .cs-video video{display:block;width:100%;height:auto;aspect-ratio:1756/988;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:#1C1C1C}
 @media(max-width:800px){.case-video{padding:0 calc(var(--frame) + 20px) 56px}}
 </style>

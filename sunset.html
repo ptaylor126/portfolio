@@ -237,7 +237,8 @@ a{color:inherit}img{display:block;max-width:100%}
 .built-with strong{font-weight:700;color:var(--ink)}
 
 /* ── Video ── */
-.cs-video{position:relative;margin:40px 0 0;max-width:1248px}
+/* Never taller than the screen: 124px header, 40px spare */
+.cs-video{position:relative;margin:40px 0 0;max-width:1248px;max-width:min(1248px,calc((100svh - 124px - 40px) * 16 / 9))}
 .cs-video video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:#EFEAE4}
 
 /* ── Screenshots ── */
