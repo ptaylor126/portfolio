@@ -280,7 +280,15 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .bento-tile:nth-child(4){transition-delay:.3s}
 .bento-tile:nth-child(5){transition-delay:.4s}
 .bento-tile:nth-child(6){transition-delay:.5s}
-.bento-tile:focus-visible{outline:2px solid var(--accent);outline-offset:8px;border-radius:24px}
+.bento-tile:focus-visible,.duo-half:focus-visible{outline:2px solid var(--accent);outline-offset:8px;border-radius:24px}
+
+/* Two Mac apps: one tile, two halves, each its own link */
+/* The label sits in the gap above the tile, so the images line up with the tile beside it */
+.bento-duo{position:relative}
+.duo-label{position:absolute;left:4px;bottom:100%;margin-bottom:12px;font:700 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#4A4A4A}
+.duo-halves{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1}
+.duo-half{display:flex;flex-direction:column;text-decoration:none;color:var(--ink);cursor:none}
+.duo-half .bt-media{aspect-ratio:auto;flex:1;min-height:0}
 
 /* Image panel — brand colour block with the screenshot centred */
 .bt-media{
@@ -320,9 +328,9 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 }
 
 /* Hover — image lifts slightly, title and tags take the accent */
-.bento-tile:hover .bt-media,.bento-tile.touch-active .bt-media{box-shadow:0 14px 40px rgba(0,0,0,.10)}
-.bento-tile:hover .bt-img,.bento-tile.touch-active .bt-img{transform:translate(-50%,-50%) scale(1.04)}
-.bento-tile:hover .bt-title,.bento-tile.touch-active .bt-title{color:var(--accent)}
+.bento-tile:not(.bento-duo):hover .bt-media,.duo-half:hover .bt-media,.bento-tile.touch-active .bt-media{box-shadow:0 14px 40px rgba(0,0,0,.10)}
+.bento-tile:not(.bento-duo):hover .bt-img,.duo-half:hover .bt-img,.bento-tile.touch-active .bt-img{transform:translate(-50%,-50%) scale(1.04)}
+.bento-tile:not(.bento-duo):hover .bt-title,.duo-half:hover .bt-title,.bento-tile.touch-active .bt-title{color:var(--accent)}
 .bento-tile:hover .bt-tags span,.bento-tile.touch-active .bt-tags span{background:var(--accent);border-color:var(--accent);color:#fff}
 
 /* ── Tile colors ── */
@@ -354,6 +362,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .work-inner{padding:56px calc(var(--frame) + 20px) 64px}
   .work-heading{margin-bottom:28px}
   .bento{grid-template-columns:1fr;gap:60px}
+  .duo-halves{grid-template-columns:1fr;gap:40px}
+  .duo-half .bt-media{aspect-ratio:4/3;flex:none}
   .bt-content{padding-top:20px}
 }
 
@@ -475,30 +485,37 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     </div>
   </a>
 
-  <!-- 02 Loupe — Purple -->
-  <a class="bento-tile" href="loupe.html">
-    <div class="bt-media bt-purple"><img class="bt-img bt-img--wide" src="public/images/loupe/tag-editor.png" alt="Loupe Tag Editor"></div>
-    <div class="bt-content">
-      <h3 class="bt-title">Loupe</h3>
-      <p class="bt-facts">Designer and developer · In beta · AI photo tagging, Mac app</p>
-      <p class="bt-desc">A Mac app that tags photos using local AI. Built with SwiftUI and Claude Code.</p>
-      <div class="bt-tags">
-        <span>AI products</span>
-        <span>Built in code</span>
-      </div>
+  <!-- 02 Two Mac apps — Sunset (rose) and Loupe (purple), each half its own link -->
+  <div class="bento-tile bento-duo">
+    <p class="duo-label">Two Mac apps</p>
+    <div class="duo-halves">
+      <a class="duo-half" href="sunset.html">
+        <div class="bt-media bt-rose"><img class="bt-img bt-img--wide" src="public/images/sunset/today.webp" alt="Sunset Today screen"></div>
+        <div class="bt-content">
+          <h3 class="bt-title">Sunset</h3>
+          <p class="bt-desc">A Mac app that turns an idea into on-brand social posts.</p>
+        </div>
+      </a>
+      <a class="duo-half" href="loupe.html">
+        <div class="bt-media bt-purple"><img class="bt-img bt-img--wide" src="public/images/loupe/tag-editor.png" alt="Loupe Tag Editor"></div>
+        <div class="bt-content">
+          <h3 class="bt-title">Loupe</h3>
+          <p class="bt-desc">A Mac app that tags photos using local AI. Built with SwiftUI and Claude Code.</p>
+        </div>
+      </a>
     </div>
-  </a>
+  </div>
 
-  <!-- 03 Sunset — Rose -->
-  <a class="bento-tile" href="sunset.html">
-    <div class="bt-media bt-rose"><img class="bt-img bt-img--wide" src="public/images/sunset/today.webp" alt="Sunset Today screen"></div>
+  <!-- 03 Seen — Purple -->
+  <a class="bento-tile" href="seen.html">
+    <div class="bt-media bt-purple"><img class="bt-img" src="public/images/seen/seen-match.jpg" alt="Seen Watch Together screen showing It&rsquo;s a match"></div>
     <div class="bt-content">
-      <h3 class="bt-title">Sunset</h3>
-      <p class="bt-facts">Designer and developer · Mac app · AI content workflow</p>
-      <p class="bt-desc">A Mac app that turns an idea into on-brand social posts.</p>
+      <h3 class="bt-title">Seen</h3>
+      <p class="bt-facts">Designer and developer · iOS and Android · Live</p>
+      <p class="bt-desc">A film and TV tracker where your recommendations come from friends, not an algorithm. Researched with 5 interviews and 54 survey responses.</p>
       <div class="bt-tags">
-        <span>AI products</span>
-        <span>Data &amp; dashboards</span>
+        <span>UX Research</span>
+        <span>Onboarding &amp; flows</span>
         <span>Built in code</span>
       </div>
     </div>
@@ -613,7 +630,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
   /* ── VIEW CURSOR ── */
   var vc=document.getElementById('viewCur');
-  bentoTiles.forEach(function(t){
+  document.querySelectorAll('a.bento-tile,.duo-half').forEach(function(t){
     t.addEventListener('mouseenter',function(){vc.classList.add('active')});
     t.addEventListener('mouseleave',function(){vc.classList.remove('active')});
   });
