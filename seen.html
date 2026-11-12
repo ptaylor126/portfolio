@@ -264,7 +264,8 @@ a{color:inherit}img{display:block;max-width:100%}
 
 /* ── Shared bits ── */
 .case-content p strong{color:var(--ink);font-weight:700}
-.case-content h3.sub{font:700 22px/1.3 var(--sans);letter-spacing:-.01em;margin:0 0 20px}
+/* Sub-headings: the same size as the sub-headings on the other case studies */
+.case-content h3.sub{font:800 clamp(18px,2vw,24px)/1.2 var(--sans);letter-spacing:-.02em;margin:64px 0 20px}
 .two-col{display:grid;grid-template-columns:minmax(0,50ch) minmax(0,340px);gap:72px;align-items:start}
 
 /* ── Cards ── */
@@ -282,7 +283,9 @@ a{color:inherit}img{display:block;max-width:100%}
 .case-content .card p.card-big{margin:0 0 12px}
 .card blockquote{font:500 16px/1.45 var(--sans);color:var(--ink);background:#fff;border-radius:10px;padding:12px 14px;margin:16px 0 0}
 .cards.stats h4,.cards.four h4{font-size:17px}
-.cards.three.changed{margin-bottom:16px}
+.cards.evidence{margin-bottom:0}
+.cards.evidence h4{font-size:22px;line-height:1.2;margin-bottom:4px}
+.changed h4{font-size:22px;line-height:1.2}
 .case-content .card p.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .chip{display:inline-block;font:500 14px/1.35 var(--sans);color:var(--ink);background:#fff;border-radius:999px;padding:6px 12px}
 
@@ -293,7 +296,9 @@ a{color:inherit}img{display:block;max-width:100%}
 .f-stat blockquote{background:#F3F2F8}
 .f-quote blockquote{background:none;padding:0;margin:4px 0 20px;border-radius:0;font:600 26px/1.3 var(--sans);letter-spacing:-.015em;color:var(--ink)}
 .f-quote h4{font:700 15px/1.4 var(--sans);letter-spacing:0;color:#555}
-.cards.found .card.f-risk{grid-column:1/-1;background:#0B0D26;border-color:#0B0D26;color:#E6E6E6;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:48px;align-items:center;padding:40px}
+.cards.found .card.f-risk{position:relative;grid-column:1/-1;background:#0B0D26;border-color:#0B0D26;color:#E6E6E6;display:grid;grid-template-columns:minmax(0,330px) minmax(0,1fr);gap:16px;align-items:center;padding:40px}
+.f-risk>.card-num{position:absolute;left:40px;top:40px;margin:0}
+.f-risk-stat{justify-self:center;text-align:center}
 .f-risk .card-num{color:#9D8DF0}
 .case-content .f-risk p.f-big{font-size:120px;color:#9D8DF0}
 .case-content .f-risk p.f-sub{color:#E6E6E6;margin-bottom:0}
@@ -309,9 +314,9 @@ a{color:inherit}img{display:block;max-width:100%}
 .journey h4{font:700 19px/1.3 var(--sans);letter-spacing:-.01em;color:var(--ink);margin:0}
 .case-content .journey p{font-size:16px;line-height:1.5;color:#444;margin:4px 0 0;max-width:none}
 .case-content p.journey-note{font-size:15px;color:#555;margin:28px 0 0 64px;max-width:44ch}
+.case-content p.journey-note+p.journey-note{margin-top:10px}
 
 /* ── Decision / Why blocks (the pattern from the JetSweat page) ── */
-.decisions{display:grid;grid-template-columns:1fr 1fr;gap:56px 64px;max-width:1248px;margin:16px 0 0}
 .decision{display:grid;grid-template-columns:110px minmax(0,58ch);gap:16px 0;margin:0;align-content:start}
 .decision dt{font:700 13px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:#6B6B6B;padding-top:7px}
 .decision dt.drawn{color:var(--ink)}
@@ -353,29 +358,43 @@ a{color:inherit}img{display:block;max-width:100%}
 
 /* ── Phone screens ── */
 .phone-shot img,.ann-phone img{display:block;width:100%;height:auto;border-radius:28px;border:1px solid rgba(0,0,0,.2)}
-.sticky-cols{display:grid;grid-template-columns:280px minmax(0,1fr);gap:56px;align-items:start;max-width:1248px;margin:32px 0 40px}
+.sticky-cols{display:grid;grid-template-columns:280px minmax(0,1fr);gap:56px;align-items:start;max-width:1248px;margin:8px 0 0}
 .sticky-cols .phone-shot{margin:0;position:sticky;top:148px}
 
-/* ── Annotated screens ── */
-/* Phone and notes sit side by side, starting at the content's left edge. The name and caption share the notes column, at its top. */
-.ann{display:grid;grid-template-columns:320px minmax(0,1fr);column-gap:72px;max-width:900px;margin:56px 0 0}
-.ann+.ann{margin-top:96px}
-.ann-phone{position:relative;grid-column:1;grid-row:1;align-self:start}
-.screen-text{grid-column:2;grid-row:1;align-self:start}
-.screen-text h3{font:700 22px/1.3 var(--sans);letter-spacing:-.01em;margin:0 0 6px}
-.case-content p.screen-cap{font-size:16px;max-width:36ch;margin-bottom:0}
+/* ── Design decisions, screen by screen ── */
+/* Default (phones, reduced motion, no script): each step shows its Decision / Why, its own screenshot, then its notes. */
+.scrolly{margin:40px 0 0}
+.scrolly-stage{display:none}
+.dsteps{list-style:none}
+.dstep+.dstep{margin-top:72px}
+.dstep-phone,.stage-shot{position:relative}
+.dstep-phone{max-width:260px;margin:28px 0 0}
+.dstep-phone img,.stage-shot img{display:block;width:100%;height:auto;border-radius:28px;border:1px solid rgba(0,0,0,.2)}
 .ann-dot{position:absolute;left:var(--x);top:var(--y);width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:var(--accent);color:#000;font:700 13px/24px var(--sans);text-align:center;box-shadow:0 0 0 2px #fff,0 2px 8px rgba(0,0,0,.4);z-index:2}
-.ann-line{position:absolute;top:var(--y);left:var(--x);right:-72px;height:2px;margin-top:-1px;background:var(--accent);transform-origin:left center;z-index:1}
-.ann-notes{grid-column:2;grid-row:1;list-style:none;position:relative;counter-reset:n}
-.ann-notes li{position:absolute;top:var(--y);left:0;transform:translateY(-50%);background:#fff;border-radius:10px;padding:12px 14px 12px 46px;box-shadow:0 2px 10px rgba(0,0,0,.08);font:400 15px/1.4 var(--sans);color:#333;counter-increment:n;max-width:400px}
-.ann-notes li::before{content:counter(n);position:absolute;left:12px;top:50%;margin-top:-12px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#000;font:700 13px/24px var(--sans);text-align:center}
-.ann.flip{grid-template-columns:minmax(0,1fr) 320px}
-.ann.flip .ann-phone{grid-column:2}
-.ann.flip .screen-text,.ann.flip .ann-notes{grid-column:1}
-.ann.flip .ann-line{left:-72px;right:calc(100% - var(--x));transform-origin:right center}
-.ann.flip .ann-notes li{left:auto;right:0}
-.case-content p.after-phones{margin-top:32px}
-.ann+p.cap{margin-top:40px}
+.notes{list-style:none;counter-reset:n;margin:20px 0 0;max-width:460px}
+.notes li{position:relative;counter-increment:n;background:#fff;border-radius:10px;padding:12px 14px 12px 46px;margin-top:8px;box-shadow:0 2px 10px rgba(0,0,0,.08);font:400 15px/1.4 var(--sans);color:#333}
+.notes li::before{content:counter(n);position:absolute;left:12px;top:11px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#000;font:700 13px/24px var(--sans);text-align:center}
+.case-content p.screens-cap{margin-top:40px}
+.case-content p.after-phones{margin-top:16px}
+
+/* Desktop with motion allowed: one sticky phone on the left, centred in the space under the 124px header.
+   The script at the end of the page marks the step nearest the middle of the screen as active. */
+@media(min-width:801px) and (prefers-reduced-motion:no-preference){
+  .js .scrolly{--ph:min(696px,calc(100svh - 172px));display:grid;grid-template-columns:320px minmax(0,1fr);column-gap:96px;align-items:start;max-width:1100px}
+  .js .scrolly-stage{display:block;position:sticky;top:calc(124px + (100svh - 124px - var(--ph)) / 2);height:var(--ph)}
+  .js .stage-phone{position:relative;height:var(--ph);width:calc(var(--ph) * 600 / 1305)}
+  .js .stage-shot{position:absolute;inset:0;opacity:0;transition:opacity .45s ease}
+  .js .stage-shot.active{opacity:1}
+  .js .stage-shot .ann-dot{opacity:0;transform:scale(.5);transition:opacity .3s ease,transform .3s cubic-bezier(.3,1.5,.5,1)}
+  .js .stage-shot.active .ann-dot{opacity:1;transform:none;transition-delay:calc(var(--i) * 140ms + 300ms)}
+  .js .dstep-phone{display:none}
+  .js .dstep{min-height:70vh;display:flex;flex-direction:column;justify-content:center;opacity:.4;transition:opacity .35s ease}
+  .js .dstep+.dstep{margin-top:0}
+  .js .dstep.active{opacity:1}
+  /* Room after the last step, so it reaches the middle of the screen while the phone is still in place */
+  .js .dsteps{padding-bottom:30vh}
+  .js .dstep .notes{margin-left:110px}
+}
 
 /* ── Things that appear once on scroll (set up by the script at the end of the page) ── */
 @media(prefers-reduced-motion:no-preference){
@@ -385,12 +404,6 @@ a{color:inherit}img{display:block;max-width:100%}
   .js .journey.in::before{transform:scaleY(1)}
   .js .journey li{opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease;transition-delay:calc(var(--i,0) * 260ms + 150ms)}
   .js .journey.in li{opacity:1;transform:none}
-  .js .ann .ann-dot{transform:scale(0);transition:transform .3s cubic-bezier(.3,1.5,.5,1);transition-delay:calc(var(--i) * 450ms + 150ms)}
-  .js .ann .ann-line{transform:scaleX(0);transition:transform .3s ease-out;transition-delay:calc(var(--i) * 450ms + 300ms)}
-  .js .ann .ann-notes li{opacity:0;transition:opacity .35s ease;transition-delay:calc(var(--i) * 450ms + 500ms)}
-  .js .ann.in .ann-dot{transform:scale(1)}
-  .js .ann.in .ann-line{transform:scaleX(1)}
-  .js .ann.in .ann-notes li{opacity:1}
 }
 
 @media(max-width:600px){
@@ -410,31 +423,24 @@ a{color:inherit}img{display:block;max-width:100%}
   .note-fig{max-width:320px}
   .cards{margin-bottom:32px}
   .cards.found,.cards.two,.cards.three{grid-template-columns:1fr}
+  .evidence .v-dots{grid-template-columns:repeat(7,1fr);gap:5px;max-width:126px}
   .cards.found .card{padding:22px}
   .case-content .card p.f-big{font-size:64px}
   .f-quote blockquote{font-size:21px}
-  .cards.found .card.f-risk{grid-template-columns:1fr;gap:24px;padding:26px 22px}
+  .cards.found .card.f-risk{grid-template-columns:1fr;gap:24px;padding:56px 22px 26px}
+  .f-risk>.card-num{left:22px;top:22px}
   .case-content .f-risk p.f-big{font-size:84px}
   .f-risk h4{font-size:20px}
-  .decisions{grid-template-columns:1fr;gap:44px}
   .decision .d-why{font-size:17px}
   .case-content p.journey-note{margin-left:0}
   .card{padding:20px}
   .card-stat b,.case-content .card p.card-big{font-size:44px}
   .case-content .card p.card-stat{align-items:flex-start;flex-direction:column;gap:6px}
-  .sticky-cols{grid-template-columns:1fr;gap:24px;margin:24px 0 28px}
+  .sticky-cols{grid-template-columns:1fr;gap:24px;margin:8px 0 0}
+  .case-content h3.sub{margin-top:44px}
   .sticky-cols .phone-shot{position:static;max-width:240px}
   .cards.stats,.cards.four{gap:12px}
   .cards.stats .card,.cards.four .card{padding:16px}
-  /* Annotations: name and caption above the screen, numbered notes under it, no lines */
-  .ann,.ann.flip{display:block;margin-top:40px}
-  .ann+.ann{margin-top:56px}
-  .case-content p.screen-cap{margin-bottom:20px}
-  .ann-phone{max-width:260px}
-  .ann-line{display:none}
-  .ann-notes{margin-top:16px}
-  .ann-notes li,.ann.flip .ann-notes li{position:relative;top:auto;left:auto;right:auto;transform:none;margin-top:8px}
-  .ann-notes li::before{top:11px;margin-top:0}
 }
 </style>
 <script>document.documentElement.classList.add('js')</script>
@@ -594,8 +600,8 @@ a{color:inherit}img{display:block;max-width:100%}
           <h4>Picking something means endless scrolling.</h4>
         </li>
         <li class="card f-risk">
-          <div>
-            <span class="card-num">05</span>
+          <span class="card-num">05</span>
+          <div class="f-risk-stat">
             <p class="f-big">61%</p>
             <p class="f-sub">would join if a friend invited them.</p>
           </div>
@@ -612,11 +618,170 @@ a{color:inherit}img{display:block;max-width:100%}
     </div>
   </div>
 
-  <!-- ── GETTING FRIENDS ON THE APP ── -->
+  <!-- ── DESIGN DECISIONS, SCREEN BY SCREEN ── -->
   <div class="case-section" id="s04" style="padding-top:96px">
     <div class="case-content">
-      <h2 class="problem-headline">Getting friends on the app is the job.</h2>
-      <p>An app built on friends&rsquo; recommendations is empty until your friends join. The research said this was the biggest risk, so most of the design deals with it.</p>
+      <h2 class="problem-headline">Design decisions, screen by screen.</h2>
+      <!-- Desktop: the phone on the left stays put and swaps screens as the steps on the right scroll past.
+           Phones and reduced motion: each step shows its own screenshot. -->
+      <div class="scrolly" id="scrolly">
+        <div class="scrolly-stage">
+          <div class="stage-phone">
+          <div class="stage-shot active" data-step="0">
+            <img src="public/images/seen/screens/seen-home.webp" alt="Seen Home: a recommendation from Emma for Past Lives with her note, then a Friends are watching row of posters, with the tab bar at the bottom." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:88%;--y:38%;--i:0" aria-hidden="true">1</span>
+            <span class="ann-dot" style="--x:48%;--y:54%;--i:1" aria-hidden="true">2</span>
+          </div>
+          <div class="stage-shot" data-step="1">
+            <img src="public/images/seen/screens/seen-recommend.webp" alt="Seen Recommend sheet: friends shown as circles with Emma and Jordan picked, a typed note about The Holdovers, and a Send to Emma and Jordan button." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:20%;--y:22%;--i:0" aria-hidden="true">1</span>
+            <span class="ann-dot" style="--x:42%;--y:31%;--i:1" aria-hidden="true">2</span>
+            <span class="ann-dot" style="--x:55%;--y:85%;--i:2" aria-hidden="true">3</span>
+          </div>
+          <div class="stage-shot" data-step="2">
+            <img src="public/images/seen/screens/seen-title-friends.webp" alt="Seen title page with a Watched by sheet open, listing star ratings from Emma, Jordan and Priya." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:58%;--y:79%;--i:0" aria-hidden="true">1</span>
+          </div>
+          <div class="stage-shot" data-step="3">
+            <img src="public/images/seen/screens/seen-show.webp" alt="Seen show page for Severance: Watchlist, Watching and Watched buttons, a Visible to friends switch, and Up next, season 1 episode 5, 4 of 19 watched." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:27%;--y:69%;--i:0" aria-hidden="true">1</span>
+            <span class="ann-dot" style="--x:10%;--y:78%;--i:1" aria-hidden="true">2</span>
+            <span class="ann-dot" style="--x:14%;--y:88%;--i:2" aria-hidden="true">3</span>
+          </div>
+          <div class="stage-shot" data-step="4">
+            <img src="public/images/seen/screens/seen-profile.webp" alt="Seen profile: Top 5 films, Top 5 shows and stats showing 34 on the watchlist, 3 watching and 212 watched." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:63%;--y:33%;--i:0" aria-hidden="true">1</span>
+            <span class="ann-dot" style="--x:50%;--y:48%;--i:1" aria-hidden="true">2</span>
+          </div>
+          <div class="stage-shot" data-step="5">
+            <img src="public/images/seen/screens/seen-home.webp" alt="Seen Home: a recommendation from Emma for Past Lives with her note, then a Friends are watching row of posters, with the tab bar at the bottom." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:50%;--y:92%;--i:0" aria-hidden="true">1</span>
+          </div>
+          </div>
+        </div>
+        <ol class="dsteps">
+        <li class="dstep active" data-step="0">
+          <dl class="decision">
+            <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+            <dd class="d-what">A recommendation is its own thing.</dd>
+            <dt>Why</dt>
+            <dd class="d-why">It keeps the note and who sent it, so you always know who recommended what and why.</dd>
+          </dl>
+          <div class="dstep-phone">
+            <img src="public/images/seen/screens/seen-home.webp" alt="Seen Home: a recommendation from Emma for Past Lives with her note, then a Friends are watching row of posters, with the tab bar at the bottom." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:88%;--y:38%;--i:0" aria-hidden="true">1</span>
+            <span class="ann-dot" style="--x:48%;--y:54%;--i:1" aria-hidden="true">2</span>
+          </div>
+          <ol class="notes">
+            <li>The note comes with the rec: who recommended it and why, not an algorithm.</li>
+            <li>Lower down on purpose. Seeing what friends watch rated lowest in the survey (30%).</li>
+          </ol>
+        </li>
+        <li class="dstep" data-step="1">
+          <dl class="decision">
+            <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+            <dd class="d-what">Recommending is the main action.</dd>
+            <dt>Why</dt>
+            <dd class="d-why">Friends are the main way people find something to watch (74%).</dd>
+          </dl>
+          <div class="dstep-phone">
+            <img src="public/images/seen/screens/seen-recommend.webp" alt="Seen Recommend sheet: friends shown as circles with Emma and Jordan picked, a typed note about The Holdovers, and a Send to Emma and Jordan button." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:20%;--y:22%;--i:0" aria-hidden="true">1</span>
+            <span class="ann-dot" style="--x:42%;--y:31%;--i:1" aria-hidden="true">2</span>
+            <span class="ann-dot" style="--x:55%;--y:85%;--i:2" aria-hidden="true">3</span>
+          </div>
+          <ol class="notes">
+            <li>Works for friends who aren&rsquo;t on Seen yet.</li>
+            <li>Picking people is the point, so friends are big and tappable.</li>
+            <li>The why that gets lost in group chats.</li>
+          </ol>
+        </li>
+        <li class="dstep" data-step="2">
+          <dl class="decision">
+            <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+            <dd class="d-what">Friends, not strangers.</dd>
+            <dt>Why</dt>
+            <dd class="d-why">&ldquo;Having anyone seeing that would be weird.&rdquo; No public feeds. Two limited exceptions came later, both placed below friends: public episode comments and labelled reviews from TMDB.</dd>
+          </dl>
+          <div class="dstep-phone">
+            <img src="public/images/seen/screens/seen-title-friends.webp" alt="Seen title page with a Watched by sheet open, listing star ratings from Emma, Jordan and Priya." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:58%;--y:79%;--i:0" aria-hidden="true">1</span>
+          </div>
+          <ol class="notes">
+            <li>Ratings from friends, not strangers.</li>
+          </ol>
+        </li>
+        <li class="dstep" data-step="3">
+          <dl class="decision">
+            <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+            <dd class="d-what">Make tracking worth doing.</dd>
+            <dt>Why</dt>
+            <dd class="d-why">Most people don&rsquo;t track at all, so logging has to be quick. Episode comments stay hidden until you&rsquo;ve ticked off that episode, because 52% rated avoiding spoilers 4 or 5 out of 5, and spoiler reviews are covered until tapped.</dd>
+          </dl>
+          <div class="dstep-phone">
+            <img src="public/images/seen/screens/seen-show.webp" alt="Seen show page for Severance: Watchlist, Watching and Watched buttons, a Visible to friends switch, and Up next, season 1 episode 5, 4 of 19 watched." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:27%;--y:69%;--i:0" aria-hidden="true">1</span>
+            <span class="ann-dot" style="--x:10%;--y:78%;--i:1" aria-hidden="true">2</span>
+            <span class="ann-dot" style="--x:14%;--y:88%;--i:2" aria-hidden="true">3</span>
+          </div>
+          <ol class="notes">
+            <li>Friends-only by default.</li>
+            <li>One tap to tick off an episode.</li>
+            <li>The main button on every title.</li>
+          </ol>
+        </li>
+        <li class="dstep" data-step="4">
+          <dl class="decision">
+            <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+            <dd class="d-what">Reward logging, not volume.</dd>
+            <dt>Why</dt>
+            <dd class="d-why">Top 5 and stats make logging worth it. No badges or points.</dd>
+          </dl>
+          <div class="dstep-phone">
+            <img src="public/images/seen/screens/seen-profile.webp" alt="Seen profile: Top 5 films, Top 5 shows and stats showing 34 on the watchlist, 3 watching and 212 watched." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:63%;--y:33%;--i:0" aria-hidden="true">1</span>
+            <span class="ann-dot" style="--x:50%;--y:48%;--i:1" aria-hidden="true">2</span>
+          </div>
+          <ol class="notes">
+            <li>Recs you haven&rsquo;t watched yet.</li>
+            <li>Your Top 5 films and shows.</li>
+          </ol>
+        </li>
+        <li class="dstep" data-step="5">
+          <dl class="decision">
+            <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+            <dd class="d-what">Keep it simple.</dd>
+            <dt>Why</dt>
+            <dd class="d-why">Letterboxd &ldquo;looked too complicated&rdquo;. Seen has a few main tabs and friends first on every screen.</dd>
+          </dl>
+          <div class="dstep-phone">
+            <img src="public/images/seen/screens/seen-home.webp" alt="Seen Home: a recommendation from Emma for Past Lives with her note, then a Friends are watching row of posters, with the tab bar at the bottom." width="600" height="1305" loading="lazy">
+            <span class="ann-dot" style="--x:50%;--y:92%;--i:0" aria-hidden="true">1</span>
+          </div>
+          <ol class="notes">
+            <li>Four tabs.</li>
+          </ol>
+        </li>
+        </ol>
+      </div>
+      <p class="cap screens-cap">Screens show sample data.</p>
+      <p class="after-phones">Tonight (swipe through ideas alone or with a friend until you both say yes) is shown in the video at the top.</p>
+    </div>
+  </div>
+
+  <!-- ── AFTER LAUNCH ── -->
+  <div class="case-section" id="s05" style="padding-top:96px">
+    <div class="case-content">
+      <h2 class="problem-headline">After launch, people weren&rsquo;t adding friends.</h2>
+      <p>Seen is much better with friends on it. After launch I noticed people were signing up without adding any. In mid July only 50% of users had a friend on the app. The research had called this the biggest risk.</p>
+      <ul class="cards four evidence reveal-group">
+        <li class="card"><p class="card-big">50%</p><p>of users had at least one friend on the app in mid July.</p></li>
+        <li class="card"><p class="card-big">0 of 28</p><div class="v-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><p>recommendation links sent to people without the app led to a sign-up.</p></li>
+        <li class="card"><h4>Invite links lost</h4><p>Invite links were lost during install, so the friendship never formed.</p></li>
+        <li class="card"><h4>Empty Home</h4><p>The Home empty state never prompted anyone to send a recommendation.</p></li>
+      </ul>
+
+      <h3 class="sub">Every step of getting a friend on the app</h3>
       <div class="sticky-cols">
         <figure class="phone-shot">
           <img src="public/images/seen/screens/seen-empty-after.webp" alt="Seen Home with no recommendations yet. It offers a Recommend something button, an Invite a friend button and a Popular right now row of posters." width="600" height="1305" loading="lazy">
@@ -624,187 +789,34 @@ a{color:inherit}img{display:block;max-width:100%}
         </figure>
         <div class="journey-wrap">
           <ol class="journey">
-            <li><span class="j-num" aria-hidden="true">1</span><h4>A friend sends a rec link</h4><p>It works for someone not on Seen yet.</p></li>
-            <li><span class="j-num" aria-hidden="true">2</span><h4>The invite survives the install</h4><p>The friendship still forms after the App Store.</p></li>
+            <li><span class="j-num" aria-hidden="true">1</span><h4>A friend sends a rec link</h4><p>It works for someone not on Seen yet. I fixed these links on 14 October 2026.</p></li>
+            <li><span class="j-num" aria-hidden="true">2</span><h4>The invite survives the install</h4><p>Fixed, so the friendship forms after the App Store.</p></li>
             <li><span class="j-num" aria-hidden="true">3</span><h4>Sign-up asks for a first rec</h4><p>Onboarding has a &ldquo;send your first rec&rdquo; step.</p></li>
             <li><span class="j-num" aria-hidden="true">4</span><h4>Import your history</h4><p>Letterboxd, IMDb, TV Time or a pasted list.</p></li>
-            <li><span class="j-num" aria-hidden="true">5</span><h4>Home asks too</h4><p>&ldquo;Recommend something&rdquo;, &ldquo;Invite a friend&rdquo; and &ldquo;Popular right now&rdquo;.</p></li>
+            <li><span class="j-num" aria-hidden="true">5</span><h4>Home asks too</h4><p>Rebuilt: &ldquo;Recommend something&rdquo;, &ldquo;Invite a friend&rdquo; and &ldquo;Popular right now&rdquo;.</p></li>
           </ol>
           <p class="journey-note">Useful on your own too: Up next, new-episode alerts, where to watch, and More like this.</p>
+          <p class="journey-note">Cut as too pushy: an onboarding step asking new users to pick 3 people.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ── OTHER DECISIONS ── -->
-  <div class="case-section" id="s05" style="padding-top:96px">
-    <div class="case-content">
-      <h2 class="problem-headline">Other decisions from the research.</h2>
-      <div class="decisions">
-        <dl class="decision">
-          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
-          <dd class="d-what">A recommendation is its own thing.</dd>
-          <dt>Why</dt>
-          <dd class="d-why">It keeps the note and who sent it, so you always know who recommended what and why.</dd>
-        </dl>
-        <dl class="decision">
-          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
-          <dd class="d-what">Make tracking worth doing.</dd>
-          <dt>Why</dt>
-          <dd class="d-why">Most people don&rsquo;t track at all. One tap ticks off an episode, history can be imported, and Top 5 and stats reward logging. No badges or points.</dd>
-        </dl>
-        <dl class="decision">
-          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
-          <dd class="d-what">Friends-only by default.</dd>
-          <dt>Why</dt>
-          <dd class="d-why">&ldquo;Having anyone seeing that would be weird.&rdquo; Every title has a &ldquo;Visible to friends&rdquo; switch.</dd>
-        </dl>
-        <dl class="decision">
-          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
-          <dd class="d-what">No spoilers.</dd>
-          <dt>Why</dt>
-          <dd class="d-why">52% rated it 4 or 5 out of 5. Episode comments stay hidden until you&rsquo;ve ticked off that episode, and spoiler reviews are covered until tapped.</dd>
-        </dl>
-        <dl class="decision">
-          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
-          <dd class="d-what">Keep it simple.</dd>
-          <dt>Why</dt>
-          <dd class="d-why">Letterboxd &ldquo;looked too complicated&rdquo;. Seen has a few main tabs and friends first on every screen.</dd>
-        </dl>
-        <dl class="decision">
-          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
-          <dd class="d-what">No public feeds from strangers.</dd>
-          <dt>Why</dt>
-          <dd class="d-why">Two limited exceptions came later, both placed below friends: public episode comments and labelled reviews from TMDB.</dd>
-        </dl>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── THE MAIN SCREENS ── -->
+  <!-- ── OTHER CHANGES FROM FEEDBACK ── -->
   <div class="case-section" id="s06" style="padding-top:96px">
     <div class="case-content">
-      <h2 class="problem-headline">The main screens.</h2>
-
-      <div class="ann">
-        <div class="screen-text">
-          <h3>Home</h3>
-          <p class="screen-cap">Recommendations from friends with their notes, then what friends are watching.</p>
-        </div>
-        <div class="ann-phone">
-          <img src="public/images/seen/screens/seen-home.webp" alt="Seen Home: a recommendation from Emma for Past Lives with her note, then a Friends are watching row of posters." width="600" height="1305" loading="lazy">
-          <span class="ann-line" style="--x:88%;--y:38%;--i:0" aria-hidden="true"></span>
-          <span class="ann-line" style="--x:48%;--y:54%;--i:1" aria-hidden="true"></span>
-          <span class="ann-dot" style="--x:88%;--y:38%;--i:0" aria-hidden="true">1</span>
-          <span class="ann-dot" style="--x:48%;--y:54%;--i:1" aria-hidden="true">2</span>
-        </div>
-        <ol class="ann-notes">
-          <li style="--y:38%;--i:0">The note comes with the rec: who recommended it and why, not an algorithm.</li>
-          <li style="--y:55%;--i:1">Lower down on purpose. Seeing what friends watch rated lowest in the survey (30%).</li>
-        </ol>
-      </div>
-
-      <div class="ann flip">
-        <div class="screen-text">
-          <h3>Recommend</h3>
-          <p class="screen-cap">Pick friends and add a note. This is the core action.</p>
-        </div>
-        <div class="ann-phone">
-          <img src="public/images/seen/screens/seen-recommend.webp" alt="Seen Recommend sheet: friends shown as circles with Emma and Jordan picked, a typed note about The Holdovers, and a Send to Emma and Jordan button." width="600" height="1305" loading="lazy">
-          <span class="ann-line" style="--x:20%;--y:22%;--i:0" aria-hidden="true"></span>
-          <span class="ann-line" style="--x:42%;--y:31%;--i:1" aria-hidden="true"></span>
-          <span class="ann-line" style="--x:55%;--y:85%;--i:2" aria-hidden="true"></span>
-          <span class="ann-dot" style="--x:20%;--y:22%;--i:0" aria-hidden="true">1</span>
-          <span class="ann-dot" style="--x:42%;--y:31%;--i:1" aria-hidden="true">2</span>
-          <span class="ann-dot" style="--x:55%;--y:85%;--i:2" aria-hidden="true">3</span>
-        </div>
-        <ol class="ann-notes">
-          <li style="--y:22%;--i:0">Works for friends who aren&rsquo;t on Seen yet.</li>
-          <li style="--y:33%;--i:1">Picking people is the point, so friends are big and tappable.</li>
-          <li style="--y:84%;--i:2">The why that gets lost in group chats.</li>
-        </ol>
-      </div>
-
-      <div class="ann">
-        <div class="screen-text">
-          <h3>Title page</h3>
-          <p class="screen-cap">&ldquo;Watched by&rdquo; shows which friends have seen it and their average rating. Tap it to see each friend&rsquo;s stars.</p>
-        </div>
-        <div class="ann-phone">
-          <img src="public/images/seen/screens/seen-title-friends.webp" alt="Seen title page with a Watched by sheet open, listing star ratings from Emma, Jordan and Priya." width="600" height="1305" loading="lazy">
-          <span class="ann-line" style="--x:58%;--y:79%;--i:0" aria-hidden="true"></span>
-          <span class="ann-dot" style="--x:58%;--y:79%;--i:0" aria-hidden="true">1</span>
-        </div>
-        <ol class="ann-notes">
-          <li style="--y:79%;--i:0">Ratings from friends, not strangers.</li>
-        </ol>
-      </div>
-
-      <div class="ann flip">
-        <div class="screen-text">
-          <h3>Show page</h3>
-          <p class="screen-cap">Up next and how many episodes you&rsquo;ve watched. Ticking off an episode takes one tap.</p>
-        </div>
-        <div class="ann-phone">
-          <img src="public/images/seen/screens/seen-show.webp" alt="Seen show page for Severance: Watchlist, Watching and Watched buttons, a Visible to friends switch, and Up next, season 1 episode 5, 4 of 19 watched." width="600" height="1305" loading="lazy">
-          <span class="ann-line" style="--x:27%;--y:69%;--i:0" aria-hidden="true"></span>
-          <span class="ann-line" style="--x:10%;--y:78%;--i:1" aria-hidden="true"></span>
-          <span class="ann-line" style="--x:14%;--y:88%;--i:2" aria-hidden="true"></span>
-          <span class="ann-dot" style="--x:27%;--y:69%;--i:0" aria-hidden="true">1</span>
-          <span class="ann-dot" style="--x:10%;--y:78%;--i:1" aria-hidden="true">2</span>
-          <span class="ann-dot" style="--x:14%;--y:88%;--i:2" aria-hidden="true">3</span>
-        </div>
-        <ol class="ann-notes">
-          <li style="--y:67.5%;--i:0">Friends-only by default.</li>
-          <li style="--y:78%;--i:1">One tap to tick off an episode, so tracking is worth doing.</li>
-          <li style="--y:90%;--i:2">The main button on every title.</li>
-        </ol>
-      </div>
-
-      <div class="ann">
-        <div class="screen-text">
-          <h3>Profile</h3>
-          <p class="screen-cap">Top 5 films and shows, recommendations waiting for you, and stats.</p>
-        </div>
-        <div class="ann-phone">
-          <img src="public/images/seen/screens/seen-profile.webp" alt="Seen profile: Top 5 films, Top 5 shows and stats showing 34 on the watchlist, 3 watching and 212 watched." width="600" height="1305" loading="lazy">
-          <span class="ann-line" style="--x:63%;--y:33%;--i:0" aria-hidden="true"></span>
-          <span class="ann-line" style="--x:50%;--y:48%;--i:1" aria-hidden="true"></span>
-          <span class="ann-dot" style="--x:63%;--y:33%;--i:0" aria-hidden="true">1</span>
-          <span class="ann-dot" style="--x:50%;--y:48%;--i:1" aria-hidden="true">2</span>
-        </div>
-        <ol class="ann-notes">
-          <li style="--y:33%;--i:0">Recs you haven&rsquo;t watched yet.</li>
-          <li style="--y:49%;--i:1">Top 5 and stats reward logging. No badges or points.</li>
-        </ol>
-      </div>
-
-      <p class="cap">Screens show sample data.</p>
-      <p class="after-phones">Tonight (swipe through ideas alone or with a friend until you both say yes) is shown in the video at the top.</p>
-    </div>
-  </div>
-
-  <!-- ── CHANGED BY WHAT PEOPLE DID ── -->
-  <div class="case-section" id="s07" style="padding-top:96px">
-    <div class="case-content">
-      <h2 class="problem-headline">Changed by what people did.</h2>
+      <h2 class="problem-headline">Other changes from feedback.</h2>
       <p>I test every change on a development build on two phones, an iPhone and a Samsung Galaxy A16, before it ships. These changes came from feedback, data or testing:</p>
       <ul class="cards three changed reveal-group">
-        <li class="card"><p class="card-big">0 of 28</p><div class="v-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><p>recommendation links sent to people without the app led to a sign-up. I fixed the links on 14 October 2026.</p></li>
         <li class="card"><p class="card-big">3 days</p><div class="v-days" aria-hidden="true"><span>WhatsApp suggestion · Day 0</span><span>Live · Day 3</span></div><p>A friend suggested the watchlist overlap prompt on WhatsApp, and it was live three days later: add a title to your watchlist and Seen tells you which friends have seen it, then opens a chat with them.</p></li>
         <li class="card"><p class="card-big">1.03:1</p><div class="v-btns" role="img" aria-label="Illustration: before, a dark Continue with Google button that is almost invisible on navy. After, the same button in white."><div aria-hidden="true"><small>Before</small><b class="v-before">Continue with Google</b></div><div aria-hidden="true"><small>After</small><b class="v-after">Continue with Google</b></div></div><p class="v-cap">Recreated.</p><p>The Google sign-in button was dark on navy, with a contrast of 1.03:1. Changed to white.</p></li>
-      </ul>
-      <ul class="cards four reveal-group">
-        <li class="card"><h4>Invite links fixed</h4><p>Invite links were lost during install, so the friendship never formed. Fixed.</p></li>
-        <li class="card"><h4>Empty Home rebuilt</h4><p>The Home empty state never prompted anyone to send a recommendation. Rebuilt.</p></li>
-        <li class="card"><h4>Cut as too pushy</h4><p>An onboarding step asking new users to pick 3 people.</p></li>
         <li class="card"><h4>Added because users asked</h4><p>A &ldquo;Dropped&rdquo; status, list pasting, and &ldquo;More like this&rdquo;.</p></li>
       </ul>
     </div>
   </div>
 
   <!-- ── RESULTS ── -->
-  <div class="case-section" id="s08" style="padding-top:96px">
+  <div class="case-section" id="s07" style="padding-top:96px">
     <div class="case-content">
       <h2 class="problem-headline">Results so far.</h2>
       <ul class="cards stats reveal-group">
@@ -818,7 +830,7 @@ a{color:inherit}img{display:block;max-width:100%}
   </div>
 
   <!-- ── WHAT I LEARNED ── -->
-  <div class="case-section" id="s09" style="padding-top:96px">
+  <div class="case-section" id="s08" style="padding-top:96px">
     <div class="case-content">
       <h2 class="problem-headline">What I learned.</h2>
       <ul class="cards two reveal-group">
@@ -831,7 +843,7 @@ a{color:inherit}img{display:block;max-width:100%}
   </div>
 
   <!-- ── WHAT'S NEXT ── -->
-  <div class="case-section" id="s10" style="padding-top:96px">
+  <div class="case-section" id="s09" style="padding-top:96px">
     <div class="case-content">
       <h2 class="problem-headline">What&rsquo;s next.</h2>
       <p>Custom lists, measuring new users since the late October updates, and an &ldquo;Up next&rdquo; home-screen widget.</p>
@@ -888,8 +900,8 @@ a{color:inherit}img{display:block;max-width:100%}
   window.addEventListener('scroll',onScroll,{passive:true});
   onScroll();
 
-  /* ── APPEAR ONCE ON SCROLL: card grids and screen annotations ── */
-  var groups=document.querySelectorAll('.reveal-group,.ann,.journey');
+  /* ── APPEAR ONCE ON SCROLL: card grids and the journey ── */
+  var groups=document.querySelectorAll('.reveal-group,.journey');
   [].forEach.call(document.querySelectorAll('.reveal-group,.journey'),function(g){
     [].forEach.call(g.children,function(c,i){c.style.setProperty('--i',i)});
   });
@@ -902,15 +914,48 @@ a{color:inherit}img{display:block;max-width:100%}
     [].forEach.call(groups,function(g){g.classList.add('in')});
   }
 
-  /* Draw the Decision underline when the block scrolls into view (as on the JetSweat page) */
+  /* ── DESIGN DECISIONS: sticky phone that follows the steps ──
+     On desktop with motion allowed, the step nearest the middle of the visible screen is active:
+     the phone shows its screenshot and dots, the step is at full strength and its underline is drawn.
+     On phones or with reduced motion the CSS shows every step in full, and underlines draw as each scrolls in. */
+  var scrollyMq=window.matchMedia('(min-width:801px) and (prefers-reduced-motion:no-preference)');
+  var dsteps=[].slice.call(document.querySelectorAll('.dstep'));
+  var shots=[].slice.call(document.querySelectorAll('.stage-shot'));
+  var current=-1,ticking=false;
+  function setStep(n){
+    if(n===current)return;current=n;
+    dsteps.forEach(function(st,i){st.classList.toggle('active',i===n)});
+    shots.forEach(function(sh,i){sh.classList.toggle('active',i===n)});
+    dsteps[n].querySelector('.decision').classList.add('is-drawn');
+  }
+  function pickStep(){
+    ticking=false;
+    if(!scrollyMq.matches||!dsteps.length)return;
+    var mid=(124+window.innerHeight)/2,best=0,bestD=Infinity;
+    dsteps.forEach(function(st,i){
+      var r=st.getBoundingClientRect(),d=Math.abs((r.top+r.bottom)/2-mid);
+      if(d<bestD){bestD=d;best=i}
+    });
+    setStep(best);
+  }
+  function queuePick(){if(!ticking){ticking=true;requestAnimationFrame(pickStep)}}
+  window.addEventListener('scroll',queuePick,{passive:true});
+  window.addEventListener('resize',queuePick);
+  if(scrollyMq.addEventListener)scrollyMq.addEventListener('change',queuePick);
+
+  /* Underlines outside the sticky layout draw when their block scrolls into view (as on the JetSweat page) */
   var blocks=document.querySelectorAll('.decision');
   if(!('IntersectionObserver' in window)){[].forEach.call(blocks,function(b){b.classList.add('is-drawn')})}
   else{
     var decObs=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-drawn');decObs.unobserve(e.target)}});
+      entries.forEach(function(e){
+        if(!e.isIntersecting||scrollyMq.matches)return;
+        e.target.classList.add('is-drawn');decObs.unobserve(e.target);
+      });
     },{threshold:.6});
     [].forEach.call(blocks,function(b){decObs.observe(b)});
   }
+  pickStep();
 })();
 </script>
 <script src="public/seen-charts.js"></script>
