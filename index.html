@@ -338,6 +338,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   transition:transform .5s cubic-bezier(.22,1,.36,1);
 }
 .bt-img--wide{width:85%;height:auto;max-height:80%}
+/* Full-bleed tile image: fills the whole panel */
+.bt-img--fill{top:0;left:0;transform:none;width:100%;height:100%;max-width:none;object-fit:cover;border-radius:inherit}
 
 /* Text — below the image, on the page background (all AA on #F9F9F9) */
 .bt-content{padding:24px 4px 0}
@@ -363,13 +365,14 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 /* Hover — image lifts slightly, title and tags take the accent */
 .bento-tile:not(.bento-duo):hover .bt-media,.bento-tile.touch-active .bt-media{box-shadow:0 14px 40px rgba(0,0,0,.10)}
 .bento-tile:not(.bento-duo):hover .bt-img,.bento-tile.touch-active .bt-img{transform:translate(-50%,-50%) scale(1.04)}
+.bento-tile:not(.bento-duo):hover .bt-img--fill,.bento-tile.touch-active .bt-img--fill{transform:scale(1.03)}
 .bento-tile:not(.bento-duo):hover .bt-title,.bento-tile.touch-active .bt-title{color:var(--accent)}
 .bento-tile:not(.bento-duo):hover .bt-tags span,.bento-tile.touch-active .bt-tags span{background:var(--accent);border-color:var(--accent);color:#fff}
 
 /* ── Tile colors ── */
 .bt-mint{background:#2D6A4F}
-.bt-navy{background:#1E3A8A}
-.bt-purple{background:#3D2C5E}
+.bt-sand{background:#E4DFD4}
+.bt-lilac{background:#9D8DF0}
 .bt-burnt{background:#C45A2D}
 .bt-rose{background:#8C3B4A}
 .bt-album{background:#10234D}
@@ -531,7 +534,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
   <!-- 01 JetSweat — Orange -->
   <a class="bento-tile" href="jetsweat.html">
-    <div class="bt-media bt-burnt"><img class="bt-img bt-img--wide" src="public/images/jetsweat/new-dashboard.png" alt="JetSweat Dashboard"></div>
+    <div class="bt-media bt-burnt"><img class="bt-img bt-img--fill" src="public/images/tiles/tile-jetsweat.webp" width="1192" height="894" alt="JetSweat dashboard with cards for users, subscribers and cancellations, a revenue chart and upcoming livestreams"></div>
     <div class="bt-content">
       <h3 class="bt-title">JetSweat</h3>
       <p class="bt-facts">Freelance Product Designer · 3 months · B2B dashboard</p>
@@ -568,7 +571,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
   <!-- 03 Seen — Purple -->
   <a class="bento-tile" href="seen.html">
-    <div class="bt-media bt-purple"><img class="bt-img" src="public/images/seen/seen-match.jpg" alt="Seen Watch Together screen showing It&rsquo;s a match"></div>
+    <div class="bt-media bt-lilac"><img class="bt-img bt-img--fill" src="public/images/tiles/tile-seen.webp" width="1192" height="894" alt="Two Seen screens: the home feed with a friend&rsquo;s recommendation, and an It&rsquo;s a match screen for a film two friends both picked"></div>
     <div class="bt-content">
       <h3 class="bt-title">Seen</h3>
       <p class="bt-facts">Designer and developer · iOS and Android · Live</p>
@@ -583,7 +586,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
   <!-- 04 5ives — Album navy -->
   <a class="bento-tile" href="5ives.html">
-    <div class="bt-media bt-album"><img class="bt-img" src="public/images/5ives/pick-after.webp" alt="5ives Pick your five screen"></div>
+    <div class="bt-media bt-album"><img class="bt-img bt-img--fill" src="public/images/tiles/tile-5ives.webp" width="1192" height="894" alt="Three 5ives screens: the matchweek home screen with live points, the Pick your five squad on a pitch, and a league table"></div>
     <div class="bt-content">
       <h3 class="bt-title">5ives</h3>
       <p class="bt-facts">Designer and developer · Live web app · Fantasy football</p>
@@ -598,7 +601,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
   <!-- 05 MealMatch AI — Mint -->
   <a class="bento-tile" href="mealmatch.html">
-    <div class="bt-media bt-mint"><img class="bt-img" src="public/images/mealmatch/section-1/mealmatch-hero-screen.png" alt="MealMatch AI"></div>
+    <div class="bt-media bt-mint"><img class="bt-img bt-img--fill" src="public/images/tiles/tile-mealmatch-device.webp" width="1192" height="894" alt="MealMatch AI meal plan screen on a phone, with calorie and macro rings above a breakfast card"></div>
     <div class="bt-content">
       <h3 class="bt-title">MealMatch AI</h3>
       <p class="bt-facts">Lead Designer · 2024–26 · AI meal planning app</p>
@@ -614,7 +617,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
   <!-- 06 Ballrs — Navy -->
   <a class="bento-tile" href="ballrs.html">
-    <div class="bt-media bt-navy"><img class="bt-img" src="public/images/ballrs/S4-P3.PNG" alt="Ballrs"></div>
+    <div class="bt-media bt-sand"><img class="bt-img bt-img--fill" src="public/images/tiles/tile-ballrs-sheet.webp" width="1192" height="894" alt="Ballrs design system sheet: game mode icons, the colour palette, buttons, a level and XP bar, and a friends league table"></div>
     <div class="bt-content">
       <h3 class="bt-title">Ballrs</h3>
       <p class="bt-facts">Designer and developer · 2025–now · Daily sports trivia app</p>
