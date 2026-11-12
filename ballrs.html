@@ -1044,13 +1044,16 @@ a{color:inherit}img{display:block;max-width:100%}
 /* Version 5.0 onboarding */
 .ob5{margin-top:72px}
 .ob5-label{font:800 13px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--ink);margin:40px 0 14px}
-.ob5-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px}
+.ob5-scroll{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
 .ob5-scroll img{display:block;width:100%;height:auto}
+@media(max-width:700px){
+  .ob5-scroll{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .case-content .ob5-scroll img{flex:none;width:110px;max-width:none}
+}
 .ob5-after{display:flex;gap:40px;align-items:flex-start;padding-bottom:40px}
 .ob5-after figure{margin:0;width:260px;max-width:100%}
 .ob5-after figcaption{font:700 15px/1.4 var(--sans);color:var(--ink);margin-bottom:12px}
 @media(max-width:900px){
-  .case-content .ob5-scroll img{width:1400px!important;max-width:none!important}
   .ob5-after{flex-direction:column;align-items:center;gap:32px}
 }
 
@@ -1977,7 +1980,20 @@ a{color:inherit}img{display:block;max-width:100%}
         <p>Before, a new player went through 11 intro slides, one for each game, then had to choose a username before playing anything. In version 5.0 you pick a sport and go straight into today's real Clue Drop, with a one-line tip. The username comes after the game, as a &ldquo;Save your score&rdquo; card on the result. Players without a username stay off the leaderboards, and the prompt to add an email moves much later.</p>
 
         <div class="ob5-label">Before: 12 screens before your first game</div>
-        <div class="ob5-scroll" tabindex="0" role="group" aria-label="Old onboarding screens, scrolls sideways on small screens"><img src="public/images/ballrs/redesign/onboarding-before-strip.webp" alt="The old onboarding: 11 intro slides explaining each game, then a Choose a Username screen." width="3056" height="519" loading="lazy"></div>
+        <div class="ob5-scroll" tabindex="0" role="group" aria-label="The old onboarding: 11 intro slides explaining each game, then a Choose a Username screen.">
+          <img src="public/images/ballrs/redesign/onboarding-before-01.webp" alt="Old onboarding screen 1 of 12" width="240" height="519" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-02.webp" alt="Old onboarding screen 2 of 12" width="240" height="519" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-03.webp" alt="Old onboarding screen 3 of 12" width="240" height="519" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-04.webp" alt="Old onboarding screen 4 of 12" width="240" height="519" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-05.webp" alt="Old onboarding screen 5 of 12" width="240" height="519" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-06.webp" alt="Old onboarding screen 6 of 12" width="240" height="519" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-07.webp" alt="Old onboarding screen 7 of 12" width="240" height="519" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-08.webp" alt="Old onboarding screen 8 of 12" width="240" height="519" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-09.webp" alt="Old onboarding screen 9 of 12" width="240" height="519" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-10.webp" alt="Old onboarding screen 10 of 12" width="240" height="519" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-11.webp" alt="Old onboarding screen 11 of 12" width="240" height="519" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-12.webp" alt="Old onboarding screen 12 of 12" width="240" height="519" loading="lazy">
+        </div>
 
         <div class="ob5-label">After: playing within one tap</div>
         <div class="ob5-after">
@@ -2145,7 +2161,7 @@ a{color:inherit}img{display:block;max-width:100%}
       <div class="sticker-sheet" id="stickerSheet"></div>
       <div class="comp-annotation comp-annotation-icons" style="margin-bottom:32px">
         <div class="comp-annotation-line"></div>
-        <div class="comp-annotation-text"><strong>Custom Over System:</strong> 0 system emojis. Every asset is a custom neubrutalist illustration for cross-device&nbsp;consistency.</div>
+        <div class="comp-annotation-text"><strong>Custom Over System:</strong> 0 system emojis. Every icon is a custom illustration, so it looks the same on every device.</div>
       </div>
       <div class="inapp-label">In the app</div>
       <div class="inapp-row">
