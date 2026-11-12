@@ -1012,14 +1012,15 @@ a{color:inherit}img{display:block;max-width:100%}
 /* Sticker sheet */
 .sticker-sheet{
   position:relative;
-  display:grid;grid-template-columns:repeat(6,64px);gap:12px;
-  margin:16px 0;padding:24px;
-  border:1px dashed rgba(0,0,0,.1);
+  display:grid;grid-template-columns:repeat(9,72px);gap:18px;
+  width:fit-content;max-width:100%;box-sizing:border-box;
+  margin:16px 0;padding:28px;
+  background:#DCD5C7;border-radius:20px;
   justify-content:center;
 }
-.sticker-sheet.scattered{display:block;min-height:200px}
+.sticker-sheet.scattered{display:block;width:auto}
 .sticker{
-  width:64px;height:64px;
+  width:72px;height:72px;
   cursor:grab;
   transition:transform .3s;
   user-select:none;
@@ -1028,20 +1029,30 @@ a{color:inherit}img{display:block;max-width:100%}
 .sticker-sheet.scattered .sticker{position:absolute}
 .sticker:active{cursor:grabbing;z-index:10}
 .sticker img{
-  width:100%;height:100%;object-fit:contain;
+  width:100%;height:100%;object-fit:contain;display:block;
   pointer-events:none;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.18));
 }
-.sticker.locked{
-  opacity:.4;filter:grayscale(100%);
-  cursor:default;
+/* In the app: icons on their backing circles, light and dark */
+.inapp-label{font:700 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#555;margin:24px 0 12px}
+.inapp-row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:20px}
+.inapp-panel{display:flex;gap:14px;padding:20px 22px;border-radius:20px;background:#F5F2EB;border:1px solid rgba(0,0,0,.08)}
+.inapp-panel.dark{background:#141414;border-color:#141414}
+.inapp-circle{width:64px;height:64px;border-radius:50%;background:#E2DACA;display:flex;align-items:center;justify-content:center;flex:none}
+.inapp-panel.dark .inapp-circle{background:#242832}
+.inapp-circle img{width:80%;height:80%;object-fit:contain;display:block}
+/* Version 5.0 onboarding */
+.ob5{margin-top:72px}
+.ob5-label{font:800 13px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--ink);margin:40px 0 14px}
+.ob5-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px}
+.ob5-scroll img{display:block;width:100%;height:auto}
+.ob5-after{display:flex;gap:40px;align-items:flex-start;padding-bottom:40px}
+.ob5-after figure{margin:0;width:260px;max-width:100%}
+.ob5-after figcaption{font:700 15px/1.4 var(--sans);color:var(--ink);margin-bottom:12px}
+@media(max-width:900px){
+  .case-content .ob5-scroll img{width:1400px!important;max-width:none!important}
+  .ob5-after{flex-direction:column;align-items:center;gap:32px}
 }
-.sticker-tooltip{
-  position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
-  font:500 13px/1 var(--mono);color:#6B6B6B;
-  text-transform:uppercase;letter-spacing:.04em;
-  white-space:nowrap;opacity:0;transition:opacity .2s;
-}
-.sticker.locked:hover .sticker-tooltip{opacity:1}
 
 /* Tappable/Info toggle */
 .tap-toggle{
@@ -1383,8 +1394,10 @@ a{color:inherit}img{display:block;max-width:100%}
   .icon-evo-range::-moz-range-thumb{width:32px;height:32px}
   .icon-evo-slider{gap:20px;margin:24px 0}
   .icon-evo-version{margin-top:4px}
-  .sticker-sheet{grid-template-columns:repeat(4,1fr);gap:8px;padding:16px}
-  .sticker-sheet img{width:100%;height:60px;object-fit:contain}
+  .sticker-sheet{grid-template-columns:repeat(4,1fr);gap:12px;padding:18px;width:100%}
+  .sticker-sheet:not(.scattered) .sticker{width:100%;max-width:72px;height:auto;aspect-ratio:1;justify-self:center}
+  .inapp-panel{gap:10px;padding:16px;width:100%;box-sizing:border-box;justify-content:center}
+  .inapp-circle{width:56px;height:56px}
   .tools-grid{grid-template-columns:1fr!important}
   .s1-stats{grid-template-columns:repeat(2,1fr);gap:8px;margin-left:0;margin-top:24px}
   .s1-stat{padding:12px}
@@ -1958,6 +1971,31 @@ a{color:inherit}img{display:block;max-width:100%}
         <dt>Why</dt>
         <dd class="d-why">Random name generator and custom usernames both run through a profanity filter. Learned this the hard way when a leaderboard username had to be manually corrected in the database.</dd>
       </dl>
+
+      <div class="ob5">
+        <h2 class="problem-headline">Version 5.0: play first.</h2>
+        <p>Before, a new player went through 11 intro slides, one for each game, then had to choose a username before playing anything. In version 5.0 you pick a sport and go straight into today's real Clue Drop, with a one-line tip. The username comes after the game, as a &ldquo;Save your score&rdquo; card on the result. Players without a username stay off the leaderboards, and the prompt to add an email moves much later.</p>
+
+        <div class="ob5-label">Before: 12 screens before your first game</div>
+        <div class="ob5-scroll" tabindex="0" role="group" aria-label="Old onboarding screens, scrolls sideways on small screens"><img src="public/images/ballrs/redesign/onboarding-before-strip.webp" alt="The old onboarding: 11 intro slides explaining each game, then a Choose a Username screen." width="3056" height="519" loading="lazy"></div>
+
+        <div class="ob5-label">After: playing within one tap</div>
+        <div class="ob5-after">
+        <figure>
+          <figcaption>1. Pick a sport</figcaption>
+          <div class="soft-frame"><img src="public/images/ballrs/redesign/onboarding-after-welcome.webp" alt="Welcome screen: pick NBA, Premier League, NFL or MLB to play your first puzzle now." width="600" height="1298" loading="lazy"></div>
+        </figure>
+        <figure>
+          <figcaption>2. Play today's Clue Drop</figcaption>
+          <div class="soft-frame"><img src="public/images/ballrs/redesign/onboarding-after-game.webp" alt="Clue Drop with a one-line tip explaining how to play." width="600" height="1298" loading="lazy"></div>
+        </figure>
+        <figure>
+          <figcaption>3. Save your score</figcaption>
+          <div class="soft-frame"><img src="public/images/ballrs/redesign/onboarding-after-save.webp" alt="The result shows all six clues, then a Save your score card to pick a username." width="600" height="1298" loading="lazy"></div>
+        </figure>
+        </div>
+        <p>Version 5.0 isn't released yet, so I don't have numbers on this change.</p>
+      </div>
     </div>
   </div>
 
@@ -2109,7 +2147,12 @@ a{color:inherit}img{display:block;max-width:100%}
         <div class="comp-annotation-line"></div>
         <div class="comp-annotation-text"><strong>Custom Over System:</strong> 0 system emojis. Every asset is a custom neubrutalist illustration for cross-device&nbsp;consistency.</div>
       </div>
-      <p class="icon-caption" style="margin-bottom:48px">Custom icons generated with AI (Nano Banana) in the neubrutalist style. Bold outlines, solid fills, no gradients. Unlocked as players level up.</p>
+      <div class="inapp-label">In the app</div>
+      <div class="inapp-row">
+        <div class="inapp-panel" role="img" aria-label="Cat, frog, pizza and robot icons on light mode backing circles"><span class="inapp-circle"><img src="public/images/ballrs/stickers/cat.webp" alt="" width="256" height="256" loading="lazy"></span><span class="inapp-circle"><img src="public/images/ballrs/stickers/frog.webp" alt="" width="256" height="256" loading="lazy"></span><span class="inapp-circle"><img src="public/images/ballrs/stickers/pizza.webp" alt="" width="256" height="256" loading="lazy"></span><span class="inapp-circle"><img src="public/images/ballrs/stickers/robot.webp" alt="" width="256" height="256" loading="lazy"></span></div>
+        <div class="inapp-panel dark" role="img" aria-label="The same four icons on dark mode backing circles"><span class="inapp-circle"><img src="public/images/ballrs/stickers/cat.webp" alt="" width="256" height="256" loading="lazy"></span><span class="inapp-circle"><img src="public/images/ballrs/stickers/frog.webp" alt="" width="256" height="256" loading="lazy"></span><span class="inapp-circle"><img src="public/images/ballrs/stickers/pizza.webp" alt="" width="256" height="256" loading="lazy"></span><span class="inapp-circle"><img src="public/images/ballrs/stickers/robot.webp" alt="" width="256" height="256" loading="lazy"></span></div>
+      </div>
+      <p class="icon-caption" style="margin-bottom:48px">Sticker icons made with AI. I regenerated the ten older icons so the whole set is in the same sticker style. In the app each icon sits on a backing circle (#E2DACA in light mode, #242832 in dark). Every image is trimmed and given the same margin, then drawn at 80% of the circle, so none look bigger or cut off. Unlocked as players level up.</p>
     </div>
   </div>
 
@@ -2574,15 +2617,14 @@ a{color:inherit}img{display:block;max-width:100%}
   /* ── STICKER SHEET (grid-first, scatter on interact) ── */
   (function(){
     var sheet=document.getElementById('stickerSheet');
-    var total=11;
-    for(var i=1;i<=total;i++){
+    var names='alien astronaut avo burger cactus cat dino donut duck frog ghost glasses heart ice-cream mush ninja octopus panda penguin pizza robot shark sloth taco unicorn watermelon wizard'.split(' ');
+    names.forEach(function(n){
       var s=document.createElement('div');
-      var locked=i>=10;
-      s.className='sticker'+(locked?' locked':'');
-      s.innerHTML='<img src="public/images/ballrs/ai-icon-'+i+'.png" alt="Profile icon '+i+'">';
-      if(locked){s.innerHTML+='<div class="sticker-tooltip">Level '+(i===10?15:20)+' Required</div>'}
+      s.className='sticker';
+      var label=n.charAt(0).toUpperCase()+n.slice(1);
+      s.innerHTML='<img src="public/images/ballrs/stickers/'+n+'.webp" alt="'+label+' profile icon" width="256" height="256">';
       sheet.appendChild(s);
-    }
+    });
     // On first drag, scatter into absolute positioning
     var scattered=false;
     var dragging=null,offX=0,offY=0;
@@ -2597,11 +2639,13 @@ a{color:inherit}img{display:block;max-width:100%}
         s.style.top=(r.top-sr.top)+'px';
         s.style.transform='rotate('+Math.round(Math.random()*20-10)+'deg)';
       });
+      stickers.forEach(function(s){s.style.width=s.offsetWidth+'px';s.style.height=s.offsetHeight+'px'});
+      sheet.style.width=sw+'px';
       sheet.classList.add('scattered');
-      sheet.style.minHeight=sh+'px';
+      sheet.style.height=sh+'px';
     }
     sheet.addEventListener('mousedown',function(e){
-      var t=e.target.closest('.sticker:not(.locked)');
+      var t=e.target.closest('.sticker');
       if(!t)return;
       scatterSheet();
       dragging=t;
