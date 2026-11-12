@@ -237,14 +237,39 @@ a{color:inherit}img{display:block;max-width:100%}
 .built-with{font:400 13px/1.4 var(--mono);color:#555;margin:8px 0 0;letter-spacing:.02em}
 .built-with strong{font-weight:700;color:var(--ink)}
 
+/* ── Section menu (the same floating menu as the other case studies) ── */
+.minimap{
+  position:fixed;right:calc(var(--frame) + 20px);
+  top:50%;transform:translateY(-50%);
+  z-index:200;
+  display:flex;flex-direction:column;gap:0;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+  background:var(--bg);
+  padding:8px 0;
+}
+.minimap.on{opacity:1;pointer-events:auto}
+.minimap a{
+  display:block;padding:5px 10px;
+  font:600 13px/1 var(--mono);letter-spacing:.04em;
+  color:#555;text-decoration:none;
+  text-transform:uppercase;white-space:nowrap;
+  transition:color .12s,background .12s;
+}
+.minimap a:hover{color:var(--ink)}
+.minimap a.active{background:var(--ink);color:var(--bg)}
+@media(max-width:1199px){.minimap{display:none}}
+/* While the menu shows, the widest rows stop short of it so it never covers them (menu 170px + 32px frame and gap + 24px clear) */
+@media(min-width:1200px){.case-content .chart-pair,.case-content .cards,.case-content .sticky-cols{max-width:min(1248px,calc(100vw - 322px))}}
+
 /* ── Hero line ── */
 .case-hero-line{font:500 20px/1.4 var(--sans);color:#333;margin:0 0 24px;max-width:44ch}
 @media(max-width:800px){.case-hero-line{font-size:18px}}
 
 /* ── Video: a portrait phone recording in a phone-shaped frame ── */
 /* Never taller than 80% of the screen, or the screen minus the 124px header and 40px spare */
-.cs-video{position:relative;margin:0 auto;max-width:340px;max-width:min(340px,calc(min(80svh,100svh - 164px) * 732 / 1584))}
-.cs-video video{display:block;width:100%;height:auto;aspect-ratio:732/1584;border-radius:36px;border:3px solid #1A1A1A;background:#0B0B26}
+.cs-video{position:relative;margin:0 auto;max-width:340px;max-width:min(340px,calc(min(80svh,100svh - 164px) * 720 / 1280))}
+.cs-video video{display:block;width:100%;height:auto;aspect-ratio:720/1280;border-radius:36px;border:3px solid #1A1A1A;background:#0B0B26}
 .cap{font:400 14px/1.4 var(--sans);color:#555;margin-top:12px}
 .case-content p.cap{font-size:14px;max-width:none;margin-bottom:0}
 .case-content p.cap-centre{text-align:center}
@@ -375,7 +400,9 @@ a{color:inherit}img{display:block;max-width:100%}
 .notes li{position:relative;counter-increment:n;background:#fff;border-radius:10px;padding:12px 14px 12px 46px;margin-top:8px;box-shadow:0 2px 10px rgba(0,0,0,.08);font:400 15px/1.4 var(--sans);color:#333}
 .notes li::before{content:counter(n);position:absolute;left:12px;top:11px;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#000;font:700 13px/24px var(--sans);text-align:center}
 .case-content p.screens-cap{margin-top:40px}
-.case-content p.after-phones{margin-top:16px}
+/* Tonight: a second video in the same frame, never taller than about 70% of the screen, with its decision beside it */
+.tonight{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:96px;align-items:center;max-width:1100px;margin:96px 0 0}
+.cs-video.cs-tonight{margin:0;width:300px;max-width:none;width:min(300px,calc(min(70svh,100svh - 164px) * 720 / 1280))}
 
 /* Desktop with motion allowed: one sticky phone on the left, centred in the space under the 124px header.
    The script at the end of the page marks the step nearest the middle of the screen as active. */
@@ -420,6 +447,8 @@ a{color:inherit}img{display:block;max-width:100%}
 @media(max-width:800px){
   .chart-pair{grid-template-columns:1fr;margin-bottom:40px}
   .two-col{grid-template-columns:1fr;gap:28px}
+  .tonight{grid-template-columns:1fr;row-gap:28px;margin-top:56px}
+  .cs-video.cs-tonight{margin:0 auto}
   .note-fig{max-width:320px}
   .cards{margin-bottom:32px}
   .cards.found,.cards.two,.cards.three{grid-template-columns:1fr}
@@ -479,6 +508,18 @@ a{color:inherit}img{display:block;max-width:100%}
   <a class="dd-case" href="ballrs.html">Ballrs</a>
 </div>
 
+<!-- Floating minimap -->
+<nav class="minimap" id="minimap" aria-label="Table of Contents">
+  <a href="#s01" data-idx="0">01 Overview</a>
+  <a href="#s02" data-idx="1">02 The Problem</a>
+  <a href="#s03" data-idx="2">03 Research</a>
+  <a href="#s04" data-idx="3">04 Design Decisions</a>
+  <a href="#s05" data-idx="4">05 After Launch</a>
+  <a href="#s06" data-idx="5">06 Changes</a>
+  <a href="#s07" data-idx="6">07 Results</a>
+  <a href="#s08" data-idx="7">08 What I Learned</a>
+</nav>
+
 <!-- Hero -->
 <section class="case-hero" id="hero">
   <h1>Seen</h1>
@@ -524,11 +565,11 @@ a{color:inherit}img{display:block;max-width:100%}
   <div class="case-section" id="s01" style="padding-top:96px">
     <div class="case-content">
       <div class="cs-video cs-phone">
-        <video muted loop playsinline preload="none" poster="public/images/seen/seen-watch-together-poster.jpg" aria-label="Watch Together, two people swiping until &ldquo;It&rsquo;s a match!&rdquo;">
-          <source src="public/images/seen/seen-watch-together.mp4" type="video/mp4">
+        <video muted loop playsinline preload="none" poster="public/images/seen/seen-walkthrough-tiktok-poster.jpg" aria-label="Seen walkthrough: get a rec from a friend, see why they sent it, and send it on.">
+          <source src="public/images/seen/seen-walkthrough-tiktok.mp4" type="video/mp4">
         </video>
       </div>
-      <p class="cap cap-centre">Watch Together, two people swiping until &ldquo;It&rsquo;s a match!&rdquo;</p>
+      <p class="cap cap-centre">Get a rec from a friend, see why they sent it, and send it on.</p>
     </div>
   </div>
 
@@ -765,7 +806,19 @@ a{color:inherit}img{display:block;max-width:100%}
         </ol>
       </div>
       <p class="cap screens-cap">Screens show sample data.</p>
-      <p class="after-phones">Tonight (swipe through ideas alone or with a friend until you both say yes) is shown in the video at the top.</p>
+      <div class="tonight">
+        <div class="cs-video cs-tonight">
+          <video muted loop playsinline preload="none" poster="public/images/seen/seen-tonight-tiktok-poster.jpg" aria-label="Seen Tonight: two people swipe the same cards until they both say yes.">
+            <source src="public/images/seen/seen-tonight-tiktok.mp4" type="video/mp4">
+          </video>
+        </div>
+        <dl class="decision">
+          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+          <dd class="d-what">Pick something together.</dd>
+          <dt>Why</dt>
+          <dd class="d-why">Choosing something to watch shouldn&rsquo;t take 45 minutes. Tonight lets two people swipe the same cards until they both say yes.</dd>
+        </dl>
+      </div>
     </div>
   </div>
 
@@ -825,6 +878,7 @@ a{color:inherit}img{display:block;max-width:100%}
         <li class="card"><p class="card-big">327</p><h4>recs sent</h4><p>59 marked watched.</p></li>
         <li class="card"><p class="card-big">198</p><h4>onboarded</h4><p>Early October 2026.</p></li>
       </ul>
+      <p>Both videos on this page were made for Seen&rsquo;s TikTok. Posts like these got views, but replying to people on X and Reddit brought more sign-ups.</p>
       <p>The research was right about the biggest risk. Users with friends behaved completely differently from users without, and most users never got past an empty library: in August, 83% had 5 or fewer titles. Importing history and fixing recommendation links mattered more than new features.</p>
     </div>
   </div>
@@ -891,11 +945,35 @@ a{color:inherit}img{display:block;max-width:100%}
     }
   });
 
-  /* ── PROGRESS BAR ── */
+  /* ── PROGRESS BAR + SECTION MENU ── */
   var fill=document.getElementById('progressFill');
+  var minimap=document.getElementById('minimap');
+  var mmLinks=minimap.querySelectorAll('a');
+  /* Only the sections the menu links to; anything after the last one keeps it highlighted */
+  var sections=[].map.call(mmLinks,function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+  var heroEl=document.getElementById('hero');
+  var activeIdx=-1;
   function onScroll(){
     var h=document.documentElement.scrollHeight-window.innerHeight;
     fill.style.height=(h>0?(window.scrollY/h)*100:0)+'%';
+
+    if(heroEl.getBoundingClientRect().bottom<0){minimap.classList.add('on')}else{minimap.classList.remove('on')}
+
+    var newIdx=0;
+    for(var i=0;i<sections.length;i++){
+      if(sections[i].getBoundingClientRect().top<window.innerHeight*.4)newIdx=i;
+    }
+    if(newIdx!==activeIdx){
+      if(activeIdx>=0&&mmLinks[activeIdx]){
+        mmLinks[activeIdx].classList.remove('active');
+        mmLinks[activeIdx].removeAttribute('aria-current');
+      }
+      activeIdx=newIdx;
+      if(mmLinks[activeIdx]){
+        mmLinks[activeIdx].classList.add('active');
+        mmLinks[activeIdx].setAttribute('aria-current','true');
+      }
+    }
   }
   window.addEventListener('scroll',onScroll,{passive:true});
   onScroll();
@@ -949,7 +1027,8 @@ a{color:inherit}img{display:block;max-width:100%}
   else{
     var decObs=new IntersectionObserver(function(entries){
       entries.forEach(function(e){
-        if(!e.isIntersecting||scrollyMq.matches)return;
+        /* Steps in the sticky layout draw when they become active instead */
+        if(!e.isIntersecting||(scrollyMq.matches&&e.target.closest('.dstep')))return;
         e.target.classList.add('is-drawn');decObs.unobserve(e.target);
       });
     },{threshold:.6});
