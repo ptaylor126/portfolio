@@ -280,15 +280,23 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .bento-tile:nth-child(4){transition-delay:.3s}
 .bento-tile:nth-child(5){transition-delay:.4s}
 .bento-tile:nth-child(6){transition-delay:.5s}
-.bento-tile:focus-visible,.duo-half:focus-visible{outline:2px solid var(--accent);outline-offset:8px;border-radius:24px}
+.bento-tile:focus-visible{outline:2px solid var(--accent);outline-offset:8px;border-radius:24px}
 
-/* Two Mac apps: one tile, two halves, each its own link */
-/* The label sits in the gap above the tile, so the images line up with the tile beside it */
-.bento-duo{position:relative}
-.duo-label{position:absolute;left:4px;bottom:100%;margin-bottom:12px;font:700 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#4A4A4A}
-.duo-halves{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1}
-.duo-half{display:flex;flex-direction:column;text-decoration:none;color:var(--ink);cursor:none}
-.duo-half .bt-media{aspect-ratio:auto;flex:1;min-height:0}
+/* Sunset and Loupe: one tile, two overlapping screenshots. The tile is not a link;
+   each screenshot and each line under it links to its own page. */
+.duo-shot{position:absolute;display:block;border-radius:8px;cursor:none;transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s}
+.duo-shot img{display:block;width:100%;height:auto;border-radius:8px}
+/* A faint light edge, so the dark Loupe window stands out on the charcoal */
+.duo-shot::after{content:'';position:absolute;inset:0;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);pointer-events:none}
+.duo-sunset{left:7%;bottom:10%;width:62%;z-index:2;box-shadow:0 14px 34px rgba(0,0,0,.45)}
+.duo-loupe{right:6%;top:11%;width:50%;z-index:1;box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.duo-shot:hover,.duo-shot:focus-visible,.duo-shot.is-hot{transform:translateY(-6px);box-shadow:0 24px 48px rgba(0,0,0,.6)}
+.duo-shot:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.duo-lines{margin-bottom:16px}
+.duo-line{display:block;width:fit-content;font:400 16px/1.5 var(--tight);color:#4A4A4A;text-decoration:none;cursor:none;transition:color .2s}
+.duo-line strong{font-weight:700;color:var(--ink);transition:color .2s}
+.duo-line:hover,.duo-line:focus-visible,.duo-line.is-hot,.duo-line:hover strong,.duo-line:focus-visible strong,.duo-line.is-hot strong{color:var(--accent)}
+.duo-line:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
 
 /* Image panel — brand colour block with the screenshot centred */
 .bt-media{
@@ -328,10 +336,10 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 }
 
 /* Hover — image lifts slightly, title and tags take the accent */
-.bento-tile:not(.bento-duo):hover .bt-media,.duo-half:hover .bt-media,.bento-tile.touch-active .bt-media{box-shadow:0 14px 40px rgba(0,0,0,.10)}
-.bento-tile:not(.bento-duo):hover .bt-img,.duo-half:hover .bt-img,.bento-tile.touch-active .bt-img{transform:translate(-50%,-50%) scale(1.04)}
-.bento-tile:not(.bento-duo):hover .bt-title,.duo-half:hover .bt-title,.bento-tile.touch-active .bt-title{color:var(--accent)}
-.bento-tile:hover .bt-tags span,.bento-tile.touch-active .bt-tags span{background:var(--accent);border-color:var(--accent);color:#fff}
+.bento-tile:not(.bento-duo):hover .bt-media,.bento-tile.touch-active .bt-media{box-shadow:0 14px 40px rgba(0,0,0,.10)}
+.bento-tile:not(.bento-duo):hover .bt-img,.bento-tile.touch-active .bt-img{transform:translate(-50%,-50%) scale(1.04)}
+.bento-tile:not(.bento-duo):hover .bt-title,.bento-tile.touch-active .bt-title{color:var(--accent)}
+.bento-tile:not(.bento-duo):hover .bt-tags span,.bento-tile.touch-active .bt-tags span{background:var(--accent);border-color:var(--accent);color:#fff}
 
 /* ── Tile colors ── */
 .bt-mint{background:#2D6A4F}
@@ -340,6 +348,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .bt-burnt{background:#C45A2D}
 .bt-rose{background:#8C3B4A}
 .bt-album{background:#10234D}
+.bt-charcoal{background:#26232B}
 
 /* ── VIEW cursor pill — follows mouse on card hover ── */
 .view-cursor{
@@ -362,8 +371,6 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .work-inner{padding:56px calc(var(--frame) + 20px) 64px}
   .work-heading{margin-bottom:28px}
   .bento{grid-template-columns:1fr;gap:60px}
-  .duo-halves{grid-template-columns:1fr;gap:40px}
-  .duo-half .bt-media{aspect-ratio:4/3;flex:none}
   .bt-content{padding-top:20px}
 }
 
@@ -373,7 +380,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .meta-dot,.scroll-sig .ss-arrow{animation:none}
   .whos-this,.wt-arrow path{transition:none!important}
   .bento-tile{opacity:1;transform:none;transition:none}
-  .bt-media,.bt-img,.bt-title,.bt-tags span{transition:none}
+  .bt-media,.bt-img,.bt-title,.bt-tags span,.duo-shot,.duo-line,.duo-line strong{transition:none}
+  .duo-shot:hover,.duo-shot:focus-visible,.duo-shot.is-hot{transform:none}
 }
 
 /* ================================================================
@@ -485,24 +493,24 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     </div>
   </a>
 
-  <!-- 02 Two Mac apps — Sunset (rose) and Loupe (purple), each half its own link -->
+  <!-- 02 Sunset and Loupe — Charcoal. Not one big link: each screenshot and each line links to its own page -->
   <div class="bento-tile bento-duo">
-    <p class="duo-label">Two Mac apps</p>
-    <div class="duo-halves">
-      <a class="duo-half" href="sunset.html">
-        <div class="bt-media bt-rose"><img class="bt-img bt-img--wide" src="public/images/sunset/today.webp" alt="Sunset Today screen"></div>
-        <div class="bt-content">
-          <h3 class="bt-title">Sunset</h3>
-          <p class="bt-desc">A Mac app that turns an idea into on-brand social posts.</p>
-        </div>
-      </a>
-      <a class="duo-half" href="loupe.html">
-        <div class="bt-media bt-purple"><img class="bt-img bt-img--wide" src="public/images/loupe/tag-editor.png" alt="Loupe Tag Editor"></div>
-        <div class="bt-content">
-          <h3 class="bt-title">Loupe</h3>
-          <p class="bt-desc">A Mac app that tags photos using local AI. Built with SwiftUI and Claude Code.</p>
-        </div>
-      </a>
+    <div class="bt-media bt-charcoal">
+      <a class="duo-shot duo-sunset" href="sunset.html" data-app="sunset" aria-label="Sunset case study"><img src="public/images/sunset/today.webp" alt="Sunset Today screen"></a>
+      <a class="duo-shot duo-loupe" href="loupe.html" data-app="loupe" aria-label="Loupe case study"><img src="public/images/loupe/tag-editor.png" alt="Loupe Tag Editor"></a>
+    </div>
+    <div class="bt-content">
+      <h3 class="bt-title">Sunset and Loupe</h3>
+      <p class="bt-facts">Two Mac apps · Designer and developer</p>
+      <div class="duo-lines">
+        <a class="duo-line" href="sunset.html" data-app="sunset"><strong>Sunset:</strong> turns an idea into on-brand social posts <span aria-hidden="true">→</span></a>
+        <a class="duo-line" href="loupe.html" data-app="loupe"><strong>Loupe:</strong> tags photos using local AI <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="bt-tags">
+        <span>AI products</span>
+        <span>Data &amp; dashboards</span>
+        <span>Built in code</span>
+      </div>
     </div>
   </div>
 
@@ -630,7 +638,16 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
   /* ── VIEW CURSOR ── */
   var vc=document.getElementById('viewCur');
-  document.querySelectorAll('a.bento-tile,.duo-half').forEach(function(t){
+  /* Sunset and Loupe: a screenshot and its line light up together */
+  var duoLinks=document.querySelectorAll('.bento-duo [data-app]');
+  duoLinks.forEach(function(a){
+    function set(on){duoLinks.forEach(function(b){if(b.getAttribute('data-app')===a.getAttribute('data-app'))b.classList.toggle('is-hot',on)})}
+    a.addEventListener('mouseenter',function(){set(true)});
+    a.addEventListener('mouseleave',function(){set(false)});
+    a.addEventListener('focus',function(){set(true)});
+    a.addEventListener('blur',function(){set(false)});
+  });
+  document.querySelectorAll('a.bento-tile,.duo-shot').forEach(function(t){
     t.addEventListener('mouseenter',function(){vc.classList.add('active')});
     t.addEventListener('mouseleave',function(){vc.classList.remove('active')});
   });
