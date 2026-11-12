@@ -7,3 +7,6 @@ node_modules/
 
 # Case-study working files (notes, source images): kept locally, not published
 case-studies/
+
+# Handoff notes and working files: kept locally, not published
+handoffs/
