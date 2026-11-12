@@ -265,9 +265,12 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 /* 160px above it (the section's 88px top padding plus 72px) and 160px under it, so it reads as its own section */
 .reel{margin-top:72px;margin-bottom:160px}
 .reel-label{font:700 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#6B6B6B;margin-bottom:16px}
-/* The full width of the grid, 16:9. Where that would be taller than 85% of the screen it stops there and is centred.
+/* The full width of the grid, 16:9, unless the whole block (heading, video, caption row and button) would not fit
+   in the window. Then the box gets narrower and is centred. 176px is everything that is not video, measured in the
+   browser: 81px for the heading, caption row and their gaps, 12px of page frame top and bottom, 32px of space above
+   and below, and 7px spare. This page has no sticky header.
    The label, video and caption row share one box, so they always have the same left and right edges. */
-.reel-box{margin:0 auto;max-width:min(100%,calc(85vh * 16 / 9))}
+.reel-box{margin:0 auto;max-width:min(100%,calc((100vh - 176px) * 16 / 9));max-width:min(100%,calc((100svh - 176px) * 16 / 9))}
 .cs-video{position:relative}
 .cs-video video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:#F6F5F0}
 .reel-foot{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 32px;margin-top:12px}
@@ -534,7 +537,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
   <!-- 01 JetSweat — Orange -->
   <a class="bento-tile" href="jetsweat.html">
-    <div class="bt-media bt-burnt"><img class="bt-img bt-img--fill" src="public/images/tiles/tile-jetsweat.webp" width="1192" height="894" alt="JetSweat dashboard with cards for users, subscribers and cancellations, a revenue chart and upcoming livestreams"></div>
+    <div class="bt-media bt-burnt"><img class="bt-img bt-img--fill" src="public/images/tiles/tile-jetsweat.webp" width="1192" height="894" alt="JetSweat dashboard with cards for users, subscribers and cancellations, a revenue chart, upcoming livestreams and engagement metrics"></div>
     <div class="bt-content">
       <h3 class="bt-title">JetSweat</h3>
       <p class="bt-facts">Freelance Product Designer · 3 months · B2B dashboard</p>
@@ -586,7 +589,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
   <!-- 04 5ives — Album navy -->
   <a class="bento-tile" href="5ives.html">
-    <div class="bt-media bt-album"><img class="bt-img bt-img--fill" src="public/images/tiles/tile-5ives.webp" width="1192" height="894" alt="Three 5ives screens: the matchweek home screen with live points, the Pick your five squad on a pitch, and a league table"></div>
+    <div class="bt-media bt-album"><img class="bt-img bt-img--fill" src="public/images/tiles/tile-5ives.webp" width="1192" height="894" alt="Two 5ives screens: the matchweek home screen with live points, and Pick your five with the squad on a pitch"></div>
     <div class="bt-content">
       <h3 class="bt-title">5ives</h3>
       <p class="bt-facts">Designer and developer · Live web app · Fantasy football</p>
@@ -617,13 +620,13 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
   <!-- 06 Ballrs — Navy -->
   <a class="bento-tile" href="ballrs.html">
-    <div class="bt-media bt-sand"><img class="bt-img bt-img--fill" src="public/images/tiles/tile-ballrs-sheet.webp" width="1192" height="894" alt="Ballrs design system sheet: game mode icons, the colour palette, buttons, a level and XP bar, and a friends league table"></div>
+    <div class="bt-media bt-sand"><img class="bt-img bt-img--fill" src="public/images/tiles/tile-ballrs-sheet.webp" width="1192" height="894" alt="Pieces of the redesigned Ballrs app: today&rsquo;s games grid, Challenge friend and Quick match buttons, the level and XP bar, a friends league table, and the Archivo font with the colour palette"></div>
     <div class="bt-content">
       <h3 class="bt-title">Ballrs</h3>
       <p class="bt-facts">Designer and developer · 2025–now · Daily sports trivia app</p>
-      <p class="bt-desc">Designed, built, and shipped a multi-sport trivia app solo.</p>
+      <p class="bt-desc">Designed, built and shipped a daily sports trivia app with a co-founder, then redesigned it around one design system.</p>
       <div class="bt-tags">
-        <span>UX Research</span>
+        <span>Design System</span>
         <span>Onboarding &amp; flows</span>
         <span>Built in code</span>
       </div>
