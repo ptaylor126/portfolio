@@ -154,25 +154,6 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 
 /* ================================================================
-   SHOWREEL
-   ================================================================ */
-.showreel{
-  padding:32px calc(var(--frame) + var(--pad)) 96px;
-  max-width:1200px;margin:0 auto;
-  position:relative;z-index:1;
-}
-.showreel .timeline-label{margin-bottom:16px}
-.showreel p{font:400 18px/1.6 var(--sans);color:#555;max-width:65ch}
-/* Never taller than 80% of the screen; the width follows the 16:9 shape */
-.cs-video{position:relative;margin:40px auto 0;max-width:min(100%,calc(80vh * 16 / 9))}
-.cs-video video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:#F6F5F0}
-@media(max-width:768px){
-  .showreel{padding-bottom:64px}
-  .showreel p{font-size:17px}
-  .cs-video{margin-top:28px}
-}
-
-/* ================================================================
    PHOTOGRAPHY ARCHIVE: Film Strip Reveal
    ================================================================ */
 .photo-archive{
@@ -393,7 +374,6 @@ a{color:inherit}img{display:block;max-width:100%}
 @media(max-width:768px){.about-story p{font-size:17px}}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
-<script defer src="public/video-controls.js"></script>
 </head>
 <body>
 <div class="frame"></div>
@@ -495,17 +475,6 @@ a{color:inherit}img{display:block;max-width:100%}
   </aside>
 
 </div>
-
-<!-- Showreel -->
-<section class="showreel">
-  <div class="timeline-label">Apps I&rsquo;ve built</div>
-  <p>Seen, Ball Bearing, LEVEL, 5ives, Loupe, Sunset, Ballrs and Space Runner. I designed and built them, 5ives and Ballrs with a co-founder.</p>
-  <div class="cs-video">
-    <video muted loop playsinline preload="none" controls poster="public/images/about/showreel-poster.jpg" aria-label="Showreel of the apps I&rsquo;ve designed and built.">
-      <source src="public/images/about/showreel.mp4" type="video/mp4">
-    </video>
-  </div>
-</section>
 
 <!-- Photography Archive -->
 <section class="photo-archive">
