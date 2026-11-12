@@ -1045,18 +1045,17 @@ a{color:inherit}img{display:block;max-width:100%}
 .inapp-circle{width:64px;height:64px;border-radius:50%;background:#E2DACA;display:flex;align-items:center;justify-content:center;flex:none}
 .inapp-panel.dark .inapp-circle{background:#242832}
 .inapp-circle img{width:80%;height:80%;object-fit:contain;display:block}
-/* Redesign onboarding */
-.ob5{margin-top:72px}
-.ob5-label{font:800 13px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--ink);margin:40px 0 14px}
+/* Onboarding: three versions */
+.case-content h3.ob-step{font:800 20px/1.35 var(--sans);letter-spacing:-.01em;color:var(--ink);margin:72px 0 12px}
+.ob-shot{margin-top:28px}
+.ob5-label{font:700 20px/1.3 var(--sans);color:var(--ink);margin:48px 0 16px}
 .ob5-scroll{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
-.ob5-scroll img{display:block;width:100%;height:auto}
+.ob5-scroll img{display:block;width:100%;height:auto;border:1px solid rgba(0,0,0,.12);border-radius:8px}
+.case-content p.ob-after-grid{margin-top:20px}
 @media(max-width:700px){
   .ob5-scroll{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .case-content .ob5-scroll img{flex:none;width:110px;max-width:none}
 }
-/* The new slides have transparent rounded corners (54px on a 600x1298 image); the border follows them */
-.ob5-intro img{border:1px solid rgba(0,0,0,.14);border-radius:9%/4.16%}
-.ob5-sub{font:700 15px/1.4 var(--sans);color:var(--ink);margin-bottom:12px}
 .ob5-after{display:flex;gap:40px;align-items:flex-start;margin-top:40px;padding-bottom:40px}
 .ob5-after figure{margin:0;width:260px;max-width:100%}
 .ob5-after figcaption{font:700 15px/1.4 var(--sans);color:var(--ink);margin-bottom:12px}
@@ -1940,29 +1939,57 @@ a{color:inherit}img{display:block;max-width:100%}
   <div class="case-section" id="s05" style="padding-top:96px">
     <div class="case-label highlight">05 Onboarding</div>
     <div class="case-content">
-      <h2 class="problem-headline">Demos instead of instructions.</h2>
-      <p>The first version of onboarding was static instruction cards. Text explaining how each game mode worked. Nobody reads instructions for a trivia game. Replaced them with animated demonstrations that simulate actual gameplay.</p>
+      <h2 class="problem-headline">Three versions, each closer to the game.</h2>
+      <p>Onboarding changed twice. Each version got new players to a real game sooner.</p>
 
-      <div class="ba-row" style="margin-top:40px;padding-bottom:56px;justify-content:flex-start">
-        <div class="ba-col">
-          <div class="hs-label">Static Instructions (Before)</div>
-          <div class="soft-frame" style="width:260px"><img src="public/images/ballrs/onboarding-static.PNG" alt="Static onboarding instructions"></div>
-        </div>
-        <div class="ba-col">
-          <div class="hs-label">Animated Demo (After)</div>
-          <div class="soft-frame" style="width:260px"><video src="public/images/ballrs/onboarding.mov" autoplay loop muted playsinline></video></div>
-        </div>
+      <h3 class="ob-step">Version 1: instruction cards.</h3>
+      <p>The first version of onboarding was static instruction cards. Text explaining how each game mode worked. Nobody reads instructions for a trivia game.</p>
+      <div class="soft-frame ob-shot" style="width:260px"><img src="public/images/ballrs/onboarding-static.PNG" alt="Static onboarding instructions"></div>
+
+      <h3 class="ob-step">Version 2: animated demos.</h3>
+      <p>Replaced them with animated demonstrations that simulate actual gameplay.</p>
+      <div class="soft-frame ob-shot" style="width:260px"><video src="public/images/ballrs/onboarding.mov" autoplay loop muted playsinline></video></div>
+      <div class="ob5-label">12 screens before your first game</div>
+      <div class="ob5-scroll" tabindex="0" role="group" aria-label="The old onboarding: 11 intro slides explaining each game, then a Choose a Username screen.">
+          <img src="public/images/ballrs/redesign/onboarding-before-01.webp" alt="Old onboarding screen 1 of 12" width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-02.webp" alt="Old onboarding screen 2 of 12" width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-03.webp" alt="Old onboarding screen 3 of 12" width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-04.webp" alt="Old onboarding screen 4 of 12" width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-05.webp" alt="Old onboarding screen 5 of 12" width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-06.webp" alt="Old onboarding screen 6 of 12" width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-07.webp" alt="Old onboarding screen 7 of 12" width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-08.webp" alt="Old onboarding screen 8 of 12" width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-09.webp" alt="Old onboarding screen 9 of 12" width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-10.webp" alt="Old onboarding screen 10 of 12" width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-11.webp" alt="Old onboarding screen 11 of 12" width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-before-12.webp" alt="Old onboarding screen 12 of 12" width="360" height="779" loading="lazy">
       </div>
+      <p class="ob-after-grid">The demos were clearer, but a new player still went through 11 slides and a username screen before playing anything.</p>
 
-      <p>For existing users who had already passed the onboarding, these screens didn't exist. But new game modes still needed explaining. Built a separate set of introduction screens that appear the first time an existing user opens a new game mode. Same animated approach, just contextual.</p>
-
-      <div class="ba-row" style="margin-top:40px;padding-bottom:56px;justify-content:flex-start">
-        <div class="ba-col">
-          <div class="hs-label">New Game Mode Intro Screen</div>
-          <div class="soft-frame" style="width:260px;border-radius:0"><img src="public/images/ballrs/new-games-bottom-sheet.png" alt="New game mode bottom sheet"></div>
-          <div class="ba-caption" style="text-align:left">Contextual sheets introduce new modes to existing users via a single-action bottom sheet.</div>
-        </div>
+      <h3 class="ob-step">Now: play first.</h3>
+      <p>In the redesign there are 4 short intro slides, then you pick a sport and go straight into today's real Clue Drop, with a one-line tip. The username comes after the game, as a &ldquo;Save your score&rdquo; card on the result. Players without a username stay off the leaderboards, and the prompt to add an email moves much later.</p>
+      <div class="ob5-label">4 short slides</div>
+      <div class="ob5-scroll" tabindex="0" role="group" aria-label="The four intro slides of the new onboarding">
+          <img src="public/images/ballrs/redesign/onboarding-after-intro-1.webp" alt="Intro slide 1: Ballrs, daily sports trivia." width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-after-intro-2.webp" alt="Intro slide 2: 7 games, every day." width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-after-intro-3.webp" alt="Intro slide 3: earn XP and level up." width="360" height="779" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-after-intro-4.webp" alt="Intro slide 4: play your friends." width="360" height="779" loading="lazy">
       </div>
+        <div class="ob5-after">
+        <figure>
+          <figcaption>1. Pick a sport</figcaption>
+          <div class="soft-frame"><img src="public/images/ballrs/redesign/onboarding-after-welcome.webp" alt="Welcome screen: pick NBA, Premier League, NFL or MLB to play your first puzzle now." width="600" height="1298" loading="lazy"></div>
+        </figure>
+        <figure>
+          <figcaption>2. Play today's Clue Drop</figcaption>
+          <div class="soft-frame"><img src="public/images/ballrs/redesign/onboarding-after-game.webp" alt="Clue Drop with a one-line tip explaining how to play." width="600" height="1298" loading="lazy"></div>
+        </figure>
+        <figure>
+          <figcaption>3. Save your score</figcaption>
+          <div class="soft-frame"><img src="public/images/ballrs/redesign/onboarding-after-save.webp" alt="The result shows all six clues, then a Save your score card to pick a username." width="600" height="1298" loading="lazy"></div>
+        </figure>
+        </div>
+      <p>It's too early for numbers on this change. The bigger challenge for Ballrs is getting people to find the app in the first place.</p>
 
       <dl class="decision">
         <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
@@ -1978,49 +2005,14 @@ a{color:inherit}img{display:block;max-width:100%}
         <dd class="d-why">Random name generator and custom usernames both run through a profanity filter. Learned this the hard way when a leaderboard username had to be manually corrected in the database.</dd>
       </dl>
 
-      <div class="ob5">
-        <h2 class="problem-headline">The redesign: play first.</h2>
-        <p>Before, a new player went through 11 intro slides, one for each game, then had to choose a username before playing anything. In the redesign there are 4 short intro slides, then you pick a sport and go straight into today's real Clue Drop, with a one-line tip. The username comes after the game, as a &ldquo;Save your score&rdquo; card on the result. Players without a username stay off the leaderboards, and the prompt to add an email moves much later.</p>
+      <p>For existing users who had already passed the onboarding, these screens didn't exist. But new game modes still needed explaining. Built a separate set of introduction screens that appear the first time an existing user opens a new game mode. Same animated approach, just contextual.</p>
 
-        <div class="ob5-label">Before: 12 screens before your first game</div>
-        <div class="ob5-scroll" tabindex="0" role="group" aria-label="The old onboarding: 11 intro slides explaining each game, then a Choose a Username screen.">
-          <img src="public/images/ballrs/redesign/onboarding-before-01.webp" alt="Old onboarding screen 1 of 12" width="240" height="519" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-before-02.webp" alt="Old onboarding screen 2 of 12" width="240" height="519" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-before-03.webp" alt="Old onboarding screen 3 of 12" width="240" height="519" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-before-04.webp" alt="Old onboarding screen 4 of 12" width="240" height="519" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-before-05.webp" alt="Old onboarding screen 5 of 12" width="240" height="519" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-before-06.webp" alt="Old onboarding screen 6 of 12" width="240" height="519" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-before-07.webp" alt="Old onboarding screen 7 of 12" width="240" height="519" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-before-08.webp" alt="Old onboarding screen 8 of 12" width="240" height="519" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-before-09.webp" alt="Old onboarding screen 9 of 12" width="240" height="519" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-before-10.webp" alt="Old onboarding screen 10 of 12" width="240" height="519" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-before-11.webp" alt="Old onboarding screen 11 of 12" width="240" height="519" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-before-12.webp" alt="Old onboarding screen 12 of 12" width="240" height="519" loading="lazy">
+      <div class="ba-row" style="margin-top:40px;padding-bottom:56px;justify-content:flex-start">
+        <div class="ba-col">
+          <div class="hs-label">New Game Mode Intro Screen</div>
+          <div class="soft-frame" style="width:260px;border-radius:0"><img src="public/images/ballrs/new-games-bottom-sheet.png" alt="New game mode bottom sheet"></div>
+          <div class="ba-caption" style="text-align:left">Contextual sheets introduce new modes to existing users via a single-action bottom sheet.</div>
         </div>
-
-        <div class="ob5-label">After: 4 short slides, then you&rsquo;re playing</div>
-        <div class="ob5-sub">Intro slides</div>
-        <div class="ob5-scroll ob5-intro" tabindex="0" role="group" aria-label="The four intro slides of the new onboarding">
-          <img src="public/images/ballrs/redesign/onboarding-after-intro-1.webp" alt="Intro slide 1: Ballrs, daily sports trivia." width="600" height="1298" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-after-intro-2.webp" alt="Intro slide 2: 7 games, every day." width="600" height="1298" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-after-intro-3.webp" alt="Intro slide 3: earn XP and level up." width="600" height="1298" loading="lazy">
-          <img src="public/images/ballrs/redesign/onboarding-after-intro-4.webp" alt="Intro slide 4: play your friends." width="600" height="1298" loading="lazy">
-        </div>
-        <div class="ob5-after">
-        <figure>
-          <figcaption>1. Pick a sport</figcaption>
-          <div class="soft-frame"><img src="public/images/ballrs/redesign/onboarding-after-welcome.webp" alt="Welcome screen: pick NBA, Premier League, NFL or MLB to play your first puzzle now." width="600" height="1298" loading="lazy"></div>
-        </figure>
-        <figure>
-          <figcaption>2. Play today's Clue Drop</figcaption>
-          <div class="soft-frame"><img src="public/images/ballrs/redesign/onboarding-after-game.webp" alt="Clue Drop with a one-line tip explaining how to play." width="600" height="1298" loading="lazy"></div>
-        </figure>
-        <figure>
-          <figcaption>3. Save your score</figcaption>
-          <div class="soft-frame"><img src="public/images/ballrs/redesign/onboarding-after-save.webp" alt="The result shows all six clues, then a Save your score card to pick a username." width="600" height="1298" loading="lazy"></div>
-        </figure>
-        </div>
-        <p>It's too early for numbers on this change. The bigger challenge for Ballrs is getting people to find the app in the first place.</p>
       </div>
     </div>
   </div>
