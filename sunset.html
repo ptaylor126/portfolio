@@ -224,6 +224,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .cs-lead{font:600 26px/1.35 var(--sans);letter-spacing:-.015em;color:var(--ink);max-width:44ch}
 .cs-cols{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;max-width:960px}
 .cs-text{font:400 18px/1.6 var(--sans);color:#555}
+.cs-text + .cs-text{margin-top:16px}
 .cs-skills{list-style:none;display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:48px;font:600 15px/1.4 var(--sans);color:#4A4A4A}
 @media(max-width:800px){
   .case-summary{padding:24px calc(var(--frame) + 20px) 64px}
@@ -246,6 +247,8 @@ a{color:inherit}img{display:block;max-width:100%}
 .shot img{width:100%;height:auto;border-radius:8px;border:1px solid rgba(0,0,0,.12)}
 .shot-wide{margin-top:96px}
 .shot-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.shot-tag{display:block;font:700 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.06em;color:#555;margin-bottom:10px}
+.shot-pair div img{display:block}
 .cap{font:400 14px/1.4 var(--sans);color:#555;margin-top:12px}
 @media(max-width:800px){
   .shot{margin-top:28px}
@@ -318,6 +321,7 @@ a{color:inherit}img{display:block;max-width:100%}
     <div>
       <p class="cs-label">What I did</p>
       <p class="cs-text">I designed and built a Mac app to run social media for my apps. It stores each app&rsquo;s brand, uses templates to keep posts consistent, and turns an idea into posts with captions and music suggestions. I review, schedule on a timeline and export for TikTok, Instagram, X and YouTube Shorts.</p>
+      <p class="cs-text">I designed it, built it and set its rules. I wrote a short spec for each feature, about 20 in all, tested every build on my own posts, and kept a log of each design decision and why I made it.</p>
     </div>
     <div>
       <p class="cs-label">Outcome</p>
@@ -378,7 +382,8 @@ a{color:inherit}img{display:block;max-width:100%}
   <div class="case-section" id="s02" style="padding-top:96px">
     <div class="case-content">
       <h2 class="problem-headline">Checking what the AI made</h2>
-      <p>The AI lists every step it took, with a tick or a warning. If it isn&rsquo;t sure about something, it says so and asks. Here it matched Gomorrah to both a 2008 film and a 2014 series, and asks which one I meant. Nothing is posted until I approve it.</p>
+      <p>Nothing the AI makes goes out without me. Drafts wait in To check with a list of what the AI did and anything it wasn&rsquo;t sure about. Approving a post saves a record, so each post shows &ldquo;With AI, approved by you on 10 November&rdquo; or &ldquo;By you&rdquo;.</p>
+      <p>The AI can&rsquo;t make up numbers either. When I ask Insights a question, the figures are worked out in code first. The AI must name the post and figure behind each point it makes, and any number it uses that it wasn&rsquo;t given is listed under its answer.</p>
       <figure class="shot">
         <img src="public/images/sunset/to-check.webp" alt="Sunset To check screen. A draft post sits next to a list of what the AI did, with a warning that asks which Gomorrah was meant." width="2400" height="1500" loading="lazy">
         <figcaption class="cap">Screens show sample data.</figcaption>
@@ -390,15 +395,46 @@ a{color:inherit}img{display:block;max-width:100%}
   <div class="case-section" id="s03" style="padding-top:96px">
     <div class="case-content">
       <h2 class="problem-headline">Seeing what works</h2>
-      <p>Insights compares every post with my median views. Green bars are well above the median, grey are close to it, and orange are below. So colour shows good or bad rather than up or down. The cards at the top turn the data into one thing to repeat, one to change and one to stop.</p>
+      <p>I used the median, not the average, so one post that takes off doesn&rsquo;t hide how the rest are doing. Each signal needs at least five posts. Below that, the card says &ldquo;Not enough posts yet (3 of 5)&rdquo; instead of showing a number that means nothing. The signups chart shows posts and signups side by side, and says plainly that it doesn&rsquo;t prove one caused the other.</p>
       <figure class="shot">
         <img src="public/images/sunset/insights.webp" alt="Sunset Insights screen. Three cards at the top say what to repeat, change and stop. Below, each post has a bar comparing it with the median." width="2400" height="1500" loading="lazy">
+        <figcaption class="cap">Screenshot taken earlier, so the figures are lower than the post&rsquo;s current views.</figcaption>
       </figure>
     </div>
   </div>
 
-  <!-- ── TODAY ── -->
+  <!-- ── READY TO POST ── -->
   <div class="case-section" id="s04" style="padding-top:96px">
+    <div class="case-content">
+      <h2 class="problem-headline">Ready to post</h2>
+      <p>Posting one video to four platforms meant a lot of copying and pasting, and the old window repeated the same controls for every platform. I redesigned it as one page with a tab for each platform and numbered steps: export, copy the caption, copy the pinned comment, pick a sound, then post and mark as posted. Each step ticks off as I go, so I can see where I&rsquo;m up to. Warnings sit inside the page rather than in pop-ups, and Keep on top floats it beside the browser while I upload.</p>
+      <figure class="shot">
+        <div class="shot-pair">
+          <div>
+            <span class="shot-tag">Before</span>
+            <img src="public/images/sunset/ready-to-post-before.webp" alt="The old Sunset Ready to post window: a narrow separate window repeating the same controls for each platform, with a pop-up warning." width="2400" height="1500" loading="lazy">
+          </div>
+          <div>
+            <span class="shot-tag">After</span>
+            <img src="public/images/sunset/ready-to-post-after.webp" alt="The new Sunset Ready to post page: one tab per platform and numbered steps that tick off as you go." width="2400" height="1500" loading="lazy">
+          </div>
+        </div>
+        <figcaption class="cap">Before and after</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- ── BUILT FOR EACH PLATFORM AND EACH BRAND ── -->
+  <div class="case-section" id="s05" style="padding-top:96px">
+    <div class="case-content">
+      <h2 class="problem-headline">Built for each platform and each brand</h2>
+      <p>TikTok covers parts of the video with its buttons and caption, and tall phones crop the sides. Sunset shows these safe zones on every slide, and won&rsquo;t export a post with text inside them or with a placeholder like [film] left in. A test renders every slide type to check no text gets cut off.</p>
+      <p>Sunset makes posts for Seen and 5ives, which look nothing alike. The app itself stays neutral, so the colour comes from each brand&rsquo;s chips, icons and posts. I set colour tokens for light and dark mode and checked that every text colour meets 4.5 to 1 contrast in both.</p>
+    </div>
+  </div>
+
+  <!-- ── TODAY ── -->
+  <div class="case-section" id="s06" style="padding-top:96px">
     <div class="case-content">
       <h2 class="problem-headline">Today</h2>
       <p>The home screen shows what needs me today: drafts to check, posts due, and results to enter.</p>
@@ -407,7 +443,7 @@ a{color:inherit}img{display:block;max-width:100%}
       </figure>
       <figure class="shot shot-wide">
         <div class="shot-pair">
-          <img src="public/images/sunset/to-check.webp" alt="Sunset To check screen in light mode." width="2400" height="1500" loading="lazy">
+          <img src="public/images/sunset/posts.webp" alt="Sunset Posts screen, with a status filter, a list of posts and the selected post&rsquo;s details." width="2400" height="1500" loading="lazy">
           <img src="public/images/sunset/to-check-dark.webp" alt="Sunset To check screen in dark mode." width="2400" height="1500" loading="lazy">
         </div>
         <figcaption class="cap">Light and dark</figcaption>
