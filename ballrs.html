@@ -579,7 +579,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .gd-screen img{
   width:100%;height:auto;display:block;
-  border-radius:40px;
+  border-radius:24px;
   box-shadow:0 4px 12px rgba(0,0,0,.08),0 20px 48px rgba(0,0,0,.12);
 }
 .gd-screen{
@@ -609,7 +609,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .gd-diagram.active{opacity:1}
 .gd-diagram img{
   width:auto;max-width:min(480px,100%);height:auto;max-height:calc(var(--gd-h) - 48px);display:block;
-  border-radius:40px;
+  border-radius:24px;
   box-shadow:0 4px 12px rgba(0,0,0,.08),0 20px 48px rgba(0,0,0,.12);
 }
 
@@ -1522,9 +1522,9 @@ a{color:inherit}img{display:block;max-width:100%}
 .ba{--pos:50%;position:relative;aspect-ratio:600/1298;border-radius:28px;overflow:hidden;border:1px solid rgba(0,0,0,.2);background:#F5F2EB;cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .ba img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
 .ba-before{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
-.ba-tag{position:absolute;top:12px;font:700 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.72);border-radius:999px;padding:6px 9px;pointer-events:none}
-.ba-tag-before{left:12px}
-.ba-tag-after{right:12px}
+/* Before / After tags sit above the slider, not on the screenshot */
+.ba-tags{display:flex;justify-content:space-between;margin:12px 0 10px}
+.ba-tag{font:700 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.72);border-radius:999px;padding:6px 9px}
 .ba-handle{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.35);pointer-events:none}
 .ba-handle::after{content:'';position:absolute;top:50%;left:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 7l-5 5 5 5M15 7l5 5-5 5'/%3E%3C/svg%3E") center/22px no-repeat;box-shadow:0 2px 10px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.35)}
 /* The range input is only there for the keyboard; the pointer drags the whole block */
@@ -2032,11 +2032,10 @@ a{color:inherit}img{display:block;max-width:100%}
           <dd class="d-why">Home was a stack of seven large cards, one per game. Now it&rsquo;s a grid of today&rsquo;s games with a tick on the ones you&rsquo;ve done, then duels and your league.</dd>
         </dl>
         <div class="rule-media">
+        <div class="ba-tags" aria-hidden="true"><span class="ba-tag">Before</span><span class="ba-tag">After</span></div>
         <div class="ba" data-ba>
           <img class="ba-after" src="public/images/ballrs/redesign/after-home-light.webp" alt="Ballrs Home after the redesign: a grid of today&rsquo;s games with ticks on the ones done, then trivia duels and leagues." width="600" height="1298" loading="lazy">
           <div class="ba-before"><img src="public/images/ballrs/redesign/before-home.webp" alt="Ballrs Home before the redesign: a stack of large cards, one per game, each with a different coloured shadow." width="600" height="1298" loading="lazy"></div>
-          <span class="ba-tag ba-tag-before" aria-hidden="true">Before</span>
-          <span class="ba-tag ba-tag-after" aria-hidden="true">After</span>
           <span class="ba-handle" aria-hidden="true"></span>
           <input class="ba-range" type="range" min="0" max="100" step="1" value="50" aria-label="Home screen: drag or use the arrow keys to compare before and after">
         </div>
@@ -2051,11 +2050,10 @@ a{color:inherit}img{display:block;max-width:100%}
           <dd class="d-why">Static cards had the same black border and hard shadow as buttons, so nothing stood out. Now only things you can press get an outline and shadow. Panels are plain.</dd>
         </dl>
         <div class="rule-media">
+        <div class="ba-tags" aria-hidden="true"><span class="ba-tag">Before</span><span class="ba-tag">After</span></div>
         <div class="ba" data-ba>
           <img class="ba-after" src="public/images/ballrs/redesign/after-leagues-light.webp" alt="Leagues after: buttons keep the outline and shadow, and the invite panel is plain." width="600" height="1298" loading="lazy">
           <div class="ba-before"><img src="public/images/ballrs/redesign/before-leagues.webp" alt="Leagues before: every card and button has the same black outline and hard shadow." width="600" height="1298" loading="lazy"></div>
-          <span class="ba-tag ba-tag-before" aria-hidden="true">Before</span>
-          <span class="ba-tag ba-tag-after" aria-hidden="true">After</span>
           <span class="ba-handle" aria-hidden="true"></span>
           <input class="ba-range" type="range" min="0" max="100" step="1" value="50" aria-label="Leagues screen: drag or use the arrow keys to compare before and after">
         </div>
@@ -2070,11 +2068,10 @@ a{color:inherit}img{display:block;max-width:100%}
           <dd class="d-why">Each game had its own colour on top of the sport colours, and online status showed in three different greens. Now teal and yellow are the brand pair, sport colours stay, and the purple-to-pink gradient is only for XP. Selected uses black, so chosen never looks like correct.</dd>
         </dl>
         <div class="rule-media">
+        <div class="ba-tags" aria-hidden="true"><span class="ba-tag">Before</span><span class="ba-tag">After</span></div>
         <div class="ba" data-ba>
           <img class="ba-after" src="public/images/ballrs/redesign/after-ranked-result.webp" alt="Ranked result after: white rows with a small coloured number, and a teal Continue button." width="600" height="1298" loading="lazy">
           <div class="ba-before"><img src="public/images/ballrs/redesign/before-ranked-result.webp" alt="Ranked result before: whole rows filled with green, red and yellow, and a yellow Continue button." width="600" height="1298" loading="lazy"></div>
-          <span class="ba-tag ba-tag-before" aria-hidden="true">Before</span>
-          <span class="ba-tag ba-tag-after" aria-hidden="true">After</span>
           <span class="ba-handle" aria-hidden="true"></span>
           <input class="ba-range" type="range" min="0" max="100" step="1" value="50" aria-label="Ranked result screen: drag or use the arrow keys to compare before and after">
         </div>
@@ -2089,11 +2086,10 @@ a{color:inherit}img{display:block;max-width:100%}
           <dd class="d-why">A promo banner sat above the nav and left an empty gap on Android in testing. Banners and in-app ads are gone.</dd>
         </dl>
         <div class="rule-media">
+        <div class="ba-tags" aria-hidden="true"><span class="ba-tag">Before</span><span class="ba-tag">After</span></div>
         <div class="ba" data-ba>
           <img class="ba-after" src="public/images/ballrs/redesign/after-zero-in.webp" alt="Zero-In after: the guess box sits just above the nav bar, with no banner." width="600" height="1298" loading="lazy">
           <div class="ba-before"><img src="public/images/ballrs/redesign/before-zero-in.webp" alt="Zero-In before: a Ballrs promo banner sits between the guess box and the nav bar." width="600" height="1298" loading="lazy"></div>
-          <span class="ba-tag ba-tag-before" aria-hidden="true">Before</span>
-          <span class="ba-tag ba-tag-after" aria-hidden="true">After</span>
           <span class="ba-handle" aria-hidden="true"></span>
           <input class="ba-range" type="range" min="0" max="100" step="1" value="50" aria-label="Zero-In screen: drag or use the arrow keys to compare before and after">
         </div>
