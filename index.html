@@ -262,8 +262,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   color:var(--ink);margin-bottom:40px;
 }
 /* ── Showreel above the grid ── */
-/* 88px above it (the section's top padding), 48px under it */
-.reel{margin-bottom:48px}
+/* 88px above it (the section's top padding), 120px under it so it reads as its own section */
+.reel{margin-bottom:120px}
 .reel-label{font:700 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#6B6B6B;margin-bottom:16px}
 /* The full width of the grid, 16:9. Where that would be taller than 85% of the screen it stops there and is centred.
    The label, video and caption row share one box, so they always have the same left and right edges. */
@@ -396,7 +396,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 @media(max-width:900px){
   .work-inner{padding:56px calc(var(--frame) + 20px) 64px}
   .work-heading{margin-bottom:28px}
-  .reel{margin-bottom:56px}
+  .reel{margin-bottom:80px}
   .reel-foot{flex-direction:column;align-items:flex-start}
   .bento{grid-template-columns:1fr;gap:60px}
   .bt-content{padding-top:20px}
