@@ -286,10 +286,16 @@ a,.nav-pill,.bento-tile{cursor:pointer}
    each screenshot and each line under it links to its own page. */
 .duo-shot{position:absolute;display:block;border-radius:8px;cursor:none;transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s}
 .duo-shot img{display:block;width:100%;height:auto;border-radius:8px}
-/* A faint light edge, so the dark Loupe window stands out on the charcoal */
+/* A faint light edge, so the dark Loupe window stands out on its background */
 .duo-shot::after{content:'';position:absolute;inset:0;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);pointer-events:none}
-.duo-sunset{left:7%;bottom:10%;width:62%;z-index:2;box-shadow:0 14px 34px rgba(0,0,0,.45)}
-.duo-loupe{right:6%;top:11%;width:50%;z-index:1;box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.duo-sunset{left:4%;top:42%;width:54%;z-index:2;box-shadow:0 14px 34px rgba(0,0,0,.45)}
+.duo-loupe{right:4%;top:13%;width:54%;z-index:1;box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.duo-label{position:absolute;top:14px;font:700 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:#fff;opacity:.85;transition:opacity .2s}
+.duo-label[data-app="sunset"]{left:16px}
+.duo-label[data-app="loupe"]{right:16px}
+.duo-label.is-hot{opacity:1}
+/* Small phones: Loupe sits a little lower so its label has more room */
+@media(max-width:480px){.duo-loupe{top:17%}}
 .duo-shot:hover,.duo-shot:focus-visible,.duo-shot.is-hot{transform:translateY(-6px);box-shadow:0 24px 48px rgba(0,0,0,.6)}
 .duo-shot:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .duo-lines{margin-bottom:16px}
@@ -348,7 +354,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .bt-burnt{background:#C45A2D}
 .bt-rose{background:#8C3B4A}
 .bt-album{background:#10234D}
-.bt-charcoal{background:#26232B}
+/* Sunset and Loupe: Sunset's rose on the left half, Loupe's purple on the right */
+.bt-split{background:linear-gradient(90deg,#8C3B4A 50%,#3D2C5E 50%)}
 
 /* ── VIEW cursor pill — follows mouse on card hover ── */
 .view-cursor{
@@ -372,6 +379,9 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .work-heading{margin-bottom:28px}
   .bento{grid-template-columns:1fr;gap:60px}
   .bt-content{padding-top:20px}
+  .duo-label{top:10px}
+  .duo-label[data-app="sunset"]{left:12px}
+  .duo-label[data-app="loupe"]{right:12px}
 }
 
 /* ── Reduced motion: final hero state, no animation ── */
@@ -380,7 +390,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .meta-dot,.scroll-sig .ss-arrow{animation:none}
   .whos-this,.wt-arrow path{transition:none!important}
   .bento-tile{opacity:1;transform:none;transition:none}
-  .bt-media,.bt-img,.bt-title,.bt-tags span,.duo-shot,.duo-line,.duo-line strong{transition:none}
+  .bt-media,.bt-img,.bt-title,.bt-tags span,.duo-shot,.duo-line,.duo-line strong,.duo-label{transition:none}
   .duo-shot:hover,.duo-shot:focus-visible,.duo-shot.is-hot{transform:none}
 }
 
@@ -493,11 +503,13 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     </div>
   </a>
 
-  <!-- 02 Sunset and Loupe — Charcoal. Not one big link: each screenshot and each line links to its own page -->
+  <!-- 02 Sunset and Loupe — rose and purple halves. Not one big link: each screenshot and each line links to its own page -->
   <div class="bento-tile bento-duo">
-    <div class="bt-media bt-charcoal">
+    <div class="bt-media bt-split">
+      <span class="duo-label" data-app="sunset" aria-hidden="true">Sunset</span>
+      <span class="duo-label" data-app="loupe" aria-hidden="true">Loupe</span>
       <a class="duo-shot duo-sunset" href="sunset.html" data-app="sunset" aria-label="Sunset case study"><img src="public/images/sunset/today.webp" alt="Sunset Today screen"></a>
-      <a class="duo-shot duo-loupe" href="loupe.html" data-app="loupe" aria-label="Loupe case study"><img src="public/images/loupe/tag-editor.png" alt="Loupe Tag Editor"></a>
+      <a class="duo-shot duo-loupe" href="loupe.html" data-app="loupe" aria-label="Loupe case study"><img src="public/images/loupe/loupe-tile.webp" alt="Loupe Tag Editor"></a>
     </div>
     <div class="bt-content">
       <h3 class="bt-title">Sunset and Loupe</h3>
@@ -639,9 +651,9 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   /* ── VIEW CURSOR ── */
   var vc=document.getElementById('viewCur');
   /* Sunset and Loupe: a screenshot and its line light up together */
-  var duoLinks=document.querySelectorAll('.bento-duo [data-app]');
-  duoLinks.forEach(function(a){
-    function set(on){duoLinks.forEach(function(b){if(b.getAttribute('data-app')===a.getAttribute('data-app'))b.classList.toggle('is-hot',on)})}
+  var duoParts=document.querySelectorAll('.bento-duo [data-app]');
+  document.querySelectorAll('.bento-duo a[data-app]').forEach(function(a){
+    function set(on){duoParts.forEach(function(b){if(b.getAttribute('data-app')===a.getAttribute('data-app'))b.classList.toggle('is-hot',on)})}
     a.addEventListener('mouseenter',function(){set(true)});
     a.addEventListener('mouseleave',function(){set(false)});
     a.addEventListener('focus',function(){set(true)});
