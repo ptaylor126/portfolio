@@ -265,15 +265,17 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 /* 88px above it (the section's top padding), 48px under it */
 .reel{margin-bottom:48px}
 .reel-label{font:700 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#6B6B6B;margin-bottom:16px}
-/* The full width of the grid, 16:9. On very wide screens it stops at 85% of the screen height and is centred. */
-.cs-video{position:relative;margin:0 auto;max-width:min(100%,calc(85vh * 16 / 9))}
+/* The full width of the grid, 16:9. Where that would be taller than 85% of the screen it stops there and is centred.
+   The label, video and caption row share one box, so they always have the same left and right edges. */
+.reel-box{margin:0 auto;max-width:min(100%,calc(85vh * 16 / 9))}
+.cs-video{position:relative}
 .cs-video video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:#F6F5F0}
 .reel-foot{display:flex;justify-content:space-between;align-items:baseline;gap:8px 32px;margin-top:12px}
 .reel-cap{font:400 14px/1.4 var(--tight);color:#555;max-width:70ch}
 .reel-more{flex:none;font:700 14px/1.4 var(--tight);color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .reel-more:hover{color:var(--ink)}
 #selected-work{scroll-margin-top:calc(var(--frame) + 24px)}
-/* Floating cue: shows while the showreel is on screen, hides once the grid is in view (set by the script) */
+/* Floating cue: shows while the showreel is on screen and its caption row has not come into view yet (set by the script) */
 .cs-pill{position:fixed;left:50%;bottom:calc(var(--frame) + 24px);transform:translateX(-50%);z-index:500;
   padding:12px 18px;border-radius:999px;background:var(--accent);color:#fff;
   font:700 14px/1 var(--tight);letter-spacing:.02em;text-decoration:none;white-space:nowrap;
@@ -282,6 +284,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .cs-pill.on{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .25s ease,visibility 0s}
 .cs-pill:hover{background:var(--ink)}
 .cs-pill:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+@media(max-width:767px){.cs-pill{display:none}}
 .bento{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -513,6 +516,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 
 <!-- App showreel: the same video and setup as the About page -->
 <div class="reel">
+ <div class="reel-box">
   <h2 class="reel-label">90 seconds of what I&rsquo;ve built</h2>
   <div class="cs-video">
     <video muted loop playsinline preload="none" controls poster="public/images/about/showreel-poster.jpg" aria-label="Showreel of the apps I&rsquo;ve designed and built.">
@@ -521,8 +525,9 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   </div>
   <div class="reel-foot">
     <p class="reel-cap">Seen, Ball Bearing, LEVEL, 5ives, Loupe, Sunset, Ballrs and Space Runner. I designed and built them, 5ives and Ballrs with a co-founder.</p>
-    <a class="reel-more js-to-work" href="#selected-work">6 case studies below <span aria-hidden="true">↓</span></a>
+    <a class="reel-more js-to-work" href="#selected-work">Case studies below <span aria-hidden="true">↓</span></a>
   </div>
+ </div>
 </div>
 
 <h2 class="work-heading" id="selected-work">Selected work</h2>
@@ -675,12 +680,22 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   });
   var pill=document.getElementById('csPill');
   var reelVideo=document.querySelector('.reel .cs-video');
-  var gridEl=document.querySelector('.bento');
-  if(pill&&reelVideo&&gridEl&&'IntersectionObserver' in window){
-    var reelIn=false,gridIn=false,overVideo=false;
-    function setPill(){pill.classList.toggle('on',reelIn&&!gridIn&&!overVideo)}
+  var reelFoot=document.querySelector('.reel-foot');
+  if(pill&&reelVideo&&reelFoot&&'IntersectionObserver' in window){
+    var reelIn=false,footReached=false,overVideo=false;
+    function setPill(){pill.classList.toggle('on',reelIn&&!footReached&&!overVideo)}
     new IntersectionObserver(function(es){reelIn=es[es.length-1].isIntersecting;setPill()},{threshold:0}).observe(reelVideo);
-    new IntersectionObserver(function(es){gridIn=es[es.length-1].isIntersecting;setPill()},{threshold:0}).observe(gridEl);
+    /* Hidden from the moment the caption row is about to enter the screen, and for everything below it.
+       The 90px head start means the bottom edge of the video, where its controls are, never reaches the pill. */
+    var footQueued=false;
+    function checkFoot(){
+      footQueued=false;
+      footReached=reelFoot.getBoundingClientRect().top<window.innerHeight+90;setPill();
+    }
+    function queueFoot(){if(!footQueued){footQueued=true;requestAnimationFrame(checkFoot)}}
+    window.addEventListener('scroll',queueFoot,{passive:true});
+    window.addEventListener('resize',queueFoot);
+    checkFoot();
     /* Stay out of the way of the video's own controls */
     reelVideo.addEventListener('mouseenter',function(){overVideo=true;setPill()});
     reelVideo.addEventListener('mouseleave',function(){overVideo=false;setPill()});
