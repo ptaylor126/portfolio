@@ -270,21 +270,16 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .reel-box{margin:0 auto;max-width:min(100%,calc(85vh * 16 / 9))}
 .cs-video{position:relative}
 .cs-video video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:#F6F5F0}
-.reel-foot{display:flex;justify-content:space-between;align-items:baseline;gap:8px 32px;margin-top:12px}
+.reel-foot{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 32px;margin-top:12px}
 .reel-cap{font:400 14px/1.4 var(--tight);color:#555;max-width:70ch}
-.reel-more{flex:none;font:700 14px/1.4 var(--tight);color:var(--accent);text-decoration:underline;text-underline-offset:3px}
-.reel-more:hover{color:var(--ink)}
+/* The one cue to the case studies: a static button on the right of the caption row */
+.reel-more{flex:none;display:inline-block;padding:10px 18px;border-radius:999px;background:var(--accent);color:#fff;
+  font:700 14px/1.4 var(--tight);text-decoration:none;white-space:nowrap;transition:background .15s}
+.reel-more span{display:inline-block;transition:transform .15s}
+.reel-more:hover{background:#075985}
+.reel-more:hover span{transform:translateY(2px)}
+.reel-more:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 #selected-work{scroll-margin-top:calc(var(--frame) + 24px)}
-/* Floating cue: shows while the showreel is on screen and its caption row has not come into view yet (set by the script) */
-.cs-pill{position:fixed;left:50%;bottom:calc(var(--frame) + 24px);transform:translateX(-50%);z-index:500;
-  padding:12px 18px;border-radius:999px;background:var(--accent);color:#fff;
-  font:700 14px/1 var(--tight);letter-spacing:.02em;text-decoration:none;white-space:nowrap;
-  box-shadow:0 8px 24px rgba(0,0,0,.18);
-  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility 0s linear .25s}
-.cs-pill.on{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .25s ease,visibility 0s}
-.cs-pill:hover{background:var(--ink)}
-.cs-pill:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-@media(max-width:767px){.cs-pill{display:none}}
 .bento{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -402,7 +397,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .work-inner{padding:56px calc(var(--frame) + 20px) 64px}
   .work-heading{margin-bottom:28px}
   .reel{margin-bottom:56px}
-  .reel-foot{flex-direction:column}
+  .reel-foot{flex-direction:column;align-items:flex-start}
   .bento{grid-template-columns:1fr;gap:60px}
   .bt-content{padding-top:20px}
   .duo-label{top:10px}
@@ -416,7 +411,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .meta-dot,.scroll-sig .ss-arrow{animation:none}
   .whos-this,.wt-arrow path{transition:none!important}
   .bento-tile{opacity:1;transform:none;transition:none}
-  .bt-media,.bt-img,.bt-title,.bt-tags span,.duo-shot,.duo-line,.duo-line strong,.duo-label,.cs-pill,.cs-pill.on{transition:none}
+  .bt-media,.bt-img,.bt-title,.bt-tags span,.duo-shot,.duo-line,.duo-line strong,.duo-label,.reel-more,.reel-more span{transition:none}
+  .reel-more:hover span{transform:none}
   .duo-shot:hover,.duo-shot:focus-visible,.duo-shot.is-hot{transform:none}
 }
 
@@ -635,9 +631,6 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 </div>
 </section>
 
-<!-- Floating cue to the case studies, shown while the showreel is on screen -->
-<a class="cs-pill js-to-work" id="csPill" href="#selected-work">Case studies <span aria-hidden="true">↓</span></a>
-
 <!-- Contact footer -->
 <div class="back-to-top"><a href="#" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'})"><span class="btt-arrow">&uarr;</span>Back to top</a></div>
 <footer class="contact-footer" id="contact">
@@ -669,7 +662,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     });
   });
 
-  /* ── SHOWREEL: links down to the case studies, and the floating cue ── */
+  /* ── SHOWREEL: the button under it scrolls down to the case studies ── */
   var workHeading=document.getElementById('selected-work');
   var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
   document.querySelectorAll('.js-to-work').forEach(function(a){
@@ -678,28 +671,6 @@ a,.nav-pill,.bento-tile{cursor:pointer}
       workHeading.scrollIntoView({behavior:reduceMotion.matches?'instant':'smooth',block:'start'});
     });
   });
-  var pill=document.getElementById('csPill');
-  var reelVideo=document.querySelector('.reel .cs-video');
-  var reelFoot=document.querySelector('.reel-foot');
-  if(pill&&reelVideo&&reelFoot&&'IntersectionObserver' in window){
-    var reelIn=false,footReached=false,overVideo=false;
-    function setPill(){pill.classList.toggle('on',reelIn&&!footReached&&!overVideo)}
-    new IntersectionObserver(function(es){reelIn=es[es.length-1].isIntersecting;setPill()},{threshold:0}).observe(reelVideo);
-    /* Hidden from the moment the caption row is about to enter the screen, and for everything below it.
-       The 90px head start means the bottom edge of the video, where its controls are, never reaches the pill. */
-    var footQueued=false;
-    function checkFoot(){
-      footQueued=false;
-      footReached=reelFoot.getBoundingClientRect().top<window.innerHeight+90;setPill();
-    }
-    function queueFoot(){if(!footQueued){footQueued=true;requestAnimationFrame(checkFoot)}}
-    window.addEventListener('scroll',queueFoot,{passive:true});
-    window.addEventListener('resize',queueFoot);
-    checkFoot();
-    /* Stay out of the way of the video's own controls */
-    reelVideo.addEventListener('mouseenter',function(){overVideo=true;setPill()});
-    reelVideo.addEventListener('mouseleave',function(){overVideo=false;setPill()});
-  }
 
   /* ── BENTO REVEAL ── */
   var bentoTiles=document.querySelectorAll('.bento-tile');
