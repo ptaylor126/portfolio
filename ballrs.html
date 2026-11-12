@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -1492,6 +1493,60 @@ a{color:inherit}img{display:block;max-width:100%}
   .decision dd{margin-bottom:22px}
   .decision dd:last-child{margin-bottom:0}
 }
+
+/* ── Version 5.0 redesign ── */
+.case-content p.v5-status{display:inline-block;font:600 14px/1.4 var(--sans);color:var(--ink);background:#FBF1CF;border-radius:999px;padding:6px 14px;margin:4px 0 0;max-width:none}
+.v5-cap{font:400 14px/1.4 var(--sans);color:#555;margin-top:14px;text-align:center}
+
+/* Before / after slider. --pos is how much of the "before" screen shows, from the left. */
+.ba{--pos:50%;position:relative;aspect-ratio:600/1298;border-radius:28px;overflow:hidden;border:1px solid rgba(0,0,0,.2);background:#F5F2EB;cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.ba img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+.ba-before{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.ba-tag{position:absolute;top:12px;font:700 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.72);border-radius:999px;padding:6px 9px;pointer-events:none}
+.ba-tag-before{left:12px}
+.ba-tag-after{right:12px}
+.ba-handle{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.35);pointer-events:none}
+.ba-handle::after{content:'';position:absolute;top:50%;left:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 7l-5 5 5 5M15 7l5 5-5 5'/%3E%3C/svg%3E") center/22px no-repeat;box-shadow:0 2px 10px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.35)}
+/* The range input is only there for the keyboard; the pointer drags the whole block */
+.ba-range{position:absolute;left:0;bottom:0;width:100%;height:1px;margin:0;opacity:0;pointer-events:none}
+.ba:has(.ba-range:focus-visible){outline:3px solid var(--ink);outline-offset:3px}
+/* Large and centred, but never taller than the screen under the header */
+.ba-hero{margin:56px auto 0;max-width:360px;max-width:min(360px,calc((100svh - 200px) * 600 / 1298))}
+
+/* A rule: Decision / Why with its picture beside it, alternating sides */
+.rule{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:72px;align-items:center;max-width:960px;margin:96px 0 0}
+.rule .decision{margin:0}
+.rule.flip{grid-template-columns:260px minmax(0,1fr)}
+.rule.flip .rule-media{order:-1}
+.type-sample{background:#F5F2EB;border-radius:20px;padding:28px 24px;display:flex;flex-direction:column;gap:14px;color:#141414;font-family:'Archivo',var(--sans);overflow:hidden}
+.ts-1{font-weight:900;font-stretch:125%;font-size:44px;line-height:1;letter-spacing:-.01em}
+.ts-2{font-weight:800;font-stretch:125%;font-size:24px;line-height:1.1}
+.ts-3{font-weight:500;font-stretch:100%;font-size:16px;line-height:1.4}
+.rule:has(.theme-pair){grid-template-columns:minmax(0,1fr) 400px}
+.theme-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.theme-pair img{width:100%;height:auto;border-radius:22px;border:1px solid rgba(0,0,0,.2)}
+
+.v5-colours{list-style:none;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;max-width:960px}
+.v5-colours li{display:flex;flex-direction:column;gap:3px;font:400 14px/1.35 var(--sans);color:#555}
+.v5-chip{display:block;height:64px;border-radius:12px;border:1px solid rgba(0,0,0,.12);margin-bottom:8px}
+.v5-colours strong{font-weight:700;color:var(--ink);font-size:15px}
+.v5-colours code{font:500 13px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;color:#555}
+
+.v5-fixed{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;max-width:960px}
+.v5-fixed li{background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:8px;font:400 15px/1.45 var(--sans);color:#555}
+.v5-fixed strong{font-weight:700;color:var(--ink)}
+
+@media(max-width:800px){
+  .ba-hero{margin-top:40px;max-width:min(300px,calc((100svh - 160px) * 600 / 1298))}
+  .rule,.rule.flip,.rule:has(.theme-pair){grid-template-columns:1fr;gap:28px;margin-top:64px}
+  .rule.flip .rule-media{order:0}
+  .rule-media{max-width:260px}
+  .rule:has(.theme-pair) .rule-media{max-width:340px}
+  .v5-colours{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .v5-fixed{grid-template-columns:1fr 1fr;gap:12px}
+  .v5-fixed li{padding:14px;font-size:14px}
+}
+@media(max-width:600px){.rule .decision{grid-template-columns:1fr}}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -1909,106 +1964,130 @@ a{color:inherit}img{display:block;max-width:100%}
   <div class="case-section" id="s06" style="padding-top:96px">
     <div class="case-label highlight">06 Design System</div>
     <div class="case-content">
-      <h2 class="problem-headline">Neubrutalist, on purpose.</h2>
-      <p>Bold, tactile, high contrast. Thick black borders, offset shadows, and sport-specific accent colours. Every element follows one rule: if it's filled with colour, you can tap it. If it's white, it's information.</p>
+      <h2 class="problem-headline">Version 5.0: one meaning for everything.</h2>
+      <p>Ballrs was my first proper app, and it looked rushed. Outlines and shadows were on everything, so they meant nothing. Every game had its own colour. Home was a stack of seven cards. For version 5.0 I rebuilt every screen around a short set of rules.</p>
+      <p class="v5-status">Built, not live yet. Ships as version 5.0 after a closed test.</p>
 
-      <div class="specs-list">
-        <div class="spec-item">
-          <div class="spec-label">Typography</div>
-          <div class="spec-value">DM Sans (Regular, Bold, Black)</div>
+      <figure class="ba-hero">
+        <div class="ba" data-ba>
+          <img class="ba-after" src="public/images/ballrs/redesign/after-home-light.webp" alt="Ballrs Home after the redesign: a grid of today&rsquo;s games with ticks on the ones done, then trivia duels and leagues." width="600" height="1298" loading="lazy">
+          <div class="ba-before"><img src="public/images/ballrs/redesign/before-home.webp" alt="Ballrs Home before the redesign: a stack of large cards, one per game, each with a different coloured shadow." width="600" height="1298" loading="lazy"></div>
+          <span class="ba-tag ba-tag-before" aria-hidden="true">Before</span>
+          <span class="ba-tag ba-tag-after" aria-hidden="true">After</span>
+          <span class="ba-handle" aria-hidden="true"></span>
+          <input class="ba-range" type="range" min="0" max="100" step="1" value="50" aria-label="Home screen: drag or use the arrow keys to compare before and after">
         </div>
-        <div class="spec-item">
-          <div class="spec-label">Background</div>
-          <div class="spec-value"><span class="spec-swatch" style="background:#F5F2EB"></span> Cream #F5F2EB</div>
+        <figcaption class="v5-cap">Home: seven stacked cards became a grid of today&rsquo;s games, with duels and your league at a glance.</figcaption>
+      </figure>
+
+      <div class="rule">
+        <dl class="decision">
+          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+          <dd class="d-what">Outlines mean you can press this.</dd>
+          <dt>Why</dt>
+          <dd class="d-why">Static cards had the same black border and hard shadow as buttons, so nothing stood out. Now only things you can press get an outline and shadow. Panels are plain.</dd>
+        </dl>
+        <div class="rule-media">
+        <div class="ba" data-ba>
+          <img class="ba-after" src="public/images/ballrs/redesign/after-leagues-light.webp" alt="Leagues after: buttons keep the outline and shadow, and the invite panel is plain." width="600" height="1298" loading="lazy">
+          <div class="ba-before"><img src="public/images/ballrs/redesign/before-leagues.webp" alt="Leagues before: every card and button has the same black outline and hard shadow." width="600" height="1298" loading="lazy"></div>
+          <span class="ba-tag ba-tag-before" aria-hidden="true">Before</span>
+          <span class="ba-tag ba-tag-after" aria-hidden="true">After</span>
+          <span class="ba-handle" aria-hidden="true"></span>
+          <input class="ba-range" type="range" min="0" max="100" step="1" value="50" aria-label="Leagues screen: drag or use the arrow keys to compare before and after">
         </div>
-        <div class="spec-item">
-          <div class="spec-label">Text / Borders</div>
-          <div class="spec-value"><span class="spec-swatch" style="background:#1A1A1A"></span> Black #1A1A1A</div>
-        </div>
-        <div class="spec-item">
-          <div class="spec-label">Primary Action</div>
-          <div class="spec-value"><span class="spec-swatch" style="background:#1ABC9C"></span> Teal #1ABC9C</div>
-        </div>
-        <div class="spec-item">
-          <div class="spec-label">Secondary Action</div>
-          <div class="spec-value"><span class="spec-swatch" style="background:#F2C94C"></span> Yellow #F2C94C</div>
-        </div>
-        <div class="spec-item">
-          <div class="spec-label">Sport Accents</div>
-          <div class="spec-value"><span class="spec-swatch" style="background:#E07A3D"></span> NBA &nbsp;<span class="spec-swatch" style="background:#A17AFB"></span> EPL &nbsp;<span class="spec-swatch" style="background:#3BA978"></span> NFL &nbsp;<span class="spec-swatch" style="background:#7A93D2"></span> MLB</div>
-        </div>
-        <div class="spec-item">
-          <div class="spec-label">Components</div>
-          <div class="spec-value">2px black borders, 4px offset shadow, 16px corner radius on buttons, 8px on cards</div>
         </div>
       </div>
 
-      <!-- Sport Switcher + Specs Toggle -->
-      <div class="sport-switcher" id="sportSwitcher">
-        <button class="sport-btn active" data-sport="nba" data-color="#E07A3D" data-large="#DC783C" data-text="#AF5F30"><img src="public/images/ballrs/icon-basketball.png" alt="">NBA</button>
-        <button class="sport-btn" data-sport="epl" data-color="#A17AFB" data-large="#A17AFB" data-text="#8162C9"><img src="public/images/ballrs/icon-soccer.png" alt="">EPL</button>
-        <button class="sport-btn" data-sport="nfl" data-color="#3BA978" data-large="#39A474" data-text="#2D825C"><img src="public/images/ballrs/icon-football.png" alt="">NFL</button>
-        <button class="sport-btn" data-sport="mlb" data-color="#7A93D2" data-large="#7890CE" data-text="#6074A6"><img src="public/images/ballrs/icon-baseball.png" alt="">MLB</button>
-        <button class="specs-toggle-btn" id="specsToggle" style="margin-left:auto">Dev Mode</button>
+      <div class="rule flip">
+        <dl class="decision">
+          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+          <dd class="d-what">Every colour has one job.</dd>
+          <dt>Why</dt>
+          <dd class="d-why">Each game had its own colour on top of the sport colours, and online status showed in three different greens. Now teal and yellow are the brand pair, sport colours stay, and the purple-to-pink gradient is only for XP. Selected uses black, so chosen never looks like correct.</dd>
+        </dl>
+        <div class="rule-media">
+        <div class="ba" data-ba>
+          <img class="ba-after" src="public/images/ballrs/redesign/after-ranked-result.webp" alt="Ranked result after: white rows with a small coloured number, and a teal Continue button." width="600" height="1298" loading="lazy">
+          <div class="ba-before"><img src="public/images/ballrs/redesign/before-ranked-result.webp" alt="Ranked result before: whole rows filled with green, red and yellow, and a yellow Continue button." width="600" height="1298" loading="lazy"></div>
+          <span class="ba-tag ba-tag-before" aria-hidden="true">Before</span>
+          <span class="ba-tag ba-tag-after" aria-hidden="true">After</span>
+          <span class="ba-handle" aria-hidden="true"></span>
+          <input class="ba-range" type="range" min="0" max="100" step="1" value="50" aria-label="Ranked result screen: drag or use the arrow keys to compare before and after">
+        </div>
+        </div>
       </div>
 
-      <!-- Live Components -->
-      <div class="comp-grid" id="compGrid">
-        <div class="comp-col">
-          <div class="comp-card">
-            <div class="demo-pill" id="demoPill" style="background:#E07A3D">Play Now</div>
-            <div class="comp-label">Pill Button</div>
-            <div class="redline"><div class="redline-label">border: 2px · radius: 16px · shadow: 4px</div></div>
-          </div>
-          <div class="comp-annotation">
-            <div class="comp-annotation-line"></div>
-            <div class="comp-annotation-text"><strong>Interactive Grammar:</strong> Coloured fill = Tappable. Press state physically removes the 4px offset shadow.</div>
-          </div>
+      <div class="rule">
+        <dl class="decision">
+          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+          <dd class="d-what">Content reaches the nav bar.</dd>
+          <dt>Why</dt>
+          <dd class="d-why">A promo banner sat above the nav and left an empty gap on Android in testing. Banners and in-app ads are gone.</dd>
+        </dl>
+        <div class="rule-media">
+        <div class="ba" data-ba>
+          <img class="ba-after" src="public/images/ballrs/redesign/after-zero-in.webp" alt="Zero-In after: the guess box sits just above the nav bar, with no banner." width="600" height="1298" loading="lazy">
+          <div class="ba-before"><img src="public/images/ballrs/redesign/before-zero-in.webp" alt="Zero-In before: a Ballrs promo banner sits between the guess box and the nav bar." width="600" height="1298" loading="lazy"></div>
+          <span class="ba-tag ba-tag-before" aria-hidden="true">Before</span>
+          <span class="ba-tag ba-tag-after" aria-hidden="true">After</span>
+          <span class="ba-handle" aria-hidden="true"></span>
+          <input class="ba-range" type="range" min="0" max="100" step="1" value="50" aria-label="Zero-In screen: drag or use the arrow keys to compare before and after">
         </div>
-        <div class="comp-col">
-          <div class="comp-card">
-            <div class="demo-stat">
-              <div class="demo-stat-num" id="demoStatNum" style="color:#DC783C">7.44</div>
-              <div class="demo-stat-label">Sessions</div>
-            </div>
-            <div class="comp-label">Stat Card</div>
-            <div class="redline"><div class="redline-label">border: 2px · radius: 8px · shadow: 2px offset</div></div>
-          </div>
-          <div class="comp-annotation">
-            <div class="comp-annotation-line"></div>
-            <div class="comp-annotation-text"><strong>Context vs. Action:</strong> Sport colours provide context. Primary actions remain Teal.</div>
-          </div>
-        </div>
-        <div class="comp-col">
-          <div class="comp-card">
-            <div class="demo-tabbar">
-              <div class="demo-tab demo-tab-active">
-                <div class="demo-tab-bg">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M3 10.18V20a2 2 0 002 2h4v-7h6v7h4a2 2 0 002-2v-9.82l-9-7.18-9 7.18z"/></svg>
-                </div>
-              </div>
-              <div class="demo-tab">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-              </div>
-              <div class="demo-tab">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9H4.5a2.5 2.5 0 010-5C7 4 7 7 7 7"/><path d="M18 9h1.5a2.5 2.5 0 000-5C17 4 17 7 17 7"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg>
-              </div>
-              <div class="demo-tab">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              </div>
-            </div>
-            <div class="comp-label">Tab Bar</div>
-            <div class="redline"><div class="redline-label">height: 52px · radius: 100px · active: filled circle</div></div>
-          </div>
-          <div class="comp-annotation">
-            <div class="comp-annotation-line"></div>
-            <div class="comp-annotation-text"><strong>Custom Over System:</strong> Sport accent on bar. Active icon filled, inactive at 40%.</div>
-          </div>
         </div>
       </div>
+
+      <div class="rule flip">
+        <dl class="decision">
+          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+          <dd class="d-what">One font: Archivo.</dd>
+          <dt>Why</dt>
+          <dd class="d-why">One variable family gives wide, heavy capitals for titles and scores, and a normal width for reading. It replaces DM Sans.</dd>
+        </dl>
+        <div class="rule-media">
+        <div class="type-sample" role="img" aria-label="Archivo type sample: BALLRS in wide black capitals, CLUE DROP in wide extra-bold capitals, and Guess the player from clues at normal width.">
+          <span class="ts-1" aria-hidden="true">BALLRS</span>
+          <span class="ts-2" aria-hidden="true">CLUE DROP</span>
+          <span class="ts-3" aria-hidden="true">Guess the player from clues</span>
+        </div>
+        </div>
+      </div>
+
+      <div class="rule">
+        <dl class="decision">
+          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+          <dd class="d-what">Dark is a full second theme.</dd>
+          <dt>Why</dt>
+          <dd class="d-why">Not inverted colours. Dark has its own rules: no shadows and thin light outlines.</dd>
+        </dl>
+        <div class="rule-media">
+        <div class="theme-pair">
+          <img src="public/images/ballrs/redesign/after-home-light.webp" alt="Ballrs Home in the light theme." width="600" height="1298" loading="lazy">
+          <img src="public/images/ballrs/redesign/after-home-dark.webp" alt="Ballrs Home in the dark theme: no shadows, and thin light outlines on the things you can press." width="600" height="1298" loading="lazy">
+        </div>
+        </div>
+      </div>
+
+      <div class="dd-grid-label" style="margin-top:72px">Colours</div>
+      <ul class="v5-colours">
+        <li><span class="v5-chip" style="background:#F5F2EB"></span><strong>Cream</strong><code>#F5F2EB</code><span>Background</span></li>
+        <li><span class="v5-chip" style="background:#17A88B"></span><strong>Teal</strong><code>#17A88B</code><span>Main action, correct</span></li>
+        <li><span class="v5-chip" style="background:#F2C94C"></span><strong>Yellow</strong><code>#F2C94C</code><span>Highlight, back</span></li>
+        <li><span class="v5-chip" style="background:#B42318"></span><strong>Red</strong><code>#B42318</code><span>Wrong, destructive</span></li>
+        <li><span class="v5-chip" style="background:#141414"></span><strong>Ink</strong><code>#141414</code><span>Text, selected</span></li>
+        <li><span class="v5-chip" style="background:linear-gradient(90deg,#C57AFB,#F965B9)"></span><strong>XP gradient</strong><code>#C57AFB to #F965B9</code><span>XP only</span></li>
+      </ul>
+
+      <div class="dd-grid-label" style="margin-top:64px">Fixed in the same build</div>
+      <ul class="v5-fixed">
+        <li><strong>Duels was blank when offline.</strong></li>
+        <li><strong>Errors read like &ldquo;Failed to send a request to the Edge Function&rdquo;.</strong></li>
+        <li><strong>The keyboard covered the league code, and Join needed two taps.</strong></li>
+        <li><strong>Block and Report looked disabled.</strong></li>
+      </ul>
 
       <!-- App Icon Evolution -->
-      <div class="dd-grid-label" style="margin-top:48px">App Icon Evolution</div>
+      <div class="dd-grid-label" style="margin-top:72px">App Icon Evolution</div>
       <div class="icon-evo" id="iconEvo">
         <div class="icon-evo-frame">
           <img class="icon-evo-img active" data-v="0" src="public/images/ballrs/app-1.png" alt="App icon V1">
@@ -2439,42 +2518,31 @@ a{color:inherit}img{display:block;max-width:100%}
     });
   });
 
-  /* ── SPORT SWITCHER ── */
-  var sportBtns=document.querySelectorAll('.sport-btn');
-  var demoPill=document.getElementById('demoPill');
-  var demoStatNum=document.getElementById('demoStatNum');
-  var demoTabbar=document.querySelector('.demo-tabbar');
-  var demoTabBg=document.querySelector('.demo-tab-bg');
-  var redlineLabels=document.querySelectorAll('.redline-label');
-  sportBtns.forEach(function(btn){
-    btn.addEventListener('click',function(){
-      var color=btn.getAttribute('data-color');
-      sportBtns.forEach(function(b){b.classList.remove('active');b.style.background='';b.style.color=''});
-      btn.classList.add('active');
-      btn.style.background=color;btn.style.color='var(--ink)';
-      demoPill.style.background=color;
-      demoStatNum.style.color=btn.getAttribute('data-large');
-      demoTabbar.style.borderTopColor=color;
-      redlineLabels.forEach(function(r){r.style.color=btn.getAttribute('data-text')});
-    });
-    if(btn.classList.contains('active')){
-      btn.style.background=btn.getAttribute('data-color');
-      btn.style.color='var(--ink)';
+  /* ── BEFORE / AFTER SLIDERS ──
+     One component for every [data-ba] block. Drag anywhere on it with a mouse or finger;
+     the hidden range input gives keyboard users the arrow keys. */
+  document.querySelectorAll('[data-ba]').forEach(function(ba){
+    var range=ba.querySelector('.ba-range');
+    function set(v){
+      v=Math.max(0,Math.min(100,v));
+      ba.style.setProperty('--pos',v+'%');
+      range.value=Math.round(v);
+      range.setAttribute('aria-valuetext',Math.round(v)+'% before, '+(100-Math.round(v))+'% after');
     }
+    function fromPointer(e){var r=ba.getBoundingClientRect();set((e.clientX-r.left)/r.width*100)}
+    var dragging=false;
+    ba.addEventListener('pointerdown',function(e){
+      if(e.button)return;
+      dragging=true;ba.classList.add('is-dragging');
+      try{ba.setPointerCapture(e.pointerId)}catch(err){}
+      fromPointer(e);e.preventDefault();range.focus({preventScroll:true});
+    });
+    ba.addEventListener('pointermove',function(e){if(dragging)fromPointer(e)});
+    function stop(){dragging=false;ba.classList.remove('is-dragging')}
+    ba.addEventListener('pointerup',stop);ba.addEventListener('pointercancel',stop);
+    range.addEventListener('input',function(){set(+range.value)});
+    set(50);
   });
-
-  /* ── SPECS TOGGLE ── */
-  var specsToggle=document.getElementById('specsToggle');
-  var compGrid=document.getElementById('compGrid');
-  var iconAnnotation=document.querySelector('.comp-annotation-icons');
-  specsToggle.addEventListener('click',function(){
-    specsToggle.classList.toggle('active');
-    compGrid.classList.toggle('show-specs');
-    specsToggle.textContent=compGrid.classList.contains('show-specs')?'Exit Dev Mode':'Dev Mode';
-    if(iconAnnotation)iconAnnotation.classList.toggle('visible',compGrid.classList.contains('show-specs'));
-  });
-
-
 
   /* ── HOME SCREEN TIMELINE STAGGER ── */
   var homeCards=document.querySelectorAll('#homeTimeline .timeline-card');
