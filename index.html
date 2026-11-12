@@ -261,6 +261,16 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   text-transform:uppercase;letter-spacing:-.04em;
   color:var(--ink);margin-bottom:40px;
 }
+/* ── Showreel above the grid ── */
+/* 88px above it (the section's top padding), 48px under it */
+.reel{margin-bottom:48px}
+.reel-label{font:700 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#6B6B6B;margin-bottom:16px}
+/* As wide as the grid, but never taller than 60% of the screen; the width follows the 16:9 shape */
+.cs-video{position:relative;max-width:min(100%,calc(60vh * 16 / 9))}
+/* Laptops: also leave room for the label, caption, gap and heading (about 245px) plus the first 70px of the tiles */
+@media(min-width:901px){.cs-video{max-width:min(100%,calc(min(60vh,100vh - 315px) * 16 / 9))}}
+.cs-video video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:#F6F5F0}
+.reel-cap{font:400 14px/1.4 var(--tight);color:#555;margin-top:12px;max-width:70ch}
 .bento{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -377,6 +387,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 @media(max-width:900px){
   .work-inner{padding:56px calc(var(--frame) + 20px) 64px}
   .work-heading{margin-bottom:28px}
+  .reel{margin-bottom:56px}
   .bento{grid-template-columns:1fr;gap:60px}
   .bt-content{padding-top:20px}
   .duo-label{top:10px}
@@ -443,6 +454,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 .back-to-top a:hover .btt-arrow{transform:translateY(-4px)}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
+<script defer src="public/video-controls.js"></script>
 </head>
 <body>
 
@@ -486,6 +498,18 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 <!-- Selected work — light band, heading, 2x2 grid -->
 <section class="work" id="work">
 <div class="work-inner">
+
+<!-- App showreel: the same video and setup as the About page -->
+<div class="reel">
+  <h2 class="reel-label">90 seconds of what I&rsquo;ve built</h2>
+  <div class="cs-video">
+    <video muted loop playsinline preload="none" controls poster="public/images/about/showreel-poster.jpg" aria-label="Showreel of the apps I&rsquo;ve designed and built.">
+      <source src="public/images/about/showreel.mp4" type="video/mp4">
+    </video>
+  </div>
+  <p class="reel-cap">Seen, Ball Bearing, LEVEL, 5ives, Loupe, Sunset, Ballrs and Space Runner. I designed and built them, 5ives and Ballrs with a co-founder.</p>
+</div>
+
 <h2 class="work-heading">Selected work</h2>
 <div class="bento">
 
@@ -629,7 +653,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
       entries.forEach(function(e){
         if(e.isIntersecting) e.target.classList.add('visible');
       });
-    },{threshold:0.15});
+    },{threshold:0.04}); /* low, so the first row shows as soon as its top edge is on screen under the showreel */
     bentoTiles.forEach(function(t){bentoObs.observe(t)});
   }
 
