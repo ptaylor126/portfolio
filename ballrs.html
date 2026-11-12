@@ -562,14 +562,18 @@ a{color:inherit}img{display:block;max-width:100%}
   padding:0 clamp(32px,8vw,96px);
 }
 .gd-stage-col{position:relative;border-right:1px solid rgba(0,0,0,.1)}
+/* The stage sits under the sticky header (112px tall) and fills what is left.
+   The phone and the diagram are sized by that height, with 24px spare top and bottom. */
 .gd-stage{
-  position:sticky;top:var(--frame);
-  height:calc(100vh - var(--frame)*2);
+  --gd-h:calc(100vh - var(--frame)*2 - 112px);
+  --gd-h:calc(100svh - var(--frame)*2 - 112px);
+  position:sticky;top:calc(var(--frame) + 112px);
+  height:var(--gd-h);
   display:flex;align-items:center;justify-content:center;
   isolation:isolate;
 }
 .gd-device{
-  position:relative;width:320px;
+  position:relative;width:min(320px,calc((var(--gd-h) - 48px) * 9 / 19.5));
   background:transparent;
   transition:opacity .3s ease;
 }
@@ -604,7 +608,7 @@ a{color:inherit}img{display:block;max-width:100%}
 }
 .gd-diagram.active{opacity:1}
 .gd-diagram img{
-  width:100%;max-width:480px;height:auto;display:block;
+  width:auto;max-width:min(480px,100%);height:auto;max-height:calc(var(--gd-h) - 48px);display:block;
   border-radius:40px;
   box-shadow:0 4px 12px rgba(0,0,0,.08),0 20px 48px rgba(0,0,0,.12);
 }
@@ -1041,7 +1045,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .inapp-circle{width:64px;height:64px;border-radius:50%;background:#E2DACA;display:flex;align-items:center;justify-content:center;flex:none}
 .inapp-panel.dark .inapp-circle{background:#242832}
 .inapp-circle img{width:80%;height:80%;object-fit:contain;display:block}
-/* Version 5.0 onboarding */
+/* Redesign onboarding */
 .ob5{margin-top:72px}
 .ob5-label{font:800 13px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--ink);margin:40px 0 14px}
 .ob5-scroll{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
@@ -1050,7 +1054,10 @@ a{color:inherit}img{display:block;max-width:100%}
   .ob5-scroll{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .case-content .ob5-scroll img{flex:none;width:110px;max-width:none}
 }
-.ob5-after{display:flex;gap:40px;align-items:flex-start;padding-bottom:40px}
+/* The new slides have transparent rounded corners (54px on a 600x1298 image); the border follows them */
+.ob5-intro img{border:1px solid rgba(0,0,0,.14);border-radius:9%/4.16%}
+.ob5-sub{font:700 15px/1.4 var(--sans);color:var(--ink);margin-bottom:12px}
+.ob5-after{display:flex;gap:40px;align-items:flex-start;margin-top:40px;padding-bottom:40px}
 .ob5-after figure{margin:0;width:260px;max-width:100%}
 .ob5-after figcaption{font:700 15px/1.4 var(--sans);color:var(--ink);margin-bottom:12px}
 @media(max-width:900px){
@@ -1510,9 +1517,7 @@ a{color:inherit}img{display:block;max-width:100%}
   .decision dd:last-child{margin-bottom:0}
 }
 
-/* ── Version 5.0 redesign ── */
-.case-content p.v5-status{display:inline-block;font:600 14px/1.4 var(--sans);color:var(--ink);background:#FBF1CF;border-radius:999px;padding:6px 14px;margin:4px 0 0;max-width:none}
-.v5-cap{font:400 14px/1.4 var(--sans);color:#555;margin-top:14px;text-align:center}
+/* ── Redesign ── */
 
 /* Before / after slider. --pos is how much of the "before" screen shows, from the left. */
 .ba{--pos:50%;position:relative;aspect-ratio:600/1298;border-radius:28px;overflow:hidden;border:1px solid rgba(0,0,0,.2);background:#F5F2EB;cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none}
@@ -1526,8 +1531,6 @@ a{color:inherit}img{display:block;max-width:100%}
 /* The range input is only there for the keyboard; the pointer drags the whole block */
 .ba-range{position:absolute;left:0;bottom:0;width:100%;height:1px;margin:0;opacity:0;pointer-events:none}
 .ba:has(.ba-range:focus-visible){outline:3px solid var(--ink);outline-offset:3px}
-/* Large and centred, but never taller than the screen under the header */
-.ba-hero{margin:56px auto 0;max-width:360px;max-width:min(360px,calc((100svh - 200px) * 600 / 1298))}
 
 /* A rule: Decision / Why with its picture beside it, alternating sides */
 .rule{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:72px;align-items:center;max-width:960px;margin:96px 0 0}
@@ -1539,6 +1542,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .ts-2{font-weight:800;font-stretch:125%;font-size:24px;line-height:1.1}
 .ts-3{font-weight:500;font-stretch:100%;font-size:16px;line-height:1.4}
 .rule:has(.theme-pair){grid-template-columns:minmax(0,1fr) 400px}
+.rule.flip:has(.theme-pair){grid-template-columns:400px minmax(0,1fr)}
 .theme-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .theme-pair img{width:100%;height:auto;border-radius:22px;border:1px solid rgba(0,0,0,.2)}
 
@@ -1553,8 +1557,7 @@ a{color:inherit}img{display:block;max-width:100%}
 .v5-fixed strong{font-weight:700;color:var(--ink)}
 
 @media(max-width:800px){
-  .ba-hero{margin-top:40px;max-width:min(300px,calc((100svh - 160px) * 600 / 1298))}
-  .rule,.rule.flip,.rule:has(.theme-pair){grid-template-columns:1fr;gap:28px;margin-top:64px}
+  .rule,.rule.flip,.rule:has(.theme-pair),.rule.flip:has(.theme-pair){grid-template-columns:1fr;gap:28px;margin-top:64px}
   .rule.flip .rule-media{order:0}
   .rule-media{max-width:260px}
   .rule:has(.theme-pair) .rule-media{max-width:340px}
@@ -1976,8 +1979,8 @@ a{color:inherit}img{display:block;max-width:100%}
       </dl>
 
       <div class="ob5">
-        <h2 class="problem-headline">Version 5.0: play first.</h2>
-        <p>Before, a new player went through 11 intro slides, one for each game, then had to choose a username before playing anything. In version 5.0 you pick a sport and go straight into today's real Clue Drop, with a one-line tip. The username comes after the game, as a &ldquo;Save your score&rdquo; card on the result. Players without a username stay off the leaderboards, and the prompt to add an email moves much later.</p>
+        <h2 class="problem-headline">The redesign: play first.</h2>
+        <p>Before, a new player went through 11 intro slides, one for each game, then had to choose a username before playing anything. In the redesign there are 4 short intro slides, then you pick a sport and go straight into today's real Clue Drop, with a one-line tip. The username comes after the game, as a &ldquo;Save your score&rdquo; card on the result. Players without a username stay off the leaderboards, and the prompt to add an email moves much later.</p>
 
         <div class="ob5-label">Before: 12 screens before your first game</div>
         <div class="ob5-scroll" tabindex="0" role="group" aria-label="The old onboarding: 11 intro slides explaining each game, then a Choose a Username screen.">
@@ -1995,7 +1998,14 @@ a{color:inherit}img{display:block;max-width:100%}
           <img src="public/images/ballrs/redesign/onboarding-before-12.webp" alt="Old onboarding screen 12 of 12" width="240" height="519" loading="lazy">
         </div>
 
-        <div class="ob5-label">After: playing within one tap</div>
+        <div class="ob5-label">After: 4 short slides, then you&rsquo;re playing</div>
+        <div class="ob5-sub">Intro slides</div>
+        <div class="ob5-scroll ob5-intro" tabindex="0" role="group" aria-label="The four intro slides of the new onboarding">
+          <img src="public/images/ballrs/redesign/onboarding-after-intro-1.webp" alt="Intro slide 1: Ballrs, daily sports trivia." width="600" height="1298" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-after-intro-2.webp" alt="Intro slide 2: 7 games, every day." width="600" height="1298" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-after-intro-3.webp" alt="Intro slide 3: earn XP and level up." width="600" height="1298" loading="lazy">
+          <img src="public/images/ballrs/redesign/onboarding-after-intro-4.webp" alt="Intro slide 4: play your friends." width="600" height="1298" loading="lazy">
+        </div>
         <div class="ob5-after">
         <figure>
           <figcaption>1. Pick a sport</figcaption>
@@ -2010,7 +2020,7 @@ a{color:inherit}img{display:block;max-width:100%}
           <div class="soft-frame"><img src="public/images/ballrs/redesign/onboarding-after-save.webp" alt="The result shows all six clues, then a Save your score card to pick a username." width="600" height="1298" loading="lazy"></div>
         </figure>
         </div>
-        <p>Version 5.0 isn't released yet, so I don't have numbers on this change.</p>
+        <p>It's too early for numbers on this change. The bigger challenge for Ballrs is getting people to find the app in the first place.</p>
       </div>
     </div>
   </div>
@@ -2018,11 +2028,18 @@ a{color:inherit}img{display:block;max-width:100%}
   <div class="case-section" id="s06" style="padding-top:96px">
     <div class="case-label highlight">06 Design System</div>
     <div class="case-content">
-      <h2 class="problem-headline">Version 5.0: one meaning for everything.</h2>
-      <p>Ballrs was my first proper app, and it looked rushed. Outlines and shadows were on everything, so they meant nothing. Every game had its own colour. Home was a stack of seven cards. For version 5.0 I rebuilt every screen around a short set of rules.</p>
-      <p class="v5-status">Built, not live yet. Ships as version 5.0 after a closed test.</p>
+      <h2 class="problem-headline">The redesign: one meaning for everything.</h2>
+      <p>The screens earlier on this page show Ballrs before the redesign.</p>
+      <p>Ballrs was my first proper app, and it looked rushed. Outlines and shadows were on everything, so they meant nothing. Every game had its own colour. Home was a stack of seven cards. In the redesign I rebuilt every screen around a short set of rules.</p>
 
-      <figure class="ba-hero">
+      <div class="rule">
+        <dl class="decision">
+          <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
+          <dd class="d-what">One screen for today&rsquo;s games.</dd>
+          <dt>Why</dt>
+          <dd class="d-why">Home was a stack of seven large cards, one per game. Now it&rsquo;s a grid of today&rsquo;s games with a tick on the ones you&rsquo;ve done, then duels and your league.</dd>
+        </dl>
+        <div class="rule-media">
         <div class="ba" data-ba>
           <img class="ba-after" src="public/images/ballrs/redesign/after-home-light.webp" alt="Ballrs Home after the redesign: a grid of today&rsquo;s games with ticks on the ones done, then trivia duels and leagues." width="600" height="1298" loading="lazy">
           <div class="ba-before"><img src="public/images/ballrs/redesign/before-home.webp" alt="Ballrs Home before the redesign: a stack of large cards, one per game, each with a different coloured shadow." width="600" height="1298" loading="lazy"></div>
@@ -2031,10 +2048,10 @@ a{color:inherit}img{display:block;max-width:100%}
           <span class="ba-handle" aria-hidden="true"></span>
           <input class="ba-range" type="range" min="0" max="100" step="1" value="50" aria-label="Home screen: drag or use the arrow keys to compare before and after">
         </div>
-        <figcaption class="v5-cap">Home: seven stacked cards became a grid of today&rsquo;s games, with duels and your league at a glance.</figcaption>
-      </figure>
+        </div>
+      </div>
 
-      <div class="rule">
+      <div class="rule flip">
         <dl class="decision">
           <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
           <dd class="d-what">Outlines mean you can press this.</dd>
@@ -2053,7 +2070,7 @@ a{color:inherit}img{display:block;max-width:100%}
         </div>
       </div>
 
-      <div class="rule flip">
+      <div class="rule">
         <dl class="decision">
           <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
           <dd class="d-what">Every colour has one job.</dd>
@@ -2072,7 +2089,7 @@ a{color:inherit}img{display:block;max-width:100%}
         </div>
       </div>
 
-      <div class="rule">
+      <div class="rule flip">
         <dl class="decision">
           <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
           <dd class="d-what">Content reaches the nav bar.</dd>
@@ -2091,7 +2108,7 @@ a{color:inherit}img{display:block;max-width:100%}
         </div>
       </div>
 
-      <div class="rule flip">
+      <div class="rule">
         <dl class="decision">
           <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
           <dd class="d-what">One font: Archivo.</dd>
@@ -2107,7 +2124,7 @@ a{color:inherit}img{display:block;max-width:100%}
         </div>
       </div>
 
-      <div class="rule">
+      <div class="rule flip">
         <dl class="decision">
           <dt class="drawn"><span>Decision<svg viewBox="0 0 80 8" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M2 5.5 C 14 3.2, 27 6.4, 40 4.6 S 64 2.8, 78 4.2"/></svg></span></dt>
           <dd class="d-what">Dark is a full second theme.</dd>
