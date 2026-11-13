@@ -90,6 +90,12 @@ a{color:inherit}img{display:block;max-width:100%}
   text-transform:uppercase;letter-spacing:-.05em;
   margin-bottom:16px;
 }
+/* ── App icon next to the title ── */
+.case-hero-title{display:flex;align-items:center;gap:20px;margin-bottom:16px}
+.case-hero-title h1{margin-bottom:0}
+.app-icon{flex:none;display:block;width:72px;height:72px}
+.app-icon-phone{border-radius:22.5%;border:1px solid rgba(0,0,0,.08)}
+@media(max-width:800px){.app-icon{width:56px;height:56px}}
 .case-hero-meta{
   display:flex;flex-wrap:wrap;gap:12px;
   font:500 13px/1 var(--mono);text-transform:uppercase;letter-spacing:.03em;
@@ -522,7 +528,7 @@ a{color:inherit}img{display:block;max-width:100%}
 
 <!-- Hero -->
 <section class="case-hero" id="hero">
-  <h1>Seen</h1>
+  <div class="case-hero-title"><img class="app-icon app-icon-phone" src="public/images/icons/seen.webp" alt="" aria-hidden="true" width="256" height="256"><h1>Seen</h1></div>
   <p class="case-hero-line">A film and TV tracker where your recommendations come from friends, not an algorithm.</p>
   <div class="case-hero-meta">
     <span>Designer and developer</span>
