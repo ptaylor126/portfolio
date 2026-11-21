@@ -268,16 +268,28 @@ a,.nav-pill,.bento-tile{cursor:pointer}
 /* 160px above it (the section's 88px top padding plus 72px) and 160px under it, so it reads as its own section */
 .reel{margin-top:72px;margin-bottom:160px}
 .reel-label{font:700 13px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#6B6B6B;margin-bottom:16px}
-/* The full width of the grid, 16:9, unless the whole block (heading, video, caption row and button) would not fit
-   in the window. Then the box gets narrower and is centred. 176px is everything that is not video, measured in the
-   browser: 81px for the heading, caption row and their gaps, 12px of page frame top and bottom, 32px of space above
+/* The full width of the grid, 16:9, unless the whole block (heading, video, chapter buttons, caption and button) would not fit
+   in the window. Then the box gets narrower and is centred. 196px is everything that is not video, measured in the
+   browser: 101px for the heading, chapter buttons, caption and their gaps, 12px of page frame top and bottom, 32px of space above
    and below, and 7px spare. This page has no sticky header.
    The label, video and caption row share one box, so they always have the same left and right edges. */
-.reel-box{margin:0 auto;max-width:min(100%,calc((100vh - 176px) * 16 / 9));max-width:min(100%,calc((100svh - 176px) * 16 / 9))}
+.reel-box{margin:0 auto;max-width:min(100%,calc((100vh - 196px) * 16 / 9));max-width:min(100%,calc((100svh - 196px) * 16 / 9))}
 .cs-video{position:relative}
 .cs-video video{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:8px;border:1px solid rgba(0,0,0,.12);background:#F6F5F0}
 .reel-foot{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 32px;margin-top:12px}
-.reel-cap{font:400 14px/1.4 var(--tight);color:#555;max-width:70ch}
+.reel-info{min-width:0}
+.reel-cap{font:400 14px/1.4 var(--tight);color:#555;max-width:70ch;margin-top:8px}
+/* Chapter buttons: one per app, each jumps the video to that app. Outlined like the tag pills; the one that is
+   showing is filled. They are 32px tall on desktop and 40px on phones, and ::after makes the tap area 44px. */
+.reel-chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none}
+.reel-chip{position:relative;display:block;min-height:32px;padding:0 12px;border:1px solid rgba(0,0,0,.18);border-radius:999px;
+  background:transparent;color:#4A4A4A;font:600 13px/1 var(--tight);white-space:nowrap;cursor:pointer;
+  -webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;
+  transition:background .15s,color .15s,border-color .15s}
+.reel-chip::after{content:"";position:absolute;inset:-7px -1px}
+.reel-chip:hover{border-color:var(--accent);color:var(--accent)}
+.reel-chip.is-on{background:var(--accent);border-color:var(--accent);color:#fff}
+.reel-chip:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 /* The one cue to the case studies: a static button on the right of the caption row */
 .reel-more{flex:none;display:inline-block;padding:10px 18px;border-radius:999px;background:var(--accent);color:#fff;
   font:700 14px/1.4 var(--tight);text-decoration:none;white-space:nowrap;transition:background .15s}
@@ -407,6 +419,8 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .work-heading{margin-bottom:28px}
   .reel{margin-top:40px;margin-bottom:104px} /* 96px above with the section's 56px padding */
   .reel-foot{flex-direction:column;align-items:flex-start}
+  .reel-chip{min-height:40px;padding:0 14px}
+  .reel-chip::after{inset:-3px -1px}
   .bento{grid-template-columns:1fr;gap:60px}
   .bt-content{padding-top:20px}
   .duo-label{top:10px}
@@ -420,7 +434,7 @@ a,.nav-pill,.bento-tile{cursor:pointer}
   .meta-dot,.scroll-sig .ss-arrow{animation:none}
   .whos-this,.wt-arrow path{transition:none!important}
   .bento-tile{opacity:1;transform:none;transition:none}
-  .bt-media,.bt-img,.bt-title,.bt-tags span,.duo-shot,.duo-line,.duo-line strong,.duo-label,.reel-more,.reel-more span{transition:none}
+  .bt-media,.bt-img,.bt-title,.bt-tags span,.duo-shot,.duo-line,.duo-line strong,.duo-label,.reel-more,.reel-more span,.reel-chip{transition:none}
   .reel-more:hover span{transform:none}
   .duo-shot:hover,.duo-shot:focus-visible,.duo-shot.is-hot{transform:none}
 }
@@ -529,7 +543,19 @@ a,.nav-pill,.bento-tile{cursor:pointer}
     </video>
   </div>
   <div class="reel-foot">
-    <p class="reel-cap">Seen, Ball Bearing, LEVEL, 5ives, Loupe, Sunset, Ballrs and Space Runner. I designed and built them, 5ives and Ballrs with a co-founder.</p>
+    <div class="reel-info">
+     <ul class="reel-chips">
+      <li><button type="button" class="reel-chip" data-t="3.2" aria-label="Jump to Seen in the showreel">Seen</button></li>
+      <li><button type="button" class="reel-chip" data-t="12.3" aria-label="Jump to Ball Bearing in the showreel">Ball Bearing</button></li>
+      <li><button type="button" class="reel-chip" data-t="21.7" aria-label="Jump to LEVEL in the showreel">LEVEL</button></li>
+      <li><button type="button" class="reel-chip" data-t="34.5" aria-label="Jump to 5ives in the showreel">5ives</button></li>
+      <li><button type="button" class="reel-chip" data-t="45.8" aria-label="Jump to Loupe in the showreel">Loupe</button></li>
+      <li><button type="button" class="reel-chip" data-t="57.7" aria-label="Jump to Sunset in the showreel">Sunset</button></li>
+      <li><button type="button" class="reel-chip" data-t="67.1" aria-label="Jump to Ballrs in the showreel">Ballrs</button></li>
+      <li><button type="button" class="reel-chip" data-t="75.9" aria-label="Jump to Space Runner in the showreel">Space Runner</button></li>
+     </ul>
+     <p class="reel-cap">I designed and built them, 5ives and Ballrs with a co-founder.</p>
+    </div>
     <a class="reel-more js-to-work" href="#selected-work">Case studies below <span aria-hidden="true">↓</span></a>
   </div>
  </div>
@@ -681,6 +707,39 @@ a,.nav-pill,.bento-tile{cursor:pointer}
       workHeading.scrollIntoView({behavior:reduceMotion.matches?'instant':'smooth',block:'start'});
     });
   });
+
+  /* ── SHOWREEL: a button per app jumps to its part of the video, and the one that is showing is filled ── */
+  var reelVideo=document.querySelector('.reel video');
+  var reelChips=[].slice.call(document.querySelectorAll('.reel-chip'));
+  if(reelVideo&&reelChips.length){
+    var reelPending=null; /* a jump asked for before the video has loaded */
+    function reelMark(time){
+      var on=null;
+      reelChips.forEach(function(b){if(time>=parseFloat(b.getAttribute('data-t')))on=b});
+      reelChips.forEach(function(b){
+        b.classList.toggle('is-on',b===on);
+        if(b===on)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');
+      });
+    }
+    function reelSync(){reelMark(reelPending!==null?reelPending:reelVideo.currentTime)}
+    reelVideo.addEventListener('timeupdate',reelSync);
+    reelVideo.addEventListener('seeking',reelSync);
+    reelVideo.addEventListener('seeked',function(){reelPending=null;reelSync()});
+    reelVideo.addEventListener('loadedmetadata',function(){
+      if(reelPending!==null)reelVideo.currentTime=reelPending;
+    });
+    reelChips.forEach(function(b){
+      b.addEventListener('click',function(){
+        var t=parseFloat(b.getAttribute('data-t'));
+        reelPending=t;
+        reelMark(t); /* fill the button at once, before the video catches up */
+        reelVideo.muted=true;
+        if(reelVideo.readyState>0)reelVideo.currentTime=t;
+        var p=reelVideo.play();
+        if(p&&p.catch)p.catch(function(){});
+      });
+    });
+  }
 
   /* ── BENTO REVEAL ── */
   var bentoTiles=document.querySelectorAll('.bento-tile');
